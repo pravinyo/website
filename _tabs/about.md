@@ -16,7 +16,7 @@ My current _technical focus is on distributed system, including MicroServices an
 > - LinkedIn: **{{ site.social.links[0] }}**
 > - Medium: **{{ site.social.links[3] }}**
 
-If you want to email me, go ahead send an email to [`{{ site.social.email }}`](mailto:{{ site.site.social.email }}) but be nice and make sure you Googled around a bit before you do. 
+If you want to email me, go ahead send an email to [`{{ site.social.email }}`](mailto:{{ site.social.email }}) but be nice and make sure you Googled around a bit before you do. 
 
 ### You want to know more about me?
 
