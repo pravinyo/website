@@ -5,7 +5,7 @@ theme: jekyll-theme-chirpy
 
 # Change the following value to '/PROJECT_NAME' ONLY IF your site type is GitHub Pages Project sites
 # and doesn't have a custom domain.
-baseurl: ''
+baseurl: '/blog2'
 
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
@@ -42,13 +42,13 @@ social:
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
   name: Pravin Tripathi
   email: pravinyo12@gmail.com             # change to your email address
+  url-portfolio: "https://pravinyo.github.io"
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/pravin_yo      # change to your twitter homepage
-    - https://github.com/pravinyo      # change to your github homepage
-    # Uncomment below to add more social links
-    # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
+    - https://www.linkedin.com/in/pravin-r-tripathi # linkedIn
+    - https://twitter.com/pravin_yo #Twitter
+    - https://github.com/pravinyo #Github
+    - https://medium.com/@pravinyo #medium
 
 google_site_verification:               # fill in to your verification string
 
