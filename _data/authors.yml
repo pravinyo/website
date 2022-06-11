@@ -6,12 +6,12 @@
 #   url: {homepage_of_author}
 # -------------------------------------
 
-cotes:
-  name: Cotes Chung
-  twitter: cotes2020
-  url: https://github.com/cotes2020/
+pravin_tripathi:
+  name: Pravin Tripathi
+  twitter: pravin_yo
+  url: https://www.linkedin.com/in/pravin-r-tripathi
 
-sille_bille:
-  name: Dinesh Prasanth Moluguwan Krishnamoorthy
-  twitter: dinesh_MKD
-  url: https://github.com/SilleBille/
+# sille_bille:
+#   name: Dinesh Prasanth Moluguwan Krishnamoorthy
+#   twitter: dinesh_MKD
+#   url: https://github.com/SilleBille/
