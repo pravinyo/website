@@ -1,8 +1,7 @@
 ---
 title: Tips to test (end to end) library changes - Gradle based Project
 subtitle: Some people are still struggling with this thing (including me)
-thumbnail-img: /assets/img/tips-to-test-library-changes/thumb-nail.jpeg
-share-img: /assets/img/tips-to-test-library-changes/header.jpeg
+image: /assets/img/tips-to-test-library-changes/thumb-nail.jpeg
 img_path: /assets/img/tips-to-test-library-changes/
 tags: [gradle, softwareengineering, backenddevelopment, testing]
 date: 2022-06-03 14:10:00 +0800
