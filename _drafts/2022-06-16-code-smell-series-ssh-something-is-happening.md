@@ -3,7 +3,7 @@ title: "Code Smell Series: Shh…something is happening there"
 author: pravin_tripathi
 date: 2022-06-16 00:00:00 +0530
 readtime: true
-img_path: /assets/img/code-smell-series/part-2/
+img_path: /assets/img/code-smell-series/toomuch/
 categories: [Blogging, CodeSmellSeries]
 tags: [coding, smells]
 image:
