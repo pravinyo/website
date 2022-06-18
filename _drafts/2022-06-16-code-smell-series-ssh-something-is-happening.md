@@ -56,6 +56,8 @@ class DispatcherDecisionMaker(
 > Even today, After reading the above code and knowing the flow, I still need to check steps and other implementations to understand the code. I encourage you to once read the above code and then think about what you understood? 
 {: .prompt-info }
 
+![bored funny image][funny-image-3]
+
 ## Understanding
 If you are unable to understand the above code, you are not alone. Let me brief you on what checks the above code does?  
 * Is `payment settlement` toggle/flow enabled?
@@ -68,7 +70,7 @@ If you are unable to understand the above code, you are not alone. Let me brief 
 
 I was surprised that too many things were happening and have been taken care of by the above piece of code. But reading the code again now, I still feel confused as it is implicit knowledge, and the **other developer might not have that proper context, so he/she again needs to read the last step from the code itself**.
 
-From the code, we see the **class is handling two responsibilities** `Payment decision` and `Dispatcher decision`. Also, there is naming smell problem in `getDispatcherResponse()`. 
+From the code, we see the **class is handling two responsibilities** `Payment decision` and `Dispatcher decision`. Also, there is `naming smell` problem in **getDispatcherResponse()**. 
 > getDispatcherResponse() method doesn't return the dispatcher response but returns the next step to execute based on the human decision from Dispatcher Team.
 {: .prompt-danger }
 
@@ -138,8 +140,8 @@ class DispatcherDecisionMaker(
 }
 ```
 ## Further Refactoring
-It can be further simplified into 2 separate class,  
-Implementation of Dispatcher Decision Maker:
+Above code is still doing multiple things. It can be further simplified into 2 separate class,  
+Implementation of `Dispatcher Decision Maker`:
 ```kotlin
 class DispatcherDecisionMaker (
     private val onApprove: Step,
@@ -165,7 +167,7 @@ class DispatcherDecisionMaker (
 }
 ```
 
-Implementation of Payment Status Decision Maker:
+Implementation of `Payment Status Decision Maker`:
 ```kotlin
 class PaymentStatusDecisionMaker(
     private val onPendingSettlementFlow: Step,
@@ -194,7 +196,7 @@ class PaymentStatusDecisionMaker(
 }
 ```
 
-It looks much better. 
+It looks much better as each class is doing one thing.
 > Even though it required to create another class but at the cost of clean responsibility and better readability, Which has more advantages than disadvantages. Also, it increases reusability.
 {: .prompt-tip }
 
@@ -207,3 +209,4 @@ Initially, we saw that code was doing more things that can’t be easily interpr
 
 [funny-image-1]: https://media.giphy.com/media/M8vBiv9mgpHDGpqL9y/giphy-downsized-large.gif
 [funny-image-2]: https://media.giphy.com/media/3iBbm6ilVZkC6RmjhL/giphy.gif
+[funny-image-3]: https://media.giphy.com/media/kkxQdM0zvG2xCmmNh5/giphy-downsized-large.gif
