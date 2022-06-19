@@ -24,7 +24,7 @@ You may think about ignoring it and adding to backlog due to week smell, but if 
 ### Recently 
 I encountered naming smell, while performing application migration from one platform (in-house old service platform) to another platform (in-house new advanced service platform). There was one API that was exposed to the back-office team for pushing the latest data multiple times a day. 
 
-> The API accepts a list of currency exchange details that is further processed (aggregation, validation, transformation, and more) and then stored in the DB to be used by other applications.
+> **_The API accepts a list of currency exchange details that is further processed (aggregation, validation, transformation, and more) and then stored in the DB to be used by other applications._**
 
 ### Problem 1:
 
@@ -32,7 +32,7 @@ Here, **naming of a few fields in currency exchange was not clear**, something l
 
 Someone who is reading this name for the first time will not come to know what it could mean. **_Is it some business term?_** 
 
-> We could guess `Crncy` could roughly mean currency given we are accepting currency exchange detail. But, **_what could fxd and var mean here?_**
+> **_We could guess `Crncy` could roughly mean currency given we are accepting currency exchange detail. But, what could fxd and var mean here?_**
 
 I tried asking few developers who joined project before me, but they don’t know as that service was `last time updated a year ago`, and _folks who developed is no longer working in the project_. So next, I thought to check the **_API contract testing code_** where I  was expecting to find the test for that field and get actual meaning behind that, **but sadly, I didn’t get anything there**. 
 
@@ -117,7 +117,8 @@ Due to these everywhere in the code base, wrong names was used, and  people who 
 
 But, the business people are not referring that name. so **_it is another naming smell_ in the API enpoint**.
 
-> Naming smell - Part 2, in this series will be on second instance which troubled me.
+> Naming smell - Part 2, is on second instance which troubled me.
+[Link to a page]({{ site.url }}{{ site.baseurl }}{% post_url 2022-06-19-code-smell-series-file-name %})
 {: .prompt-info }
 
 > You have something to share, go ahead and add in comments 😉 » Happy Learning!!
