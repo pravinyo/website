@@ -1,7 +1,7 @@
 ---
 title: "Code Smell Series: Naming smells - Part 2"
 author: pravin_tripathi
-date: 2022-06-17 00:00:00 +0530
+date: 2022-06-19 00:00:00 +0530
 readtime: true
 img_path: /assets/img/code-smell-series/naming/
 categories: [Blogging, CodeSmellSeries]
