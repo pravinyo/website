@@ -43,7 +43,7 @@ At last, I had to read the complete API implementation to understand what was ha
 
 #### Now you will say, Pravin
 
-* **You could have guessed it does roughly means same variable name.**  
+* **You could have guessed, it does roughly means same variable name.**  
   But hold on,  
     - Why do I have to guess the name?  
     - Why not written clearly in the first place?  
