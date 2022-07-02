@@ -1,7 +1,7 @@
 ---
 title: "Code Smell Series: Shh…something is happening there"
 author: pravin_tripathi
-date: 2022-07-01 00:00:00 +0530
+date: 2022-07-02 00:00:00 +0530
 readtime: true
 img_path: /assets/img/code-smell-series/ssh-something-is-happening/
 categories: [Blogging, CodeSmellSeries]
