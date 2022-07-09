@@ -18,6 +18,4 @@ toc: false
 > This presentation is on `State in Reactive System`
 {: .prompt-info }
 
-<div id="html" markdown="1">
-  <object data="{{ page.file_document_path }}" width="100%" height="500" type="application/pdf"></object>
-</div>
+{% include presentation.html %}
