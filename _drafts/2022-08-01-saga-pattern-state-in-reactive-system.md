@@ -13,6 +13,7 @@ image:
   alt: Photo by Andrea Zanenga on Unsplash
 file_document_path: "/assets/document/presentation/state-in-your-reactive-system.pdf"
 toc: false
+youtube_id: hAStlXBgoac
 ---
 
 ## State in Reactive System
@@ -21,6 +22,10 @@ In this presentation, I talked about something we are already familiar. For some
 
 We see how our design evolves as we progress with the presentation. We initially start with a simple application, later identify problems and see how to fix those problems.
 
+## Video
+{% include youtube.html %}
+
+## Deck
 {% include presentation.html %}
 
 ## Further readings
