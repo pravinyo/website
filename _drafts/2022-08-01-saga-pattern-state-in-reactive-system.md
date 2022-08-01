@@ -15,8 +15,11 @@ file_document_path: "/assets/document/presentation/state-in-your-reactive-system
 toc: false
 ---
 
-> This presentation is on `State in Reactive System`
-{: .prompt-info }
+## State in Reactive System
+
+In this presentation, I talked about something we are already familiar. For some, it will be a refreshing session; for others, it will be new learning.
+
+We see how our design evolves as we progress with the presentation. We initially start with a simple application, later identify problems and see how to fix those problems.
 
 {% include presentation.html %}
 
