@@ -62,48 +62,43 @@ An API used to update the product rate. This rates get updated multiple times in
 
 
 ## Instance 5: Event Producer
-Interface does not have to be REST API. It could be a Pub-sub type interface, where the requests in the form of a message are consumed, and a response is sent in the form of a message/event.
+Interface does not have to be REST API. It could be a `Pub-Sub type interface`, where the requests in the form of a `message are consumed`, and a response is sent in the form of a message/event.
 
-Here, Incomplete implementation of producer pushed in production that wasn't consumed by any product. So, it did not affect any product, but What is the meaning of that code? Why was that code not reverted? It gave me the understanding that since it is in prod, It must be working. 
+- Here, **Incomplete implementation of producer pushed in production** that wasn't consumed by any product. So, it did not affect any product.  
+ > What is the meaning of that code? Why was that code not reverted? It gave me the understanding that since it is in prod, It must be working. 
 
-After I integrated my changes to consume that message, my code won't get it. After debugging the framework, I found that the header in the message had one mandatory field missing. After fixing it worked. 
+- After I `integrated my changes` to consume that message, `my code won't get it`. After debugging the framework, I found that the **header in the message had one mandatory field missing**. After fixing it worked. 
+> Seriously, for someone new to the framework, this is a `nightmare` as he could not know framework level understanding in a short time.  
+Better to `implement it correctly or avoid writing it` in the first place.
 
-Seriously, for someone new to the framework, this is a nightmare as he could not know framework level understanding in a short time. Better to implement it correctly or avoid writing it in the first place.
 
+## Instance 6: 2 Factor Authentication (2FA) API 
+An API is used to send OTP messages to the customers, and another API is used to validate OTP messages. Validating OTP requires a sent `OTP pin` and `function ID`(_used to identify message format specific to the product_).
 
-## Instance 6: 2 Factor Authentication API 
-An API is used to send OTP pins to the customers, and another API is used to validate OTP pins.
+### The Problem
+**OTP Validation API suddenly stopped working for the product** I was working on, which caused smoke failure in the lower environment. It blocked us from pushing any change to the higher environment like QA.
 
-Here validating OTP requires a sent OTP pin and function ID(used to identify message format specific to the product).
+### Before
+The `default value` used for `function ID` in OTP generation and validation. This change was working fine. The front-end pulls the function ID from Database(DB) based on `product code`. 
 
-### Problem:
-OTP Validation API suddenly stopped working for the product I was working on, which caused smoke failure in the lower environment. It blocked us from pushing any change to the higher environment like QA.
+### Now
+After eight months, the frontend code had **two different values for the product code** _(for example, FOREX and FOREX_CARD)._ 
 
-### Before:
-The default value used for function ID in OTP generation and validation. This change was working fine. The front end pulls the function ID from DB based on product code. 
+- The frontend code was quite `complex to check which config was used` while making the OTP generation and validation call, as `two different configs` were present with `different product codes`.
+- Later checking the DB, I found that the `product code got updated from FOREX to FOREX_CARD` a few days ago. In the OTP validation API, I found that **if the function ID is missing in the request body, it takes the default value.**
+- Next, talking with the integration team, I learned that the `function ID has to be the same in OTP generation and validation calls` for a product code which was a different value in the API call. 
+- Later after 3-4 hr debugging, **I realized that the frontend was using an older name (FOREX), not the new name(FOREX_CARD) to get the function ID**.  
+  > By looking at the frontend code, it was difficult for me to understand those things, but with the help of frontend folks, I found the config.
 
-### Now:
-After eight months, the frontend code had two different values for the product code (for example, FOREX and FOREX_CARD). 
+  > Questions in my mind,  
+  > - Why were there two different names for product code in the frontend code?
+  > - Why is older code not removed?
 
-The frontend code was quite complex to check which config was used while making the OTP generation and validation call, as two different configs were present with different product codes.
+- Anyway, front-end code was `refactored and removed code related to older names`. Afterward, It started working.
+  > It is the code and unclear understanding of the API usage due to poor documentation that caused the issue. 
 
-Later checking the DB, I found that the product code got updated from FOREX to FOREX_CARD a few days ago. In the OTP validation API, I found that if the function ID is missing in the request body, it takes the default value.
-
-Next, talking with the integration team, I learned that the function ID has to be the same in OTP generation and validation calls for a product code which was currently a different value in the API call. 
-
-Later after 3-4 hr debugging, I realized that the frontend was using an older name (FOREX), not the new name(FOREX_CARD) to get the function ID. By looking at the frontend code, it was difficult for me to understand those things, but with the help of frontend folks, I found the config.
-
-Here is the question in my mind,
-- Why were there two different names for product code in the frontend code?
-- Why is older code not removed?
-
-Anyway,
-Later front-end code was refactored and removed code related to older names. Afterward, It started working.
-
-It is the code and unclear understanding of the API usage due to poor documentation that caused the issue. 
-
-The function ID has to be the same in OTP generation, and validation calls for a product code => This was not documented in tools like Jira, confluence, etc. Later talking with the integration team, I came to know. 
-
+> `The function ID has to be the same in OTP generation, and validation calls for a product code`  This was not documented in tools like Jira, confluence, etc. Later talking with the integration team, I came to know.  
+{: .prompt-info }
 ## Learning
 I will not blame the team, but the practice that was followed by the developer who implemented that API in the product should have mentioned necessary details in the story so that others could quickly come to know.
 
