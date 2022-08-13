@@ -99,14 +99,17 @@ After eight months, the frontend code had **two different values for the product
 
 > `The function ID has to be the same in OTP generation, and validation calls for a product code`  This was not documented in tools like Jira, confluence, etc. Later talking with the integration team, I came to know.  
 {: .prompt-info }
-## Learning
-I will not blame the team, but the practice that was followed by the developer who implemented that API in the product should have mentioned necessary details in the story so that others could quickly come to know.
-
-It is better to have a clear understanding of API before making any changes to the product. Small changes could go unnoticed, and no one will come to know the actual cause of failure unless the one who implemented that change is debugging the issue, which in my case was not available.
-
 ## Conclusion
-Documentation is there to help other developers transition to your API smoothly. It is also better to review your documentation with other peers if you are not clear about what to include and add. This documentation saves a lot of hours and unnecessary meetings and calls for small things. It is better to add implicit details in the documentation not directly mentioned in the code but is required to use the API correctly.
+- I will not blame the team, but the practice that was followed by the developer who implemented that API in the product should have mentioned necessary details in the story so that others could quickly come to know.
 
-Avoid using meaningless small names or names like TOCard, which won’t help anyone understand your API. If those terms are business defined better to add a description explaining in 1-2 lines.
+- It is better to have a clear understanding of API before making any changes to the product. Small changes could go unnoticed, and no one will come to know the actual cause of failure unless the one who implemented that change is debugging the issue, which in my case was not available.
 
-Double check the details regarding what fields are optional and mandatory, as miss information could cause the story to spill over.
+- Documentation is there to help other developers transition to your API smoothly. It is also better to review your documentation with other peers if you are not clear about what to include and add. This documentation saves a lot of hours and unnecessary meetings and calls for small things. It is better to add implicit details in the documentation not directly mentioned in the code but is required to use the API correctly.
+
+- Avoid using meaningless small names or names like TOCard, which won’t help anyone understand your API. If those terms are business defined better to add a description explaining in 1-2 lines.
+
+- Double check the details regarding what fields are optional and mandatory, as miss information could cause the story to spill over.
+
+&nbsp;
+> You have something to share, go ahead and add in comments 😉 » Happy Learning!!
+{: .prompt-tip }
