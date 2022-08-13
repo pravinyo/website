@@ -32,8 +32,10 @@ This API is used to get account details based on `customer ID (Required)` and `a
 - Even if it returns details for multiple resources, there is no way to identify which resource belongs to which customer ID as there is no field ID in returned resource details. `Seriously, Which to use? How am I going to identify it? It makes no sense to me.` &#128532;
 
 ## Instance 2: Suspension Details API
-Legacy API is used to get the suspension details for customer id.
-- API is named "/suspension-details", but it returns account details. It is badly named. It should have been named GET "/account-details". Why did this thing get missed?
+Legacy API is used to get the **suspension details** for `customer id`.
+- API is named `GET BASE_URL/suspension-details`, but it returns account details. 
+- Due to bad naming, it created more confusion during migration. It should have been named `GET "BASE_URL/account-details`.  
+- Why did this thing get missed? &#128533;
 
 ## Instance 3: Money Transfer API
 An API used to send money from an internal account to an external account (customer account)
