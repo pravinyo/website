@@ -17,7 +17,7 @@ image:
 
 **Why am I asking about API?** _There is a reason I brought up this topic. I have read a lot of API documentation internal and external(vendor API) to the projects, and the majority of them are poorly maintained. Sometimes, it is hard to understand what data to send for the working of the API._
 
-Why don't developers give importance to `writing API documentation`?
+> Why don't developers give importance to `writing API documentation`?
 
 > Why is it still hard to understand the API even after reading the documentation provided by the team who developed that API?
 
@@ -26,10 +26,10 @@ Why don't developers give importance to `writing API documentation`?
 
 ## Instance 1: Account Details API
 This API is used to get account details based on `customer ID (Required)` and `account id (Optional)`.
-- API says the customer ID field is mandatory, but if not provided still works.
-- If only an account ID was provided, which is optional, it can still return details based on the optional field.
+- API says the customer ID field is mandatory, but if not provided still works. &#128529;
+- If only an account ID was provided, which is optional, it can still return details based on the optional field. &#128529;
 - Secondly, it also returns other resources which have matching account IDs but different customer IDs. It was not documented for the API.
-- Even if it returns details for multiple resources, there is no way to identify which resource belongs to which customer ID as there is no field ID in returned resource details. Seriously, Which to use? How am I going to identify it? It makes no sense to me.
+- Even if it returns details for multiple resources, there is no way to identify which resource belongs to which customer ID as there is no field ID in returned resource details. `Seriously, Which to use? How am I going to identify it? It makes no sense to me.` &#128532;
 
 ## Instance 2: Suspension Details API
 Legacy API is used to get the suspension details for customer id.
