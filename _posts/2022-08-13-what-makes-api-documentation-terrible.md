@@ -1,9 +1,9 @@
 ---
-title: "Tale of API Documentation"
+title: "What makes API documentation terrible?"
 author: pravin_tripathi
 date: 2022-08-13 00:00:00 +0530
 readtime: true
-img_path: /assets/img/tale-of-api-documentation/
+img_path: /assets/img/what-makes-api-documentation-terrible/
 categories: ["Blogging", "Article"]
 tags: [design, backenddevelopment, softwareengineering]
 image:
