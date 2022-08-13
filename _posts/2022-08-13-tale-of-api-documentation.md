@@ -12,6 +12,8 @@ image:
   height: 400   # in pixels
   alt: Photo by Ben Kolde on Unsplash
 ---
+## Is this another article on How to write documentation?
+No, this article is not about How to write API documentation but about what things everyone should avoid while writing API documentation. This documentation is meant to be used by other developers, so it is better to avoid the below problems that I tried to articulate.
 
 **What do we mean by API in simple terms?** _An interface through which clients interact with the services._ 
 
