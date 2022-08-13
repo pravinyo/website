@@ -28,30 +28,37 @@ image:
 This API is used to get account details based on `customer ID (Required)` and `account id (Optional)`.
 - API says the customer ID field is mandatory, but if not provided still works. &#128529;
 - If only an account ID was provided, which is optional, it can still return details based on the optional field. &#128529;
-- Secondly, it also returns other resources which have matching account IDs but different customer IDs. It was not documented for the API.
-- Even if it returns details for multiple resources, there is no way to identify which resource belongs to which customer ID as there is no field ID in returned resource details. `Seriously, Which to use? How am I going to identify it? It makes no sense to me.` &#128532;
+- Secondly, it also `returns other resources` which have `matching account IDs` but different customer IDs. 
+  > It was not documented for the API.
+- Even if it returns details for multiple resources, there is `no way to identify` which resource belongs to which customer ID as there is `no field ID` in returned resource details. 
+  > Seriously, Which to use? How am I going to identify it? It makes no sense to me. &#128532;
 
 ## Instance 2: Suspension Details API
 Legacy API is used to get the **suspension details** for `customer id`.
 - API is named `GET BASE_URL/suspension-details`, but it returns account details. 
 - Due to bad naming, it created more confusion during migration. It should have been named `GET "BASE_URL/account-details`.  
-- Why did this thing get missed? &#128533;
+  > Why did this thing get missed? &#128533;
 
 ## Instance 3: Money Transfer API
-An API used to send money from an internal account to an external account (customer account)
-- API has some fields marked as mandatory in the documentation, but it accepts empty/null values. It doesn't make sense. What is the point of mandatory fields?
-- Details for debtor and creditor accounts have all the fields marked as optional. In reality, as per the business, that API needs mandatory details, but technical implementation says different things. I had to make a few calls with the client team and check the usage in other products to understand the API. 
-- In the name of adding encryption features in the API, many fields are renamed, new fields were added, and some were removed. I don’t understand why this is not communicated to the other team/business, as this leads to the wrong information communicated with developers. Later, wrong estimations are given by developers. This is a serious issue.
+An API used to `send money` from an `internal account` to an `external account` (customer account)
+- API has `some fields marked as mandatory` in the documentation, but it can `accepts empty/null values`.  
+  > It doesn't make sense. What is the point of mandatory fields?
+- Details for **debtor** and **creditor accounts** have all the fields marked as `optional`. In reality, as per the business, that API needs `mandatory details`, but technical implementation says different things.  
+  > I had to make a few calls with the client team and check the usage in other products to understand the API. 
+- In the name of `adding encryption` features in the API, many fields are `renamed`, new fields were `added`, and some were `removed`.  
+  > I don’t understand why this is not communicated to the other team/business, as this leads to the wrong information communicated with developers. _Later, wrong estimations are given by developers._  
+  > This is a serious issue.
 
 ## Instance 4: Product Rate API
-An API used to update the product rate. This rate changes every hour.
-- The model name used for serializing the request payload looks like the TOCard, but what does TO mean here? No documentation was available, and When I checked the Jira story, there were also TO terms used. So, what does "TO" mean? I was clueless.
-
-The team that built that API is no longer available. During migration, new developers picked it up, but they had no full context. Going directly to the product owner could be a good approach, but I wanted to know why that developer thought TOCard is sufficient to understand the payload data. In business terms, there was not any TO-related jargon used.
-
-Once data is updated, it returns the response which has a message like,  “Successfully updated TOCard details”
-
-Later I realized after talking with a few old developers that "TO" in TOCard may mean Treasury Officer, as there is one such department. But, it is again a guess by that developer. I do not understand what that developer achieved by saving a few characters in the model name. It is a useless name as it is not directly helping me understand the API.
+An API used to update the product rate. This rates get updated multiple times in a day.
+- The `data model` name used for serializing the request payload looks like the `TOCard`, but what does `TO` mean here? No documentation was available, and When I checked the Jira story, there were also TO terms used.  
+  > So, what does "TO" mean? I was clueless.
+- In business terms, there was not any TO-related jargon used.
+- The team that built that API is no longer available. During migration, new developers picked it up, but they had no full context.  
+ > Going directly to the product owner could be a good approach, but I wanted to know why that developer thought `TOCard` name is sufficient to `understand the payload data`. 
+- Once data is updated, it returns the response which has a message like, `Successfully updated TOCard details`
+ > Later I realized after talking with a few old developers that "TO" in TOCard may mean` Treasury Officer`, as there is one such department. But, it is `again a guess` by that developer.  
+ I do not understand what that developer achieved by saving a few characters in the model name. It is a useless name as it is not directly helping me understand the API.
 
 
 ## Instance 5: Event Producer
