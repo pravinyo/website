@@ -1,7 +1,7 @@
 ---
 title: "State in reactive system - Orchestration-based Saga Pattern"
 author: pravin_tripathi
-date: 2022-08-01 00:00:00 +0530
+date: 2022-08-31 00:00:00 +0530
 readtime: true
 img_path: /assets/img/orchestration-based-sagas/
 categories: ["Presentation", "system-design"]
