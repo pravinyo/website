@@ -4,7 +4,7 @@ author: pravin_tripathi
 date: 2022-10-23 00:00:00 +0530
 readtime: true
 img_path: /assets/img/how-not-to-document-your-api/
-categories: ["Presentation", "API", "Documentation"]
+categories: ["Presentation", "Documentation"]
 tags: [design, backenddevelopment, softwareengineering]
 image:
   path: header.gif
