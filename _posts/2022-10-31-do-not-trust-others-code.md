@@ -1,10 +1,10 @@
 ---
 title: Do not trust others' code
 author: pravin_tripathi
-date: 2022-10-31 00:00:00 +0800
+date: 2022-10-31 22:30:00 +0800
 categories: [Blogging, Article]
 tags: [design, backenddevelopment]
-published: false
+published: true
 img_path: /assets/img/do-not-trust-others-code/
 readtime: true
 image:
@@ -96,7 +96,7 @@ The response I got looks like below,
 ```
 
 From the above error, I thought maybe I edited the wrong field, but no, all field values look fine. So what could have gone wrong?   
-The sad part about this error message is I do not know which among the multiple error fields (10 fields I edited) has the issue. I had to undo the changes and try to send a new call after each field change.  
+The sad part about this error message is I do not know which among the multiple edited fields (10 fields I edited) has the issue. I had to undo the changes and try to send a new call after each field change.  
 
 > What a great API design and developer experience!, I was laughing with my pair. 
 {: .prompt-info }
@@ -113,7 +113,7 @@ groupName field in the request now reverted to the previous value. Let’s see i
  
 ## Part 4: frugally removed unnecessary/optional fields from the request payload but now a weird validation error. 
  
-Since API requests have numerous optional fields, I tried to remove which are unnecessary, as per my use case. I removed most of the fields except for one field(pool account). If I remove it and send the request, here is the response,
+Since API requests have numerous optional fields, I tried to remove which are unnecessary, as per my use case. I removed most of the fields except for one field(**pool account**). If I remove it and send the request, here is the response,
 ```json 
 {
            …
@@ -152,6 +152,8 @@ During fixing those validation issues, I encountered one mandatory field called 
 
 ![short term happiness](https://media.giphy.com/media/xT77XP5M4Iax5DVx96/giphy.gif)
  
+> Well, it is easy to criticize others' code. But maybe there could be some unknown reason for which this happened. What could you have done differently if you were in that developer's place?
+{: .prompt-warning }
 
 ## What could be improved?
 - `Use proper documentation tool`: 
@@ -174,3 +176,7 @@ During fixing those validation issues, I encountered one mandatory field called 
 
 ## Conclusion
  Client creation API is core in journey automation. From five short stories about the same API, you could have realized the pain of using a poorly implemented API. I have experienced a lot of pain with poorly implemented APIs and poor documentation, but this experience is different from others and unique.
+
+## Want to read more?
+ - [Presentation: How not to document your API?]({% post_url 2022-10-23-how-not-to-document-your-apis %})
+ - [Blog: What makes API documentation terrible?]({% post_url 2022-08-13-what-makes-api-documentation-terrible %})
