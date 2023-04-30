@@ -4,7 +4,12 @@ author: pravin_tripathi
 date: 2023-04-29 00:34:00 +0800
 categories: [Blogging, CodeSmellSeries]
 tags: [coding, smells]
-published: true
+img_path: /assets/img/code-smell-series/unit-test/
+image:
+  path: header_test.jpg
+  width: 1920   # in pixels
+  height: 1280   # in pixels
+  alt: Photo by Testalize.me on Unsplash 
 ---
 > The secret to high quality code is following the path of clean code.
 {: .prompt-warning }
@@ -102,6 +107,8 @@ public void should_return_page_hierarchy_with_right_tags() throws Exception {
     );
 }
 ```
+
+## **Do we have any real example?**
 Now, let's see another example which is taken from production code. Below is the code snippet of the unit test,
 
 ```java
@@ -301,11 +308,23 @@ void test_client_creation_that_has_success_failure_type_for_something() {
 ... // adding similarly for other test
 ```
 
-## **Tests should not depend on each other**
+## **Rule 3: Tests should not depend on each other**
 
 As a general rule, each test function should contain all the code and resources that it requires to test the piece of code. A test function is a mini universe that contains all things it need to test the piece of code. For a particular class under test, there will be many mini universe. A failure in one test shouldn’t affect the other test directly or indirectly.
 
-Example of static mock:
+Example: In the below code snippet, we are using static resource called Security context. It is used to handle user authentication and extracting user details from the token. If we see carefully, we are creating static mock of `SecurityContext.class` and using the object to mock the method response.
+
+```java
+@Test
+void test_something() {
+    ...
+    var securityContext = Mockito.mockStatic(SecurityContext.class);
+	securityContext.when(SecurityContext::getUserId).thenReturn(CUSTOMER_ID);
+    ...
+    securityContext.close();
+}
+```
+If above test for some reason fails and failed to release the securityContext static mock object, It will cause failure in other tests and debugging will be harder if you are not aware of this problem. If you are not proper development practice, there is a good chance that your code will be having similar problem. One way to solve above problem is to use `try-with-resources` statement to handle this failure. Refer below code snippet for above code refactored to use try-with-resources statement,
 
 ```java
 @Test
@@ -317,8 +336,16 @@ void test_something() {
 }
 ```
 
-Common reason for occurring this issue:
-
+### Common reason for occurring this issue:
 - Not following correct testing practice.
-- Not releasing the static mock resource after completion of test
-- Not properly handling commonly shared resources in testing
+- Not releasing the static mock resource after completion of test.
+- Not properly handling commonly shared resources in testing.
+
+## **Conclusion**
+
+Based on my observation, people normally don't follow proper development practice. They either write production code before test code or don't give importance to testing and put less effort writing such test. I have witnessed such project, where the developer after 2 years of development of the project, hesitate to add new modification with the excuse that code is complex, and he doesn't have context to pick up the new changes to that project. This is a disaster for the project.
+
+It would be lot better if proper development practice is been followed in the project to minimize such impact. Practices such as Pair Programming, Mob Review, Test Driven Development, Code Review, Code Documentation are some of the good practices to follow to ensure high quality of code and less time to deploy new changes in the production.
+
+> You have something to share, go ahead and add in comments 😉 » Happy Learning!!
+{: .prompt-tip }
