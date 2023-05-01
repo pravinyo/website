@@ -11,27 +11,27 @@ image:
   height: 1280   # in pixels
   alt: Photo by Testalize.me on Unsplash 
 ---
-> The secret to high quality code is following the path of clean code.
+> The secret to high-quality code is following the path of clean code.
 {: .prompt-warning }
 
-A code will remain in it's highest quality if it has understandable and meaningful test. Robert C. Martin in his book, "Clean Code: A Handbook of Agile Software Craftsmanship" have mentioned a very nice acronym for clean code in unit testing.
+A code will remain at its highest quality if it has an understandable and meaningful test. Robert C. Martin in his book, “Clean Code: A Handbook of Agile Software Craftsmanship” mentioned a very nice acronym for clean code in unit testing.
 
 ## **F.I.R.S.T.**
-As per clean code practice, all tests follow below five rules that form the `F.I.R.S.T.` acronym. Below explaination is taken from the Clean Code Book by Robert C. Martin,
+As per clean code practice, all tests follow the five rules below that form the `F.I.R.S.T.` acronym. The below explanation is taken from the Clean Code Book by Robert C. Martin,
 
-**<u>Fast</u>**: Tests should be fast. They should run quickly. When tests run slow, you won’t want to run them frequently. If you don’t run them frequently, you won’t find problems early enough to fix them easily. You won’t feel as free to clean up the code. Eventually the code will begin to rot.
+**<u>Fast</u>**: Tests should be fast. They should run quickly. When tests run slow, you won’t want to run them frequently. If you don’t run them frequently, you won’t find problems early enough to fix them easily. You won’t feel as free to clean up the code. Eventually, the code will begin to rot.
 
 **<u>Independent</u>**: Tests should not depend on each other. One test should not set up the conditions for the next test. You should be able to run each test independently and run the tests in any order you like. When tests depend on each other, then the first one to fail causes a cascade of downstream failures, making diagnosis difficult and hiding downstream defects.
 
 **<u>Repeatable</u>**: Tests should be repeatable in any environment. You should be able to run the tests in the production environment, in the QA environment, and on your local development machine without a network. If your tests aren’t repeatable in any environment, then you’ll always have an excuse for why they fail. You’ll also find yourself unable to run the tests when the environment isn’t available.
 
-**<u>Self-Validating</u>**: The tests should have a boolean output. Either they pass or fail. You should not have to read through a log file to tell whether the tests pass. You should not have to manually compare two different text files to see whether the tests pass. If the tests aren’t self-validating, then failure can become subjective and running the tests can require a long manual evaluation.
+**<u>Self-Validating</u>**: The tests should have a boolean output. Either they pass or fail. You should not have to read through a log file to tell whether the tests pass. You should not have to manually compare two different text files to see whether the tests pass. If the tests aren’t self-validating, then failure can become subjective, and running the tests can require a long manual evaluation.
 
 **<u>Timely</u>**: The tests need to be written in a timely fashion. Unit tests should be written just before the production code that makes them pass. If you write tests after the production code, then you may find the production code to be hard to test. You may decide that some production code is too hard to test. You may not design the production code to be testable.
 
 ## **Rule 1: Single Concept per Test**
 
-As per this rule, single test function should test a single thing/concept. We don’t want long test functions that go testing one miscellaneous thing after another. Below code snippet is an example of such a test. This test function should be segregated into three independent tests, because it tests three independent things. Merging them all together into the same function forces the reader to figure out why each section is there and what is being tested by that section.
+As per this rule, a single test function should test a single thing/concept. We don’t want long test functions that go testing one miscellaneous thing after another. Below code snippet is an example of such a test. This test function should be segregated into three independent tests because it tests three independent things. Merging them all together into the same function forces the reader to figure out why each section is there and what is being tested by that section.
 
 Example of bad test,
 ```java
@@ -108,8 +108,8 @@ public void should_return_page_hierarchy_with_right_tags() throws Exception {
 }
 ```
 
-## **Do we have any real example?**
-Now, let's see another example which is taken from production code. Below is the code snippet of the unit test,
+## **Do we have any real examples?**
+Now, let’s see another example that is taken from the production code. Below is the code snippet of the unit test.
 
 ```java
 @Test
@@ -150,8 +150,8 @@ void test_something() {
 }
 ```
 
-As you can see, above test code is very complex and has too many assertions. This test is hard to understand. As a matter of fact, the code that this test is written for is also very complex. As we know test is a documentation for the project/service, so above test will confuse more to developer instead of helping when things go bad.
-> Let's apply earlier 2 rules discussed on above test code,
+As you can see, the above test code is very complex and has too many assertions. This test is hard to understand. As a matter of fact, the code that this test is written for is also very complex. As we know test is a documentation for the project/service, so the above test will confuse more developers instead of helping when things go bad.
+> Let’s apply the earlier 2 rules discussed in the above test code.
 {: .prompt-tip }
 
 ```java
@@ -228,11 +228,11 @@ void test_loan_contract_Creation_for_something() {
 
 ...
 ```
-Above refactored code looks pretty nice compared to the earlier test, but still there are many asserts.
-> A test should have at max 5 assertion per function but as a best practice it should have single assertion per test. **<u>if assertions count > 5, it means you are doing something different and it is complex.</u>**
+The above-refactored code looks pretty nice compared to the earlier test, but still, there are many asserts.
+> A test should have at max 5 assertions per function but as a best practice, it should have a single assertion per test. **<u>if assertions count > 5, it means you are doing something different and it is complex.</u>**
 {: .prompt-warning }
 
-Following single assertion per test rule, we can further decompose our test. Let’s take **test_something_for_client_creation** test in last step and further break it down to smaller test.
+Following a single assertion per test rule, we can further decompose our test. Let’s take **test_something_for_client_creation** test in the last step and further break it down into smaller tests.
 
 ```java
 @Test
@@ -310,9 +310,9 @@ void test_client_creation_that_has_success_failure_type_for_something() {
 
 ## **Rule 3: Tests should not depend on each other**
 
-As a general rule, each test function should contain all the code and resources that it requires to test the piece of code. A test function is a mini universe that contains all things it need to test the piece of code. For a particular class under test, there will be many mini universe. A failure in one test shouldn’t affect the other test directly or indirectly.
+As a general rule, each test function should contain all the code and resources that it requires to test the piece of code. A test function is a mini-universe that contains all things it needs to test the piece of code. For a particular class under test, there will be many mini-universe. A failure in one test shouldn’t affect the other test directly or indirectly.
 
-Example: In the below code snippet, we are using static resource called Security context. It is used to handle user authentication and extracting user details from the token. If we see carefully, we are creating static mock of `SecurityContext.class` and using the object to mock the method response.
+Example: In the below code snippet, we are using a static resource called Security context. It is used to handle user authentication and extract user details from the token. If we see carefully, we are creating a static mock of the `SecurityContext.class` and using the object to mock the method response.
 
 ```java
 @Test
@@ -324,7 +324,7 @@ void test_something() {
     securityContext.close();
 }
 ```
-If above test for some reason fails and failed to release the securityContext static mock object, It will cause failure in other tests and debugging will be harder if you are not aware of this problem. If you are not proper development practice, there is a good chance that your code will be having similar problem. One way to solve above problem is to use `try-with-resources` statement to handle this failure. Refer below code snippet for above code refactored to use try-with-resources statement,
+If the above test fails and fails to release the securityContext static mock object, It will cause failure in other tests. And debugging will be tough if we are not aware of this problem. If you are not following proper development practices, there is a good chance that your code will be having similar issues. One way to solve the above problem is to use `try-with-resources` statement to handle this failure. Refer to the code snippet for the above code refactored to use try-with-resources statement.
 
 ```java
 @Test
@@ -336,16 +336,16 @@ void test_something() {
 }
 ```
 
-### Common reason for occurring this issue:
-- Not following correct testing practice.
-- Not releasing the static mock resource after completion of test.
-- Not properly handling commonly shared resources in testing.
+### The common reason for occurring this issue:
+- Not following correct testing practices.
+- Not releasing the static mock resource after completion of the test.
+- Not handling commonly shared resources in testing.
 
 ## **Conclusion**
 
-Based on my observation, people normally don't follow proper development practice. They either write production code before test code or don't give importance to testing and put less effort writing such test. I have witnessed such project, where the developer after 2 years of development of the project, hesitate to add new modification with the excuse that code is complex, and he doesn't have context to pick up the new changes to that project. This is a disaster for the project.
+Based on my observation, people generally don’t follow proper development practices. They either write production code before test code or don’t give importance to testing and put less effort into writing such tests. I have witnessed such a project, where the developer after a few years of development of the feature, hesitates to add new modifications with the excuse that code is complex, and he doesn’t have the context to add changes to that feature. It is a disaster for the project.
 
-It would be lot better if proper development practice is been followed in the project to minimize such impact. Practices such as Pair Programming, Mob Review, Test Driven Development, Code Review, Code Documentation are some of the good practices to follow to ensure high quality of code and less time to deploy new changes in the production.
+It would be a lot better if proper development practices were followed in the project to minimize such an impact. Practices such as Pair Programming, Mob Review, Test Driven Development, Code Review, and Code Documentation are some practices to ensure high-quality code and less time to deploy new changes in production.
 
 > You have something to share, go ahead and add in comments 😉 » Happy Learning!!
 {: .prompt-tip }
