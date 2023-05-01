@@ -1,7 +1,7 @@
 ---
 title: "Code Smell Series: Unit Test"
 author: pravin_tripathi
-date: 2023-04-29 00:34:00 +0800
+date: 2023-05-01 00:00:00 +0800
 categories: [Blogging, CodeSmellSeries]
 tags: [coding, smells]
 img_path: /assets/img/code-smell-series/unit-test/
@@ -66,6 +66,7 @@ public void should_add_Months() {
 
 This rule says that every test function in a JUnit test should have one and only one assert statement. This rule may seem harsh, but the advantage can be seen in the below code snippet. Those tests come to a single conclusion that is quick and easy to understand.
 
+Let's see one code example to understand this rule.  
 Before:
 
 ```java
