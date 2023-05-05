@@ -1,7 +1,7 @@
 ---
 title: "Code Smell Series: Unit Test"
 author: pravin_tripathi
-date: 2023-05-01 00:00:00 +0800
+date: 2023-05-01 22:30:00 +0800
 categories: [Blogging, CodeSmellSeries]
 tags: [coding, smells]
 img_path: /assets/img/code-smell-series/unit-test/
@@ -344,9 +344,9 @@ void test_something() {
 
 ## **Conclusion**
 
-Based on my observation, people generally don’t follow proper development practices. They either write production code before test code or don’t give importance to testing and put less effort into writing such tests. I have witnessed such a project, where the developer after a few years of development of the feature, hesitates to add new modifications with the excuse that code is complex, and he doesn’t have the context to add changes to that feature. It is a disaster for the project.
+Based on my observation, many developers generally don’t follow proper development practices. They either write production code before test code or don’t give importance to testing and put less effort into writing such tests. I have witnessed such a project, where the developer after a few years of development of the feature, hesitates to add new modifications with the excuse that code is complex, and he doesn’t have the context to add changes to that feature. It is a disaster for the project.
 
-It would be a lot better if proper development practices were followed in the project to minimize such an impact. Practices such as Pair Programming, Mob Review, Test Driven Development, Code Review, and Code Documentation are some practices to ensure high-quality code and less time to deploy new changes in production.
+It would be a lot better if proper development practices were followed in the project to minimize such an impact. Practices such as <u>Pair Programming, Mob Review, Test Driven Development, Code Review, and Code Documentation</u> are some practices to ensure high-quality code and less time to deploy new changes in production.
 
 > You have something to share, go ahead and add in comments 😉 » Happy Learning!!
 {: .prompt-tip }
