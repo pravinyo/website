@@ -1,7 +1,7 @@
 ---
 title: "Code Smell Series: Big Class"
 author: pravin_tripathi
-date: 2023-05-11 00:00:00 +0530
+date: 2023-05-13 00:00:00 +0530
 readtime: true
 img_path: /assets/img/code-smell-series/big-class/
 categories: [Blogging, CodeSmellSeries]
