@@ -4,8 +4,8 @@ author: pravin_tripathi
 date: 2023-09-26 00:00:00 +0530
 readtime: true
 img_path: /assets/img/workflow-design-using-iwf-framework/
-categories: [Blogging, CodeSmellSeries]
-tags: [coding, smells]
+categories: [Blogging, Article]
+tags: [backenddevelopment, design, java, softwareengineering]
 image:
   path: cadence-service.png
   width: 1000   # in pixels
@@ -15,19 +15,10 @@ image:
 
 # Using iWF DSL framework to write workflow on the top of Candence/Temporal platform
 
-## Part 1: Cadence/Temporal Design
+In this article, We are going to discuss about Workflow and design simple use case using iWF framework (with Temporal Server).
 
-### What are the components of the Cadence/Temporal server?
-Server consists of four independently scalable services:
-- **Frontend gateway:** for rate limiting, routing, authorizing.
-- **History service:** maintains data (workflow mutable state,  
-  event and history storage, task queues ,and timers).
-- **Matching service:** hosts Task Queues for dispatching.
-- **Worker Service:** for internal background Workflows 
-  (replication queue, system Workflows).
-- [To learn more...](https://docs.temporal.io/clusters)
-
-## Part 2: Basic Concepts
+## Part 1: Basics Concepts
+Before directly jumping to code, Lets see some concepts about workflow and Cadence/Temporal Server.
 
 ### Runtime platform
 Provide the ecosystem to run your applications and takes care of `durability, availability, and scalability` of the application.
@@ -40,8 +31,11 @@ Cadence/Temporal service is responsible for keeping workflow state and associate
 ![Temporal service](temporal-service.png)
 _Temporal System Overview for workflow execution_
 
-### Workflows
+### What is Workflow?
 The term Workflow frequently denotes either a Workflow Type, a Workflow Definition, or a Workflow Execution.
+- Workflows are sequences of tasks/steps  that are executed in a specific order.
+- based on the principle of separation of concerns.
+- focuses on the design and implementation of business processes as workflows.
 - **Workflow Definition:** A Workflow Definition is the code that defines the constraints of a Workflow Execution. A Workflow Definition is often also referred to as a Workflow Function.
 - **Deterministic constraints:** A critical aspect of developing Workflow Definitions is ensuring they exhibit certain deterministic traits – that is, making sure that the same Commands are emitted in the same sequence, whenever a corresponding Workflow Function Execution (instance of the Function Definition) is re-executed.
 - **Handling unreliable Worker Processes:** Workflow Function Executions are completely oblivious to the Worker Process in terms of failures or downtime.
@@ -50,11 +44,18 @@ The term Workflow frequently denotes either a Workflow Type, a Workflow Definiti
 - _Workflow execution states:_
   ![img.png](workflow-execution-state.png)
 
+### What is Workflow Engine?
+- A workflow engine facilitates the flow of information, tasks, and events. 
+- The workflow engine is responsible for managing the execution of workflows.
+- Workflow engines may also be referred to as Workflow Orchestration Engines
+- The other components of the system are responsible for performing the specific tasks that make up the workflows
 
-### Activities
+
+### Activities/Workflow State
 - An Activity is a normal function or method that executes a single, well-defined action (either short or long running), such as calling another service, transcoding a media file, or sending an email message.
 - Workflow code orchestrates the execution of Activities, persisting the results. If an Activity Function Execution fails, any future execution starts from initial state
 - Activity Functions are executed by Worker Processes
+- Workflow State is used in domain of iWF framework which is same as Activities in Cadence or Temporal.
 
 
 ### Event handling
@@ -62,10 +63,7 @@ Workflows can be signalled about an external event. A signal is always point to 
 - Human Tasks
 - Process Execution Alteration
 - Synchronization  
-  Example: there is a requirement that all messages for a single user are processed sequentially  
-  but the underlying messaging infrastructure can deliver them in parallel. The Cadence solution  
-  would be to have a workflow per user and signal it when an event is received. Then the workflow  
-  would buffer all signals in an internal data structure and then call an activity for every signal received.
+  Example: there is a requirement that all messages for a single user are processed sequentially but the underlying messaging infrastructure can deliver them in parallel. The Cadence solution would be to have a workflow per user and signal it when an event is received. Then the workflow would buffer all signals in an internal data structure and then call an activity for every signal received.
 
 ### Visibility
 - View,  Filter and Search for Workflow Executions
@@ -73,7 +71,22 @@ Workflows can be signalled about an external event. A signal is always point to 
   - https://docs.temporal.io/visibility#search-attribute
 - Query Workflow state
 
+## Part 2: Cadence/Temporal Server Design
+Both Cadence and Temporal provides platform to execute our workflow function which is nothing but business logic.
+### What are the components of the Cadence/Temporal server?
+Server consists of four independently scalable services:
+![img.png](cadence-service.png)
+- **Frontend gateway:** for rate limiting, routing, authorizing.
+- **History service:** maintains data (workflow mutable state,  
+  event and history storage, task queues ,and timers).
+- **Matching service:** hosts Task Queues for dispatching.
+- **Worker Service:** for internal background Workflows 
+  (replication queue, system Workflows).
+- [To learn more...](https://docs.temporal.io/clusters)
+
 ## Part 3: iWF Design
+iWF is the framework which is developed to simply running workflow and harness full potential of the Cadence/Temporal Server.
+
 ### High Level Design
 An iWF application is composed of several iWF workflow workers. These workers _host REST APIs as "worker APIs" for server to call_. This callback pattern similar to AWS Step Functions invoking Lambdas, if you are familiar with.
 
