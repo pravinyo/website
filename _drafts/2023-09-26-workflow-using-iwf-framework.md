@@ -13,17 +13,15 @@ image:
   alt: from https://cadenceworkflow.io/
 ---
 
-# Using iWF DSL framework to write workflow on the top of Candence/Temporal platform
+# Using iWF DSL framework to write workflow on the top of Temporal platform
 
 In this article, We are going to discuss about Workflow and design simple use case using iWF framework (with Temporal Server).
 
 ## Part 1: Basics Concepts
-Before directly jumping to code, Lets see some concepts about workflow and Cadence/Temporal Server.
+Before directly jumping to code, Lets see some concepts about workflow and Temporal Server.
 
 ### Runtime platform
-Provide the ecosystem to run your applications and takes care of `durability, availability, and scalability` of the application.
-Both Cadence and Temporal share same behaviour as Temporal is forked from Cadence. **Worker Processes are hosted by you and execute your code.** The communication within Cluster uses `gRPC`.
-Cadence/Temporal service is responsible for keeping workflow state and associated durable timers. It maintains internal queues (called task lists) which are used to dispatch tasks to external workers. Workflow execution is resumable, recoverable, and reactive.
+Provide the ecosystem to run your applications and takes care of `durability, availability, and scalability` of the application. Both Cadence(from Uber) and Temporal share same behaviour as Temporal is forked from Cadence. **Worker Processes are hosted by you and execute your code.** The communication within Cluster uses `gRPC`. Cadence/Temporal service is responsible for keeping workflow state and associated durable timers. It maintains internal queues (called task lists) which are used to dispatch tasks to external workers. Workflow execution is resumable, recoverable, and reactive.
 - [Cadence Doc](https://cadenceworkflow.io/docs/get-started/)
 - [Temporal Doc](https://docs.temporal.io/temporal)
 - [iWF Project](https://github.com/indeedeng/iwf/wiki/Basic-concepts-overview)
@@ -73,16 +71,17 @@ Workflows can be signalled about an external event. A signal is always point to 
 
 ## Part 2: Cadence/Temporal Server Design
 Both Cadence and Temporal provides platform to execute our workflow function which is nothing but business logic.
+
+![img.png](cadence-service.png)
 ### What are the components of the Cadence/Temporal server?
 Server consists of four independently scalable services:
-![img.png](cadence-service.png)
 - **Frontend gateway:** for rate limiting, routing, authorizing.
 - **History service:** maintains data (workflow mutable state,  
   event and history storage, task queues ,and timers).
 - **Matching service:** hosts Task Queues for dispatching.
 - **Worker Service:** for internal background Workflows 
   (replication queue, system Workflows).
-- [To learn more...](https://docs.temporal.io/clusters)
+- [Read more...](https://docs.temporal.io/clusters)
 
 ## Part 3: iWF Design
 iWF is the framework which is developed to simply running workflow and harness full potential of the Cadence/Temporal Server.
@@ -108,13 +107,19 @@ At any API, workflow code can mutate the data/search attributes or publish to in
 ![LLD for iWF](iwf-workflow-execution.png)
 
 ### RPC: Interact with workflow via API
-API for application to interact with the workflow. It can access to persistence, internal channel, and state execution
-![communication](communication.png)
-[RPC vs Signal](https://github.com/indeedeng/iwf/wiki/RPC#signal-channel-vs-rpc)
-  - RPC + Internal Channel = Signal Channel
-  - Inter Channel and Signal Channel are both message queues
-  - RPC is synchronous API call [Definition](https://github.com/indeedeng/iwf-java-sdk/blob/main/src/main/java/io/iworkflow/core/RpcDefinitions.java)
+Using RPC annotation is one of the way to interact with the workflow from external sources like REST API, Kafka event. It can access to persistence, internal channel, and state execution
+![communication](communication.png)  
+[RPC vs Signal](https://github.com/indeedeng/iwf/wiki/RPC#signal-channel-vs-rpc)  
+Both RPC and Signal are the two ways to communication from external system with the workflow execution.
+  - RPC is synchronous API call - [Definition](https://github.com/indeedeng/iwf-java-sdk/blob/main/src/main/java/io/iworkflow/core/RpcDefinitions.java)
   - Signal channel is Asynchronous API call
+
+Some recommends as a best practice to use RPC with Internal channel to asynchronously call the workflow. It is basically to replace the Signal API.  
+`RPC + Internal Channel => Signal Channel`
+
+> Inter Channel and Signal Channel are both message queues
+{: .prompt-info }
+  
 
 ### Determinism and Versioning: iWF Approach
 - [IWF doc](https://github.com/indeedeng/iwf/wiki/Compare-with-Cadence-Temporal#determinism-and-versioning)
