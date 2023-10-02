@@ -3,7 +3,7 @@ title: "REST API Based Workflow Design Using iWF Framework"
 author: pravin_tripathi
 date: 2023-10-02 00:00:00 +0530
 readtime: true
-img_path: /assets/img/iwf-workflow/
+img_path: /assets/img/workflow-design-using-iwf-framework/
 categories: [Blogging, Article]
 tags: [backenddevelopment, design, java, softwareengineering]
 image:
