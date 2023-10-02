@@ -1,16 +1,16 @@
 ---
 title: "REST API Based Workflow Design Using iWF Framework"
 author: pravin_tripathi
-date: 2023-09-26 00:00:00 +0530
+date: 2023-10-02 00:00:00 +0530
 readtime: true
-img_path: /assets/img/workflow-design-using-iwf-framework/
+img_path: /assets/img/iwf-workflow/
 categories: [Blogging, Article]
 tags: [backenddevelopment, design, java, softwareengineering]
 image:
-  path: cadence-service.png
+  path: header.jpg
   width: 1000   # in pixels
   height: 400   # in pixels
-  alt: from https://cadenceworkflow.io/
+  alt: Generated using Bing AI
 ---
 
 # Using the iWF DSL framework to write workflow on the top of the Temporal platform
