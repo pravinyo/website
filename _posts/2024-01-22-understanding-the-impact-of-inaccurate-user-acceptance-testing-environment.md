@@ -42,7 +42,7 @@ Transaction status returned in callback response and transaction status API is n
 There were some cases that I wanted to try out on the UAT environment which is supposed to be a replica of the prod environment, but when I heard that those cases I could not test in UAT, I asked question **Why it cannot be tested in UAT**. well, I didn’t get any proper response. `The impact of this is I have to test in Prod and if all cases are successful then great, otherwise I have to fix it.` This is just causing more delay for product release and causing inconvenience to the clients. If the system is well tested and proper testing is been employed with proper data, I don’t have to wait until Prod deployment to test the functionality. This simply explains the engineering practice by D’s tech team is bad and they have to do something. Since they have a good number of active Demat accounts, Banks and NBFCs have to work on some solutions to mitigate various problems. Also, It is not easy for newcomers to build a new depository service business as a barrier to entering this type of market is not easy, So seems like they don’t care now. But if other existing competitors come up with robust and better systems, D will be in trouble.
 
 ## Faulty session management in UAT
-As per the documentation, D’s system should timeout the session if the transaction is in one of the below states,
+Session management is complex, specially if your user is allowed to login on multiple device. Let me share one instance where poor configuration caused trouble to my me. As per the documentation, D’s system should timeout the session if the transaction is in one of the below states,
 
 1. Got redirected the client’s app to D’s portal for login but no action for 10 mins.
 2. Post login, If the customer didn’t pledge shares within 15 min then the session will time out.
@@ -52,7 +52,7 @@ In UAT, the second point cannot be tested and their team says some development i
 > Due to the above reasons, my team has to rely on documentation to proceed with the code changes. It is frustrating as we cannot test our system using their UAT system. Also, the UAT system is not at all close to the production environment which gives less confidence to me whether my code will work properly or not. This is a kind of nightmare for anyone who is chasing a tight deadline.
 {: .prompt-warning }
 
-## Faulty security check in UAT
+## Faulty security management in UAT
 This is something no one wants to ignore being in the finance industry and you are building an app that your clients going to use for financial transactions.
 
 ![fight](fight.jpg)
