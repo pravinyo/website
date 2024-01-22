@@ -1,7 +1,7 @@
 ---
 title: "Understanding the impact of inaccurate User Acceptance Testing Environment"
 author: pravin_tripathi
-date: 2024-01-21 00:00:00 +0530
+date: 2024-01-22 00:00:00 +0530
 readtime: true
 img_path: /assets/img/understanding-the-impact-of-inaccurate-user-acceptance-testing-environment/
 categories: [Blogging, Article]
