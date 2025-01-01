@@ -1,7 +1,7 @@
 ---
 title: "Kafka Schema Registry and JSON Schema: A Comprehensive Guide"
 author: pravin_tripathi
-date: 2024-12-08 00:00:00 +0530
+date: 2025-01-01 00:00:00 +0530
 readtime: true
 img_path: /assets/img/kafka-schema-registry-json-schema/
 categories: [Blogging, Article]
@@ -140,83 +140,259 @@ Benefits of default values:
 ### Docker Compose Setup
 
 ```yaml
-version: '2'
+version: '3'
 services:
   zookeeper:
-    image: wurstmeister/zookeeper:3.4.6
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
 
-  kafka:
-    image: wurstmeister/kafka:latest
-    ports:
-      - "9093:9093"
-    depends_on:
-      - zookeeper
-
   schema-registry:
-    image: confluentinc/cp-schema-registry:latest
+    image: confluentinc/cp-schema-registry:7.8.0
+    hostname: schema-registry
+    depends_on:
+      - kafka-broker-1
     ports:
       - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka-broker-1:9092,PLAINTEXT_INTERNAL://localhost:19092
+      SCHEMA_REGISTRY_DEBUG: 'true'
+
+  kafka-broker-1:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-broker-1
+    ports:
+      - "19092:19092"
     depends_on:
-      - kafka
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,PLAINTEXT_INTERNAL://localhost:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 ```
 
-### Schema Registration API
+### Schema Registry API
 
 ```bash
 # Register a new schema
-curl -X POST -H "Content-Type: application/json" \
-  --data @schema.json \
-  http://localhost:8081/subjects/user-value/versions
+curl --request POST \
+  --url http://localhost:8081/subjects/user-registration-test-value/versions \
+  --header 'Content-Type: application/vnd.schemaregistry.v1+json' \
+  --data '{
+	"schemaType": "JSON",
+	"schema": "{ \"$schema\": \"http://json-schema.org/draft-07/schema#\", \"title\": \"User\", \"description\": \"Schema representing a user\", \"type\": \"object\", \"additionalProperties\": false, \"properties\": { \"name\": { \"type\": \"string\", \"description\": \"Name of person.\" }, \"email\": { \"type\": \"string\", \"description\": \"email of person.\" }, \"userId\": { \"type\": \"string\", \"description\": \"user id in the system\" } }, \"required\": [\"name\", \"userId\", \"email\"] }"
+}'
 
-# Check schema compatibility
-curl -X POST -H "Content-Type: application/json" \
-  --data @new-schema.json \
-  http://localhost:8081/compatibility/subjects/user-value/versions/latest
+# Fetch Schema
+curl --request GET \
+--url http://localhost:8081/subjects/user-registration-test-value/versions/latest
+
+# Delete Schema
+curl --request DELETE \
+  --url http://localhost:8081/subjects/user-registration-test-value
 ```
 
 ## Java Integration Examples
 
+### Configuration
+```gradle
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'dev.pravin'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url "https://packages.confluent.io/maven"
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'io.confluent:kafka-json-schema-serializer:7.8.0'
+	implementation 'io.confluent:kafka-schema-registry-client:7.8.0'
+
+	implementation 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+```
+
+```text
+spring.application.name=schema registry demo
+server.port=8100
+spring.kafka.properties.use.latest.version=true
+```
+
+```java
+@EnableKafka
+@Configuration
+public class KafkaConfig {
+
+    public static final String BROKER_URL = "localhost:19092";
+    public static final String SCHEMA_REGISTRY_URL = "http://localhost:8081";
+    public static final String SPRING_KAFKA_ADMIN_CLIENT = "spring-kafka-admin-client";
+    public static final String GROUP_ID = "group_id_23";
+
+    @Bean
+    public ProducerFactory<String, UserRegistrationTest> producerFactory() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BROKER_URL);
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaJsonSchemaSerializer.class);
+        config.put("schema.registry.url", SCHEMA_REGISTRY_URL);
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, UserRegistrationTest> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public SchemaRegistryClient schemaRegistryClient() throws RestClientException, IOException {
+        CachedSchemaRegistryClient client = new CachedSchemaRegistryClient(SCHEMA_REGISTRY_URL, 1);
+        String jsonString = """
+                {
+                  "$schema": "http://json-schema.org/draft-07/schema#",
+                  "title": "User",
+                  "description": "Schema representing a user",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of person."
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "email of person."
+                    },
+                    "userId": {
+                      "type": "string",
+                      "description": "user id in the system"
+                    }
+                  },
+                  "required": ["name", "userId", "email"]
+                }
+                """;
+        client.register("user-registration-test-value", new JsonSchema(jsonString));
+        return client;
+    }
+
+    @Bean
+    public ConsumerFactory<String, UserRegistrationTest> consumerFactory(SchemaRegistryClient schemaRegistryClient) {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BROKER_URL);
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaJsonSchemaDeserializer.class);
+        config.put("schema.registry.url", SCHEMA_REGISTRY_URL);
+        config.put("specific.json.reader", true);
+        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(),
+                new KafkaJsonSchemaDeserializer<>(schemaRegistryClient));
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, UserRegistrationTest> kafkaListenerContainerFactory(SchemaRegistryClient schemaRegistryClient) {
+        ConcurrentKafkaListenerContainerFactory<String, UserRegistrationTest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory(schemaRegistryClient));
+        return factory;
+    }
+}
+```
+
 ### Producer Example
 ```java
-public class KafkaProducerApp {
-    public static void main(String[] args) {
-        Properties properties = new Properties();
-        properties.put("bootstrap.servers", "localhost:9093");
-        properties.put("key.serializer", StringSerializer.class.getName());
-        properties.put("value.serializer", StringSerializer.class.getName());
+@Data
+@Builder
+@Getter
+public class UserRegistrationTest {
+    private String userId;
+    private String email;
+    private String name;
+}
 
-        KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
-        String message = "{\"user_id\": 1, \"name\": \"John Doe\"}";
-        producer.send(new ProducerRecord<>("user-topic", "1", message));
-        
-        producer.close();
+@Service
+@RequiredArgsConstructor
+public class KafkaProducer {
+    private final SchemaRegistryClient schemaRegistryClient;
+    private final KafkaTemplate<String, UserRegistrationTest> kafkaTemplate;
+
+    public void sendMessage(UserRegistrationTest userRegistrationTest) throws RestClientException, IOException {
+        schemaRegistryClient.reset();
+        int version = schemaRegistryClient.getLatestSchemaMetadata(TOPIC+"-value").getVersion();
+        System.out.println("Version: " + version);
+        kafkaTemplate.send(TOPIC, userRegistrationTest);
+        System.out.println("Message sent: " + userRegistrationTest);
+    }
+}
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/kafka")
+public class KafkaController {
+    private final KafkaProducer kafkaProducer;
+
+    @PostMapping("/publish")
+    public String publishMessage(@RequestBody UserRegistrationTest userRegistrationTest) throws RestClientException, IOException {
+        kafkaProducer.sendMessage(userRegistrationTest);
+        return "Message published: " + userRegistrationTest.toString();
     }
 }
 ```
 
 ### Consumer Example
 ```java
-public class KafkaConsumerApp {
-    public static void main(String[] args) {
-        Properties properties = new Properties();
-        properties.put("bootstrap.servers", "localhost:9093");
-        properties.put("group.id", "user-consumer-group");
-        properties.put("key.deserializer", StringDeserializer.class.getName());
-        properties.put("value.deserializer", StringDeserializer.class.getName());
+@Service
+@RequiredArgsConstructor
+public class KafkaConsumer {
 
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        consumer.subscribe(List.of("user-topic"));
-
-        while (true) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
-            for (ConsumerRecord<String, String> record : records) {
-                System.out.println("Consumed message: " + record.value());
-            }
-        }
+    @KafkaListener(topics = TOPIC)
+    public void consume(String message) {
+        System.out.println("Message received: " + message);
     }
 }
+```
+### Publish message to Kafka topic
+```bash
+curl --request POST \
+  --url http://localhost:8100/kafka/publish \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/10.2.0' \
+  --data '{
+	"userId": "pravin",
+	"email": "pravin@pravin.dev"
+}'
 ```
 
 ## Best Practices and Considerations
@@ -241,3 +417,6 @@ Kafka Schema Registry with JSON Schema provides a robust solution for managing d
 - Implement careful evolution strategies
 - Utilize default values
 - Continuously test and validate schemas
+
+### Sample Code
+[Download the code](../../assets/document/attachment/kafka-schema-registry-json-schema/schemaregistry.zip)
