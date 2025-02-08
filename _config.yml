@@ -42,7 +42,7 @@ social:
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
   name: Pravin Tripathi
   email: pravinyo12@gmail.com             # change to your email address
-  url-portfolio: "https://pravinyo.github.io"
+  # url-portfolio: "https://pravinyo.github.io"
   links:
     # The first element serves as the copyright owner's link
     - https://www.linkedin.com/in/pravin-r-tripathi # linkedIn

@@ -17,7 +17,3 @@ My current _technical focus is on distributed system, including MicroServices an
 > - [`Medium`]( {{ site.social.links[3] }} )
 
 If you want to email me, go ahead send an email to [`{{ site.social.email }}`](mailto:{{ site.social.email }}) but be nice and make sure you Googled around a bit before you do. 
-
-### You want to know more about me?
-
-To be honest, I'm having some trouble remembering right now, so **_why don't you just [check my portfolio]({{ site.social.url-portfolio }})_** and it will answer **all** your questions.
