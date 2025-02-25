@@ -64,7 +64,7 @@ sequenceDiagram
 
 ## Key Attributes of @Transactional  
 
-### 1. **Propagation**  
+### **Propagation**  
 Propagation defines how transactions behave when a method is called within another transaction. It determines whether a new transaction should be created, an existing one should be used, or no transaction should be used at all.  
 
 #### **Propagation Types at a Glance**  
@@ -159,7 +159,7 @@ Propagation defines how transactions behave when a method is called within anoth
      ```  
    - **Explanation:** If `methodG` is called within an existing transaction, a nested transaction is created. If the outer transaction fails, the nested transaction is rolled back. If the nested transaction fails, the outer transaction can decide whether to commit or rollback.  
 
-### 2. **Isolation**  
+### **Isolation**  
 Defines how data modifications in one transaction are visible to others.  
 
 | Isolation Level | Description |
@@ -178,7 +178,7 @@ public void updateAccountBalance() {
 }
 ```
 
-### 3. **Rollback Behavior**  
+### **Rollback Behavior**  
 Specifies conditions under which transactions should be rolled back.  
 
 | Rollback Rule | Description |
@@ -194,7 +194,7 @@ public void saveData() throws SQLException {
 }
 ```
 
-### 4. **Read-Only Transactions**  
+### **Read-Only Transactions**  
 Indicates that a transaction will not perform write operations, allowing optimizations.  
 
 #### **Example:**  
@@ -205,7 +205,7 @@ public List<User> getUsers() {
 }
 ```
 
-### 5. **Timeout**  
+### **Timeout**  
 Specifies the maximum time (in seconds) a transaction can run before rollback.  
 
 #### **Example:**  
@@ -218,7 +218,7 @@ public void processLongRunningTask() {
 
 ## Common Pitfalls  
 
-### 1. **Self-Invocation**  
+### **Self-Invocation**  
 Transactional methods calling each other within the same class do not trigger transactional behavior due to proxy-based AOP. This happens because the proxy is bypassed during self-invocation.  
 
 **Solution:** Use `AopContext.currentProxy()` or refactor the code to call the method from another bean.  
@@ -239,7 +239,7 @@ public class MyService {
 
 ---
 
-### 2. **Checked Exceptions**  
+### **Checked Exceptions**  
 By default, transactions roll back only on unchecked exceptions (`RuntimeException` or `Error`). Checked exceptions do not trigger rollback unless explicitly configured.  
 
 **Solution:** Use the `rollbackFor` attribute to specify checked exceptions.  
@@ -251,7 +251,7 @@ public void myMethod() throws CustomCheckedException {
 }
 ```
 
-### 3. **Visibility Issues**  
+### **Visibility Issues**  
 The method must be `public` to ensure Spring’s proxy mechanism applies correctly. Non-public methods (e.g., `private`, `protected`) will not be transactional.  
 
 **Solution:** Always declare transactional methods as `public`.  
