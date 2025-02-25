@@ -31,8 +31,6 @@ Spring's `@Transactional` annotation is a powerful tool for managing transaction
 4. [Best Practices](#best-practices)  
 5. [Conclusion](#conclusion)  
 
----
-
 ## How @Transactional Works  
 
 When a method is annotated with `@Transactional`, Spring creates a proxy that wraps the method call. This proxy manages the transaction boundaries:  
