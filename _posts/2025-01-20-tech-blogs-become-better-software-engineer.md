@@ -6,6 +6,7 @@ readtime: true
 img_path: /assets/img/tech-blogs-become-better-software-engineer/
 categories: [Blogging, Article]
 tags: [softwareengineering]
+pin: true
 image:
   path: header.png
   width: 1600   # in pixels
