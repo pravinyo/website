@@ -93,19 +93,19 @@ You can set your own clustered index key values. Your key:
 
 This section shows clustered collection examples.
 
-### **`Create` Example**
+### **Create** Example
 
 The following [`create`](https://www.mongodb.com/docs/v6.2/reference/command/create/#mongodb-dbcommand-dbcmd.create) example adds a [clustered collection](https://www.mongodb.com/docs/v6.2/core/clustered-collections/#std-label-clustered-collections) named `products`:
 
-```jsx
+```js
 db.runCommand( {create:"products",clusteredIndex: {"key": {_id:1 },"unique":true,"name":"products clustered key" }} )
 ```
 
 In the example, [clusteredIndex](https://www.mongodb.com/docs/v6.2/reference/command/create/#std-label-create.clusteredIndex) specifies:
 
-- `"key": { _id: 1 }`, which sets the clustered index key to the `_id` field.
-- `"unique": true`, which indicates the clustered index key value must be unique.
-- `"name": "products clustered key"`, which sets the clustered index name.
+- **"key": { _id: 1 }**, which sets the clustered index key to the `_id` field.
+- **"unique": true**, which indicates the clustered index key value must be unique.
+- **"name": "products clustered key"**, which sets the clustered index name.
 
 ### **`db.createCollection` Example**
 

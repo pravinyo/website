@@ -183,7 +183,7 @@ In this example:
 ```sql
 CLOSE my_cursor;
 ```
-Once you’ve finished working with the cursor, it is good practice to close it. This is done with the `CLOSE` statement, as shown above.
+Once you’ve finished working with the cursor, it is good practice to close it. This is done with the **CLOSE** statement, as shown above.
 
 ### Important Notes:
 1. **Implicit Cursors**: PostgreSQL automatically creates implicit cursors for SELECT queries outside of procedural code. For complex operations, explicit cursors are necessary.
@@ -196,6 +196,7 @@ Once you’ve finished working with the cursor, it is good practice to close it.
 3. **Memory Considerations**: Cursors are more memory-efficient than loading entire result sets, but should be closed when no longer needed.
 
 ### Example in a Transaction Block:
+
 ```sql
 BEGIN;
 
@@ -290,10 +291,10 @@ COMMIT;
 
 ## Implementing Cursor-like Functionality in Spring Boot
 
-In a Spring Boot application using **Spring Data JPA**, we typically work with repositories to perform CRUD (Create, Read, Update, Delete) operations on entities. However, if you need to implement **cursor-like behavior** (such as fetching results incrementally or processing rows one by one), you can use **native SQL queries** along with **`@Query` annotation** or **JPA Criteria API** in combination with pagination.
-While Spring Data JPA doesn’t directly provide a `cursor` concept like in PostgreSQL, you can simulate cursor-like behavior using **pagination**, **streaming**, or custom **native queries**.
+In a Spring Boot application using **Spring Data JPA**, we typically work with repositories to perform CRUD (Create, Read, Update, Delete) operations on entities. However, if you need to implement **cursor-like behavior** (such as fetching results incrementally or processing rows one by one), you can use **native SQL queries** along with **@Query annotation** or **JPA Criteria API** in combination with pagination.
+While Spring Data JPA doesn’t directly provide a **cursor** concept like in PostgreSQL, you can simulate cursor-like behavior using **pagination**, **streaming**, or custom **native queries**.
 
-### 1. Using `@Query` Annotation with Pagination
+### 1. Using **@Query** Annotation with Pagination
 
 ```java
 // Entity Class
@@ -343,7 +344,7 @@ public class EmployeeService {
 }
 ```
 
-### 2. Using `Stream` for Processing Large Results
+### 2. Using **Stream** for Processing Large Results
 
 ```java
 // Repository with Streaming Query
@@ -372,7 +373,7 @@ public class EmployeeService {
 }
 ```
 
-### 3. Using Native SQL Queries with `@Query` and Streaming
+### 3. Using Native SQL Queries with **@Query** and Streaming
 
 ```java
 // Repository with Native Query
