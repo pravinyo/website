@@ -204,7 +204,6 @@ A cluster is nothing but a heap → it is designed for speed for operations like
 
 All indexes in Postgres are secondary indexes.
 
-[Database Page](database-page)
 ---
 
 ## Database Indexing
@@ -773,3 +772,4 @@ CREATE INDEX CONCURRENTLY g ON grades(g);
 ## Related Articles		
 - [**Article - The Cost of Long running Transactions**](the-cost-of-long-running-transactions)
 - [**Article - Microsoft SQL Server Clustered Index Design**](microsoft-sql-server-clustered-index-des)
+- [**Database Page**](database-page)

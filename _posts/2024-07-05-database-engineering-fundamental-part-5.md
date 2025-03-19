@@ -222,8 +222,6 @@ This feature is particularly beneficial for columns where there are many duplica
 
 Let's consider a table of **sales records**, where we want to create an index on the `product_id` column. Many sales records might involve the same product, so there will be lots of duplicate `product_id` values.
 
-### Table: `sales`
-
 ```sql
 CREATE TABLE sales (
     sale_id SERIAL PRIMARY KEY,
@@ -231,7 +229,6 @@ CREATE TABLE sales (
     quantity INT,
     sale_date DATE
 );
-
 ```
 
 ### Step 1: Insert Some Data
@@ -245,7 +242,6 @@ INSERT INTO sales (product_id, quantity, sale_date) VALUES
     (1, 200, '2024-01-03'),
     (1, 150, '2024-01-04'),
     (3, 300, '2024-01-05');
-
 ```
 
 Now, the `sales` table looks like this:

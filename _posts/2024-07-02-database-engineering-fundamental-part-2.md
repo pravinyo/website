@@ -22,8 +22,8 @@ image:
 - [Full Table Scans](#full-table-scan)
 - [B-Tree](#b-tree)
 - [B-Tree limitations](#limitation-of-b-tree)
-- [B+Tree](#b-tree-1)
-- [B+Tree Considerations](#b-tree-dbms-considerations)
+- [B+Tree]
+- [B+Tree Considerations]
 - [B+Tree storage cost in MySQL vs Postgres](#storage-cost-in-postgres-vs-mysql)
 - [Summary](#summary)
 
