@@ -1,7 +1,7 @@
 ---
 title: "Part 3: Database Engineering Fundamentals: MongoDB internal Architecture"
 author: pravin_tripathi
-date: 2025-03-04 04:00:00 +0530
+date: 2024-07-03 04:00:00 +0530
 readtime: true
 img_path: /assets/img/database-engineering-fundamental-part-3/
 categories: [Blogging, Article]

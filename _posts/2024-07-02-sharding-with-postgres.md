@@ -1,7 +1,7 @@
 ---
 title: "Part 2: Database Engineering Fundamentals: Sharding with Postgres"
 author: pravin_tripathi
-date: 2025-04-01 04:00:00 +0530
+date: 2024-07-02 02:00:00 +0530
 readtime: true
 img_path: /assets/img/database-engineering-fundamental-part-2/
 categories: [Blogging, Article]

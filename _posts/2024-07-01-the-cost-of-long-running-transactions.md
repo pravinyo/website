@@ -1,7 +1,7 @@
 ---
 title: "Part 1: Database Engineering Fundamentals: The Cost of Long running Transactions"
 author: pravin_tripathi
-date: 2025-04-01 04:00:00 +0530
+date: 2024-07-01 04:00:00 +0530
 readtime: true
 img_path: /assets/img/database-engineering-fundamental-part-1/
 categories: [Blogging, Article]

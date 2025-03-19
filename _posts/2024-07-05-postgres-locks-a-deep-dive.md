@@ -1,7 +1,7 @@
 ---
 title: "Part 5: Database Engineering Fundamentals: Postgres Locks — A Deep Dive"
 author: pravin_tripathi
-date: 2025-03-01 04:00:00 +0530
+date: 2024-07-05 05:00:00 +0530
 readtime: true
 img_path: /assets/img/database-engineering-fundamental-part-5/
 attachment_path: /assets/document/attachment/database-engineering-fundamental-part-5/

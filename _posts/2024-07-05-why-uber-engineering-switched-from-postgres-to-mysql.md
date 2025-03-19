@@ -1,7 +1,7 @@
 ---
 title: "Part 5: Database Engineering Fundamentals: Why Uber Engineering Switched from Postgres to MySQL"
 author: pravin_tripathi
-date: 2025-03-01 04:00:00 +0530
+date: 2024-07-05 10:00:00 +0530
 readtime: true
 img_path: /assets/img/database-engineering-fundamental-part-5/
 categories: [Blogging, Article]
