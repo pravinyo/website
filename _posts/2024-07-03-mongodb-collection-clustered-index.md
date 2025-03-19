@@ -95,19 +95,19 @@ This section shows clustered collection examples.
 
 ### **Create** Example
 
-The following [`create`](https://www.mongodb.com/docs/v6.2/reference/command/create/#mongodb-dbcommand-dbcmd.create) example adds a [clustered collection](https://www.mongodb.com/docs/v6.2/core/clustered-collections/#std-label-clustered-collections) named `products`:
+The following [**create**](https://www.mongodb.com/docs/v6.2/reference/command/create/#mongodb-dbcommand-dbcmd.create) example adds a [clustered collection](https://www.mongodb.com/docs/v6.2/core/clustered-collections/#std-label-clustered-collections) named **products**:
 
-```js
+```jsx
 db.runCommand( {create:"products",clusteredIndex: {"key": {_id:1 },"unique":true,"name":"products clustered key" }} )
 ```
 
 In the example, [clusteredIndex](https://www.mongodb.com/docs/v6.2/reference/command/create/#std-label-create.clusteredIndex) specifies:
 
-- **"key": { _id: 1 }**, which sets the clustered index key to the `_id` field.
+- **"key": { _id: 1 }**, which sets the clustered index key to the **_id** field.
 - **"unique": true**, which indicates the clustered index key value must be unique.
 - **"name": "products clustered key"**, which sets the clustered index name.
 
-### **`db.createCollection` Example**
+### **db.createCollection Example**
 
 The following [`db.createCollection()`](https://www.mongodb.com/docs/v6.2/reference/method/db.createCollection/#mongodb-method-db.createCollection) example adds a [clustered collection](https://www.mongodb.com/docs/v6.2/core/clustered-collections/#std-label-clustered-collections) named `stocks`:
 
@@ -117,13 +117,13 @@ db.createCollection("stocks",   {clusteredIndex: {"key": {_id:1 },"unique":true,
 
 In the example, [clusteredIndex](https://www.mongodb.com/docs/v6.2/reference/method/db.createCollection/#std-label-db.createCollection.clusteredIndex) specifies:
 
-- `"key": { _id: 1 }`, which sets the clustered index key to the `_id` field.
-- `"unique": true`, which indicates the clustered index key value must be unique.
-- `"name": "stocks clustered key"`, which sets the clustered index name.
+- **"key": { _id: 1 }**, which sets the clustered index key to the **_id** field.
+- **"unique": true**, which indicates the clustered index key value must be unique.
+- **"name": "stocks clustered key"**, which sets the clustered index name.
 
 ### **Date Clustered Index Key Example**
 
-The following [`create`](https://www.mongodb.com/docs/v6.2/reference/command/create/#mongodb-dbcommand-dbcmd.create) example adds a clustered collection named `orders`:
+The following [**create**](https://www.mongodb.com/docs/v6.2/reference/command/create/#mongodb-dbcommand-dbcmd.create) example adds a clustered collection named **orders**:
 
 ```jsx
 db.createCollection("orders",   {clusteredIndex: {"key": {_id:1 },"unique":true,"name":"orders clustered key" } })

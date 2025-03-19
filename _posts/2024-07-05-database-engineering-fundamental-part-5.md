@@ -244,7 +244,7 @@ INSERT INTO sales (product_id, quantity, sale_date) VALUES
     (3, 300, '2024-01-05');
 ```
 
-Now, the `sales` table looks like this:
+Now, the **sales** table looks like this:
 
 | sale_id | product_id | quantity | sale_date |
 | --- | --- | --- | --- |
@@ -254,11 +254,11 @@ Now, the `sales` table looks like this:
 | 4 | 1 | 150 | 2024-01-04 |
 | 5 | 3 | 300 | 2024-01-05 |
 
-We have a `product_id` of **1** appearing multiple times (for product 1).
+We have a **product_id** of **1** appearing multiple times (for product 1).
 
-### Step 2: Create an Index on `product_id`
+### Step 2: Create an Index on **product_id**
 
-Now, you decide to create an index on the `product_id` column to speed up queries that look for specific products:
+Now, you decide to create an index on the **product_id** column to speed up queries that look for specific products:
 
 ```sql
 CREATE INDEX idx_product_id ON sales(product_id);
