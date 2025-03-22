@@ -9,7 +9,7 @@ categories: [Blogging, Article]
 mermaid: true
 permalink: /database-engineering-fundamental-part-1/microsoft-sql-server-clustered-index-des/
 parent: /database-engineering-fundamental-part-1/
-tags: [softwareengineering, backenddevelopment]
+tags: [softwareengineering, backenddevelopment,database-engineering]
 image:
   path: header.png
   width: 1600   # in pixels

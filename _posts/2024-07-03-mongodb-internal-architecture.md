@@ -8,7 +8,7 @@ categories: [Blogging, Article]
 mermaid: true
 permalink: /database-engineering-fundamental-part-3/mongodb-internal-architecture/
 parent: /database-engineering-fundamental-part-3/
-tags: [softwareengineering, backenddevelopment]
+tags: [softwareengineering, backenddevelopment,database-engineering]
 image:
   path: header.png
   width: 1600   # in pixels

@@ -8,7 +8,7 @@ categories: [Blogging, Article]
 mermaid: true
 permalink: /database-engineering-fundamental-part-5/write-amplification-problem-in-postgresql/
 parent: /database-engineering-fundamental-part-5/
-tags: [softwareengineering, backenddevelopment]
+tags: [softwareengineering, backenddevelopment,database-engineering]
 image:
   path: header.png
   width: 1600   # in pixels
