@@ -203,6 +203,7 @@ You need to understand that there is a flow to the System design interview. Whic
 ### Basic/Fundamental of System Design
 - [System Design Fundamentals: A Complete Guide for Beginners](https://dev.to/kaustubhyerkade/system-design-fundamentals-a-complete-guide-for-beginners-3n95) or [view pdf]({{page.attachment_path}}/system_design_fundamentals_ a_complete_guide_for_ beginners.pdf)
 - [System Design Fundamentals (YouTube)](https://www.youtube.com/watch?v=uzeJb7ZjoQ4&t=873s&ab_channel=Exponent)
+- [The System Design Primer](https://github.com/donnemartin/system-design-primer?tab=readme-ov-file#the-system-design-primer)
 
 ### Roadmap
 - [Interview Prep: High Level Design Roadmap](https://medium.com/@sandeep.kumar.ece16/interview-prep-high-level-design-roadmap-9b1218373d3c) or [view pdf]({{page.attachment_path}}/interview_prep _ high_level_design_roadmap_ by_sandeep_kumar.pdf)
