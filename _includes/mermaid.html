@@ -5,7 +5,7 @@
 <script src="{{ site.data.assets[origin].mermaid.js | relative_url }}"></script>
 
 <script>
-  (function() {
+  $(function() {
     function updateMermaid(event) {
       if (event.source === window && event.data &&
             event.data.direction === ModeToggle.ID) {
@@ -55,7 +55,7 @@
     window.addEventListener("message", updateMermaid);
         
     // added this to fix mermaid failing to render without refresh
-    // const toggle = new ModeToggle();
-    // toggle.notify();
-  })();
+    const toggle = new ModeToggle();
+    toggle.notify();
+  });
 </script>
