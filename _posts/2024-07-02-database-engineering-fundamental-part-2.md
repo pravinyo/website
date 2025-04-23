@@ -25,7 +25,6 @@ image:
 - [B+Tree]
 - [B+Tree Considerations]
 - [B+Tree storage cost in MySQL vs Postgres](#storage-cost-in-postgres-vs-mysql)
-- [Summary](#summary)
 
 ### **Database Partitioning**
 - [What is Partitioning?](#database-partitioning)
