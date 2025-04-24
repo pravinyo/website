@@ -3,7 +3,7 @@ title: "State in reactive system - Orchestration-based Saga Pattern"
 author: pravin_tripathi
 date: 2022-08-31 00:00:00 +0530
 readtime: true
-img_path: /assets/img/orchestration-based-sagas/
+media_subpath: /assets/img/orchestration-based-sagas/
 categories: ["Presentation", "system-design"]
 tags: [design, backenddevelopment, softwareengineering]
 image:
@@ -13,7 +13,6 @@ image:
   alt: Photo by Andrea Zanenga on Unsplash
 file_document_path: "/assets/document/presentation/state-in-your-reactive-system.pdf"
 toc: false
-youtube_id: hAStlXBgoac
 ---
 
 ## State in Reactive System
@@ -23,7 +22,7 @@ In this presentation, I talked about something we are already familiar. For some
 We see how our design evolves as we progress with the presentation. We initially start with a simple application, later identify problems and see how to fix those problems.
 
 ## Video
-{% include youtube.html %}
+{% include embed/youtube.html id='hAStlXBgoac' %}
 
 ## Deck
 {% include presentation.html %}

@@ -3,7 +3,7 @@ title: "Challenges in Migration of Application to Another Platform"
 author: pravin_tripathi
 date: 2022-02-12 00:00:00 +0530
 readtime: true
-img_path: /assets/img/challenges-discovered-in-migration-of-application-to-another-platform/
+media_subpath: /assets/img/challenges-discovered-in-migration-of-application-to-another-platform/
 categories: [Blogging, Article]
 tags: [backenddevelopment, softwareengineering, migration]
 image:

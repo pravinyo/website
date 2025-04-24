@@ -3,7 +3,7 @@ title: "Part 5: Database Engineering Fundamentals: PostgreSQL Process Architectu
 author: pravin_tripathi
 date: 2024-07-05 07:00:00 +0530
 readtime: true
-img_path: /assets/img/database-engineering-fundamental-part-5/
+media_subpath: /assets/img/database-engineering-fundamental-part-5/
 categories: [Blogging, Article]
 mermaid: true
 permalink: /database-engineering-fundamental-part-5/postgresql-process-architecture/

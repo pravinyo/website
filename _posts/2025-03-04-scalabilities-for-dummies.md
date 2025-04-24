@@ -3,7 +3,7 @@ title: "Scalability for Dummies: A Comprehensive Guide to Building Scalable Web 
 author: pravin_tripathi
 date: 2025-03-04 00:00:00 +0530
 readtime: true
-img_path: /assets/img/scalabilities-for-dummies/
+media_subpath: /assets/img/scalabilities-for-dummies/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment]

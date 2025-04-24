@@ -3,7 +3,7 @@ title: "Comprehensive Roadmap for Low-Level and High-Level Design Interview Prep
 author: pravin_tripathi
 date: 2024-06-09 01:00:00 +0530
 readtime: true
-img_path: /assets/img/system-design-roadmap/
+media_subpath: /assets/img/system-design-roadmap/
 attachment_path: /assets/document/attachment/system-design-roadmap/
 categories: [Blogging, Article]
 mermaid: true

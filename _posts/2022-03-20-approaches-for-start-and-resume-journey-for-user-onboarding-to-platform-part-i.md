@@ -3,7 +3,7 @@ title: "Approaches for Start and Resume Journey for User Onboarding to Platform"
 author: pravin_tripathi
 date: 2022-03-20 00:00:00 +0530
 readtime: true
-img_path: /assets/img/approaches-for-start-and-resume-journey-for-user-onboarding-to-platform/
+media_subpath: /assets/img/approaches-for-start-and-resume-journey-for-user-onboarding-to-platform/
 categories: [Blogging, Article]
 tags: [design, softwareengineering, backenddevelopment, onboardingprocess]
 image:

@@ -3,7 +3,7 @@ title: "Understanding Spring @Transactional Annotation: A Comprehensive Guide"
 author: pravin_tripathi
 date: 2024-10-01 00:00:00 +0530
 readtime: true
-img_path: /assets/img/spring-transactional-annotation/
+media_subpath: /assets/img/spring-transactional-annotation/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment, spring]

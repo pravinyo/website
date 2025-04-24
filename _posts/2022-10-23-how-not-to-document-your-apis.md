@@ -3,7 +3,7 @@ title: "How (Not) To Document Your APIs"
 author: pravin_tripathi
 date: 2022-10-23 00:00:00 +0530
 readtime: true
-img_path: /assets/img/how-not-to-document-your-api/
+media_subpath: /assets/img/how-not-to-document-your-api/
 categories: ["Presentation", "Documentation"]
 tags: [design, backenddevelopment, softwareengineering]
 image:
@@ -13,7 +13,6 @@ image:
   alt: https://giphy.com/
 file_document_path: "/assets/document/presentation/how-to-not-document-your-apis.pdf"
 toc: false
-youtube_id: tZnphSpnh_4
 ---
 
 ## How (Not) To document Your APIs
@@ -27,7 +26,7 @@ _Image source: https://giphy.com_
 
 
 ## Video
-{% include youtube.html %}
+{% include embed/youtube.html id='tZnphSpnh_4' %}
 
 ## Deck
 {% include presentation.html %}

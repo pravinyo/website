@@ -5,7 +5,7 @@ date: 2021-05-15 00:00:00 +0530
 readtime: true
 categories: [Blogging, Article]
 tags: [java, docker-compose, kafka, performance-tuning, jvm, backend]
-img_path: /assets/img/understanding-java-vm-memory-management/
+media_subpath: /assets/img/understanding-java-vm-memory-management/
 image:
   path: header.jpg
   width: 1000   # in pixels

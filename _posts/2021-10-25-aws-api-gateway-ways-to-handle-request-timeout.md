@@ -3,7 +3,7 @@ title: "AWS API Gateway — Ways to handle Request Timeout"
 author: pravin_tripathi
 date: 2021-10-25 00:00:00 +0530
 readtime: true
-img_path: /assets/img/aws-api-gateway-ways-to-handle-request-timeout/
+media_subpath: /assets/img/aws-api-gateway-ways-to-handle-request-timeout/
 categories: [Blogging, Article]
 tags: [aws, softwarearchitecture, backenddevelopment]
 image:

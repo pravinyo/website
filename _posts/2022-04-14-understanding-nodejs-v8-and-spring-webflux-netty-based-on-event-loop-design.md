@@ -3,7 +3,7 @@ title: "Understanding Nodejs(V8) and Spring Webflux(Netty) — based on Event Lo
 author: pravin_tripathi
 date: 2022-04-14 00:00:00 +0530
 readtime: true
-img_path: /assets/img/understanding-nodejs-v8-and-spring-webflux-netty-based-on-event-loop-design/
+media_subpath: /assets/img/understanding-nodejs-v8-and-spring-webflux-netty-based-on-event-loop-design/
 categories: [Blogging, Article]
 tags: [nodejs, springwebflux, backenddevelopment, eventloop]
 image:

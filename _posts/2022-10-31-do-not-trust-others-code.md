@@ -5,7 +5,7 @@ date: 2022-10-31 22:30:00 +0800
 categories: [Blogging, Article]
 tags: [design, backenddevelopment]
 published: true
-img_path: /assets/img/do-not-trust-others-code/
+media_subpath: /assets/img/do-not-trust-others-code/
 readtime: true
 image:
   path: header.jpg

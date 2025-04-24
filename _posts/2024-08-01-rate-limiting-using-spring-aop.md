@@ -3,7 +3,7 @@ title: "How to Implement Rate Limiting in Spring Boot APIs Using Aspect-Oriented
 author: pravin_tripathi
 date: 2024-08-01 00:00:00 +0530
 readtime: true
-img_path: /assets/img/rate-limiting-using-spring-aop/
+media_subpath: /assets/img/rate-limiting-using-spring-aop/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment]

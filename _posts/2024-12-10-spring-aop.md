@@ -3,7 +3,7 @@ title: "Understanding Aspect-Oriented Programming (AOP) in Spring Boot"
 author: pravin_tripathi
 date: 2024-12-10 00:00:00 +0530
 readtime: true
-img_path: /assets/img/spring-aop/
+media_subpath: /assets/img/spring-aop/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment]

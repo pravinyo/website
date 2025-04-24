@@ -3,7 +3,7 @@ title: "Part 2: Database Engineering Fundamentals"
 author: pravin_tripathi
 date: 2024-07-02 01:00:00 +0530
 readtime: true
-img_path: /assets/img/database-engineering-fundamental-part-2/
+media_subpath: /assets/img/database-engineering-fundamental-part-2/
 attachment_path: /assets/document/attachment/database-engineering-fundamental-part-2/
 categories: [Blogging, Article]
 mermaid: true

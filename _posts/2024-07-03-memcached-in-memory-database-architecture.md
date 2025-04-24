@@ -3,7 +3,7 @@ title: "Part 3: Database Engineering Fundamentals: MemCached In-Memory database 
 author: pravin_tripathi
 date: 2024-07-03 04:00:00 +0530
 readtime: true
-img_path: /assets/img/database-engineering-fundamental-part-3/
+media_subpath: /assets/img/database-engineering-fundamental-part-3/
 categories: [Blogging, Article]
 mermaid: true
 permalink: /database-engineering-fundamental-part-3/memcached-in-memory-database-architecture/

@@ -3,7 +3,7 @@ title: "External Traffic handling in AWS Kubernetes Services"
 author: pravin_tripathi
 date: 2021-06-27 00:00:00 +0530
 readtime: true
-img_path: /assets/img/external-traffic-handling-aws-kubernetes-services/
+media_subpath: /assets/img/external-traffic-handling-aws-kubernetes-services/
 categories: [Blogging, Article]
 tags: [awscloud, kubernetes, networkarchitecture, scalability, resiliency]
 image:

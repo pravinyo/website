@@ -3,7 +3,7 @@ title: "Understanding Apache Camel: A Comprehensive Guide to Integration Pattern
 author: pravin_tripathi
 date: 2025-02-08 00:00:00 +0530
 readtime: true
-img_path: /assets/img/apache-camel-application-integration/
+media_subpath: /assets/img/apache-camel-application-integration/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment]

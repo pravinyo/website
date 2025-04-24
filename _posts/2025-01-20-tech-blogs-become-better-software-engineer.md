@@ -3,7 +3,7 @@ title: "Tech Blogs: Become better software Engineer"
 author: pravin_tripathi
 date: 2025-01-20 00:00:00 +0530
 readtime: true
-img_path: /assets/img/tech-blogs-become-better-software-engineer/
+media_subpath: /assets/img/tech-blogs-become-better-software-engineer/
 categories: [Blogging, Article]
 tags: [softwareengineering]
 pin: true
@@ -55,7 +55,7 @@ image:
 
 ### Independent and Developer-Centric Blogs
 1. [Martin Fowler's Blog](https://martinfowler.com/)
-2. [High Scalability](http://highscalability.com/)
+2. [High Scalability](https://highscalability.com/)
 3. [Coding Horror](https://blog.codinghorror.com/)
 5. [Joel on Software](https://www.joelonsoftware.com/)
 6. [Troy Hunt's Blog](https://www.troyhunt.com/)

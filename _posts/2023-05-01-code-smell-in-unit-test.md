@@ -4,7 +4,7 @@ author: pravin_tripathi
 date: 2023-05-01 22:30:00 +0800
 categories: [Blogging, CodeSmellSeries]
 tags: [coding, smells]
-img_path: /assets/img/code-smell-series/unit-test/
+media_subpath: /assets/img/code-smell-series/unit-test/
 image:
   path: header_test.jpg
   width: 1920   # in pixels

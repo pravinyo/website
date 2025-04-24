@@ -3,7 +3,7 @@ title: "Comprehensive Guide to Caching in Spring Boot with Redis"
 author: pravin_tripathi
 date: 2024-09-04 00:00:00 +0530
 readtime: true
-img_path: /assets/img/caching-in-springboot-with-redis/
+media_subpath: /assets/img/caching-in-springboot-with-redis/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment]

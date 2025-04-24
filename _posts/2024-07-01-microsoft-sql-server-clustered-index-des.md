@@ -3,7 +3,7 @@ title: "Part 1: Database Engineering Fundamentals: Microsoft SQL Server Clustere
 author: pravin_tripathi
 date: 2024-07-01 03:00:00 +0530
 readtime: true
-img_path: /assets/img/database-engineering-fundamental-part-1/
+media_subpath: /assets/img/database-engineering-fundamental-part-1/
 attachment_path: /assets/document/attachment/database-engineering-fundamental-part-1/
 categories: [Blogging, Article]
 mermaid: true

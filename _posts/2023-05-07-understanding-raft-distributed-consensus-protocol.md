@@ -3,7 +3,7 @@ title: "Understaning RAFT - distributed consensus protocol"
 author: pravin_tripathi
 date: 2023-05-07 00:00:00 +0530
 readtime: true
-img_path: /assets/img/understaning-raft-distributed-consensus-protocol/
+media_subpath: /assets/img/understaning-raft-distributed-consensus-protocol/
 categories: ["Presentation", "system-design"]
 tags: [design, backenddevelopment, softwareengineering]
 image:

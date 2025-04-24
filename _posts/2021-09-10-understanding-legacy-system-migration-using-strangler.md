@@ -3,7 +3,7 @@ title: "Understanding Legacy System Migration using Strangler Fig Pattern"
 author: pravin_tripathi
 date: 2021-09-10 00:00:00 +0530
 readtime: true
-img_path: /assets/img/understanding-legacy-system-migration-using-strangler/
+media_subpath: /assets/img/understanding-legacy-system-migration-using-strangler/
 categories: [Blogging, Article]
 tags: [softwaredevelopment, systemdesign, strategy]
 image:

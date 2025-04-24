@@ -3,7 +3,7 @@ title: "Effortless Postgres-S3 Data Flow (Spring Boot)"
 author: pravin_tripathi
 date: 2025-04-23 00:00:00 +0530
 readtime: true
-img_path: /assets/img/effortless-postgres-s3-data-flow-spring-boot/
+media_subpath: /assets/img/effortless-postgres-s3-data-flow-spring-boot/
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment]

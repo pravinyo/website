@@ -3,7 +3,7 @@ title: "Kafka Schema Registry and JSON Schema: A Comprehensive Guide"
 author: pravin_tripathi
 date: 2024-11-08 00:00:00 +0530
 readtime: true
-img_path: /assets/img/kafka-schema-registry-json-schema/
+media_subpath: /assets/img/kafka-schema-registry-json-schema/
 categories: [Blogging, Article]
 tags: [backenddevelopment, design]
 image:

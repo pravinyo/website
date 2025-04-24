@@ -3,7 +3,7 @@ title: "Things I learned from analysis for migration activity"
 author: pravin_tripathi
 date: 2021-08-16 00:00:00 +0530
 readtime: true
-img_path: /assets/img/things-i-learned-from-analysis-migration-activity/
+media_subpath: /assets/img/things-i-learned-from-analysis-migration-activity/
 categories: [Blogging, Article]
 tags: [design, softwaredevelopment, nodejs, backenddevelopment]
 image:
