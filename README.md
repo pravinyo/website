@@ -38,8 +38,14 @@ bundle install
 
 To preview your site locally, run the following command:
 
+with draft post,
 ```bash
 bundle exec jekyll serve --draft
+```
+
+without draft post,
+```bash
+bundle exec jekyll serve
 ```
 
 Alternatively, you can use Docker:
