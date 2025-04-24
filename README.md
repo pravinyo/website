@@ -1,38 +1,100 @@
 <div align="center">
-  # Chirpy Jekyll Theme
+  <h1>Chirpy Jekyll Theme</h1>
+  <p>A minimal and powerful Jekyll theme for GitHub Pages.</p>
+  <a href="https://jekyllrb.com/docs/installation/">Jekyll Documentation</a> •
+  <a href="https://github.com/cotes2020/chirpy-starter">Chirpy Starter</a>
 </div>
 
-## Quick Start
+---
 
-Before starting, please follow the instructions in the [Jekyll Docs](https://jekyllrb.com/docs/installation/) to complete the installation of `Ruby`, `RubyGems`, `Jekyll`, and `Bundler`. In addition, [Git](https://git-scm.com/) is also required to be installed.
+## 🚀 Quick Start
 
-### Step 1. Creating a New Site
+Follow these steps to set up your site using the Chirpy Jekyll Theme.
 
-Create a new repository from the [**Chirpy Starter**](https://github.com/cotes2020/chirpy-starter/generate) and name it `<GH_USERNAME>.github.io`, where `GH_USERNAME` represents your GitHub username.
+### Prerequisites
 
-### Step 2. Installing Dependencies
+Ensure the following tools are installed on your system:
 
-Before running for the first time, go to the root directory of your site, and install dependencies as follows:
+- [Ruby](https://www.ruby-lang.org/en/)
+- [RubyGems](https://rubygems.org/pages/download)
+- [Jekyll](https://jekyllrb.com/docs/installation/)
+- [Bundler](https://bundler.io/)
+- [Git](https://git-scm.com/)
 
-```console
-$ bundle
+### Step 1: Create a New Repository
+
+1. Use the [**Chirpy Starter**](https://github.com/cotes2020/chirpy-starter/generate) to generate a new repository.
+2. Name the repository `<GH_USERNAME>.github.io`, where `<GH_USERNAME>` is your GitHub username.
+
+### Step 2: Install Dependencies
+
+Navigate to the root directory of your site and install the required dependencies:
+
+```bash
+bundle install
 ```
 
-### Step 3. Running Local Server
+### Step 3: Run the Local Server
 
-Run the following command in the root directory of the site:
+To preview your site locally, run the following command:
 
-```console
-$ bundle exec jekyll s --draft
+```bash
+bundle exec jekyll serve --draft
 ```
 
-Or run with Docker:
+Alternatively, you can use Docker:
 
-```console
-$ docker run -it --rm \
+```bash
+docker run -it --rm \
     --volume="$PWD:/srv/jekyll" \
     -p 4000:4000 jekyll/jekyll \
     jekyll serve
 ```
 
-After a while, navigate to the site at <http://localhost:4000>.
+Once the server is running, open your browser and visit: [http://localhost:4000](http://localhost:4000).
+
+---
+
+## 📂 Project Structure
+
+- `_posts/`: Add your blog posts here.
+- `_config.yml`: Configure your site settings.
+- `assets/`: Store images, CSS, and JavaScript files.
+- `README.md`: Documentation for your project.
+
+---
+
+## 🌟 Features
+
+- Minimal design with a focus on content.
+- Fully responsive and mobile-friendly.
+- Easy integration with GitHub Pages.
+- Support for categories, tags, and archives.
+
+---
+
+## 🛠️ Customization
+
+To customize your site, edit the `_config.yml` file. You can update:
+
+- Site title, description, and URL.
+- Social media links.
+- Theme settings and plugins.
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests to improve this project.
+
+---
+
+## 📧 Contact
+
+For questions or support, please reach out via [GitHub Issues](https://github.com/<GH_USERNAME>/<REPO_NAME>/issues).
