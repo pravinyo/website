@@ -14,7 +14,7 @@ image:
   alt: Generated using Copilot
 ---
 
-## Network Address Translation (NAT)
+# Network Address Translation (NAT)
 Beyond the basics, TCP's performance can be significantly impacted by various factors and algorithms. This article explores Network Address Translation, connection states, packet sizing, and two algorithms designed to improve efficiency but which can introduce latency.
 
 NAT allows multiple devices on a local network to share a single public IP address:
@@ -67,7 +67,7 @@ An optimization involves having clients initiate closure requests, preventing se
 
 One of the fundamental challenges in networking is determining how large data packets can be:
 
-#### The Layering of Network Units
+### The Layering of Network Units
 - TCP (Layer 4): Data is organized into **segments**
 - IP (Layer 3): Segments are encapsulated into **packets** with headers
 - Data Link (Layer 2): Packets are placed into **frames**
@@ -146,5 +146,9 @@ While this reduces network traffic, it can cause performance issues when combine
 
 You can disable delayed acknowledgments using the TCP_QUICKACK option, making segments acknowledge faster at the cost of additional network traffic. Segments will be acknowledged “quicker”
 
+[previous part](../network-engineering-fundamental-part-3)
+
+
+[continue to next part](../network-engineering-fundamental-part-5)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

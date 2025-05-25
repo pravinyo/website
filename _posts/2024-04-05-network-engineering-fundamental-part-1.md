@@ -175,4 +175,6 @@ The TCP/IP model simplifies the OSI model into four practical layers:
 
 > Note that the physical layer isn't officially included in the TCP/IP model.
 
+[continue to next part](../network-engineering-fundamental-part-2)
+
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

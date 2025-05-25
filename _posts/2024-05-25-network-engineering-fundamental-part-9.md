@@ -17,9 +17,9 @@ image:
 
 Finally, let's touch on a few more advanced topics, including database access control, network analysis tools, and challenges in protocol evolution, before concluding with a reflection on the importance of understanding these fundamentals.
 
-## Advanced Networking Concepts
+# Advanced Networking Concepts
 
-### Network Access Control for Databases
+## Network Access Control for Databases
 
 Database systems like PostgreSQL implement network-level access controls through configuration files (e.g., pg_hba.conf in PostgreSQL). These controls allow administrators to:
 
@@ -31,7 +31,7 @@ This forms an important layer of security beyond application-level authenticatio
 
 > [https://www.postgresql.org/docs/current/auth-pg-hba-conf.html](https://www.postgresql.org/docs/current/auth-pg-hba-conf.html)
 
-### Protocol Analysis with Wireshark
+## Protocol Analysis with Wireshark
 
 Tools like Wireshark allow deep inspection of network traffic:
 
@@ -39,7 +39,7 @@ Tools like Wireshark allow deep inspection of network traffic:
 - **Stream Identification**: In protocols like HTTP/2, client streams use odd IDs while server streams use even IDs
 - **Database Protocol Inspection**: Even proprietary protocols like MongoDB's wire protocol can be analyzed
 
-**Wireshark on https and http**
+### Wireshark on https and http**
 
 **Filters:**
 - ip.addr == 93.184.215.14
@@ -58,7 +58,7 @@ Wireshark -> preference -> TLS -> pre master secret log filename
 
 > Client stream id 1 (odd) and server stream id (even)
 
-### Protocol Ossification
+## Protocol Ossification
 
 Protocol ossification refers to the loss of flexibility and extensibility in network protocols over time:
 
@@ -79,5 +79,10 @@ The goal of this article is to shed light on the art of software engineering. A 
 As a fellow engineer, I feel that this work is often taken for granted and rarely acknowledged. Understanding how protocols work is the first step to contributing to the evolution of network engineering and potentially making better protocols. You've seen what it takes to achieve a simple task such as clicking a link, which raises the question: can we make it better?
 Understanding these underlying processes not only satisfies curiosity but also provides valuable insights for web developers, network engineers, and anyone interested in how the internet functions at a fundamental level.
 Next time you click a link, you'll have a deeper appreciation for the complex sequence of events happening behind the scenes to bring that content to your screen.
+
+[previous part](../network-engineering-fundamental-part-8)
+
+
+[Start of the article](../network-engineering-fundamental-part-1)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

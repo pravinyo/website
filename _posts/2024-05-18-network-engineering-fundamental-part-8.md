@@ -14,11 +14,11 @@ image:
   alt: Generated using Copilot
 ---
 
-## Transport Layer Security (TLS): Securing Network Communication
+# Transport Layer Security (TLS): Securing Network Communication
 
 Modern internet security relies heavily on encryption, particularly through Transport Layer Security (TLS). Let's explore how we've evolved from basic HTTP to secure communications:
 
-### The Evolution of Web Security
+## The Evolution of Web Security
 1. **Vanilla HTTP**: The original web protocol - unencrypted and vulnerable
 2. **HTTPS**: HTTP with encryption through SSL/TLS
 3. **TLS 1.2 Handshake**: Two round trips required to establish secure connection
@@ -28,9 +28,9 @@ Modern internet security relies heavily on encryption, particularly through Tran
 ![](image35.png)
 ![](image28.png)
 
-### Why We Need TLS
+## Why We Need TLS
 
-TLS serves several critical purposes:
+### TLS serves several critical purposes:
 
 - **Encryption**: We use symmetric key algorithms for encrypting data
 - **Key Exchange**: We need a secure way to exchange symmetric keys
@@ -42,19 +42,24 @@ TLS serves several critical purposes:
 ![](image14.png)
 ![](image36.png)
 
-TLS establishes a secure channel through a carefully choreographed handshake process:
+### TLS establishes a secure channel through a carefully choreographed handshake process:
 
 1. Client and server agree on the cryptographic algorithms to use
 2. Authentication occurs through certificates
 3. Session keys are established securely
 4. Encrypted communication can begin
 
-The key advantages of TLS 1.3 over previous versions include:
+### The key advantages of TLS 1.3 over previous versions include:
 - Faster connections (fewer round trips)
 - Improved security with deprecated legacy algorithms
 - Forward secrecy by default
 - Simplified negotiation process
 
 > With TLS 1.3, the certificate and other parameters are encrypted because the server already has the symmetric key. This differs from TLS 1.2, where the certificate is sent in plain text in the Server Hello because the encryption key isn't created until the second round trip. More details on this can be found in [this article](https://medium.com/@hnasr/the-many-configurations-of-https-4fa005a456ad).
+
+[previous part](../network-engineering-fundamental-part-7)
+
+
+[continue to next part](../network-engineering-fundamental-part-9)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

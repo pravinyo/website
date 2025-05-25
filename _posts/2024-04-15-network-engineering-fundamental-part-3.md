@@ -14,11 +14,11 @@ image:
   alt: Generated using Copilot
 ---
 
-## TCP (Transmission Control Protocol)
+# TCP (Transmission Control Protocol)
 
 While UDP offers speed and simplicity, TCP provides reliability. This article delves into the details of the Transmission Control Protocol, its connections, structure, states, and trade-offs.
 
-**Basic Characteristics:**
+## Basic Characteristics:
 - Layer 4 protocol
 - Process addressing via ports
 - Controlled transmission (unlike UDP's "firehose" approach)
@@ -27,14 +27,14 @@ While UDP offers speed and simplicity, TCP provides reliability. This article de
 - 20-60 byte headers
 - Stateful operation
 
-**Common TCP Applications:**
+## Common TCP Applications:
 - Reliable communications
 - Remote shell connections
 - Database connections
 - Web communications
 - Any bidirectional communication requiring reliability
 
-**TCP Connection Details:**
+## TCP Connection Details:
 - Operates at Layer 5 (Session)
 - Represents an agreement between client and server
 - Required before data transmission
@@ -61,7 +61,7 @@ While UDP offers speed and simplicity, TCP provides reliability. This article de
 
 ![](image6.png)
 
-**TCP Segment Structure:**
+## TCP Segment Structure:
 ![](image45.png)
 - Header is 20-60 bytes
 - Encapsulated within IP packets as "data"
@@ -70,7 +70,7 @@ While UDP offers speed and simplicity, TCP provides reliability. This article de
 
 ![](image30.png)
 
-**TCP Connection States:**
+## TCP Connection States:
 TCP maintains connection state on both client and server sides:
 - Tracks window sizes, sequence numbers, and connection status
 - Follows a defined state machine for connection establishment and termination
@@ -86,14 +86,14 @@ As you see, server is maintaining the state information in file descriptor of th
 
 This is bad can slow down our server. One fix is to notify client to initiate this closure request so our server can close it and it will not have to go in time wait state. We don’t care about client most important thing is sever.
 
-**TCP Advantages:**
+## TCP Advantages:
 - Guaranteed delivery
 - Connection-oriented security
 - Flow and congestion control
 - Ordered packet delivery
 - Resistance to spoofing
 
-**TCP Disadvantages:**
+## TCP Disadvantages:
 - Larger header overhead than UDP
 - Higher bandwidth requirements
 - Stateful nature consumes memory
@@ -102,7 +102,7 @@ This is bad can slow down our server. One fix is to notify client to initiate th
 - Head-of-line blocking issues
 
 
-**Demo Example: Capture TCP segment using TCP DUMP**
+## Demo Example: Capture TCP segment using TCP DUMP
 ```sh
 > sudo tcpdump -n -v -i en0 src 93.184.215.14 or dst 93.184.215.14 and port 80
 
@@ -601,5 +601,10 @@ Content-Length: 648
 
 192.168.0.229.49654 > 93.184.215.14.80: Flags [.], cksum 0xcc6d (correct), ack 1009, win 2048, options [nop,nop,TS val 3256484241 ecr 1834235859], length 0
 ```
+
+[previous part](../network-engineering-fundamental-part-2)
+
+
+[continue to next part](../network-engineering-fundamental-part-4)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

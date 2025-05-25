@@ -14,10 +14,10 @@ image:
   alt: Generated using Copilot
 ---
 
-## Proxy Systems: Intermediaries in Network Communication
+# Proxy Systems: Intermediaries in Network Communication
 Networks often involve intermediaries that route or manage traffic. This article distinguishes between client-side proxies and server-side reverse proxies, and then delves into the specific function of load balancers at different network layers.
 
-### Proxies: Client-Side Intermediaries
+## Proxies: Client-Side Intermediaries
 
 A proxy acts as an intermediary for client requests:
 
@@ -26,14 +26,14 @@ A proxy acts as an intermediary for client requests:
 - The destination server is aware of the proxy but not the original client
 - May include headers like `X-Forwarded-For` to communicate client details
 
-**Key Use Cases for Proxies:**
+### Key Use Cases for Proxies:
 - Content caching
 - Anonymous browsing
 - Request/response logging
 - Content filtering and site blocking
 - Microservice architecture support
 
-### Reverse Proxies: Server-Side Intermediaries
+## Reverse Proxies: Server-Side Intermediaries
 
 Unlike regular proxies, reverse proxies hide server details from clients:
 
@@ -45,7 +45,7 @@ Unlike regular proxies, reverse proxies hide server details from clients:
 
 Systems can employ both proxies and reverse proxies in complex arrangements.
 
-**Key Use Cases for Reverse Proxies:**
+### Key Use Cases for Reverse Proxies:
 - Content caching (CDNs)
 - Load balancing
 - API gateway/ingress control
@@ -96,14 +96,14 @@ When a new connection request comes, it will pick a different backend server as 
 4. Using NAT (Network Address Translation), the load balancer forwards traffic between client and server
 5. For subsequent connections, different backend servers may be selected
 
-#### Layer 4 Load Balancer Advantages:
+### Layer 4 Load Balancer Advantages:
 - **Simplicity**: Straightforward load balancing without complex logic
 - **Efficiency**: No deep packet inspection means lower processing overhead
 - **Security**: Doesn't read content payloads, reducing exposure
 - **Protocol Agnostic**: Works with any TCP/UDP-based protocol
 - **Connection Efficiency**: Maintains a single TCP connection (with NAT)
 
-#### Layer 4 Load Balancer Disadvantages:
+### Layer 4 Load Balancer Disadvantages:
 - **Limited Intelligence**: Cannot make routing decisions based on content
 - **Microservice Challenges**: Difficult to route to specific microservices
 - **Connection Stickiness**: Tied to the entire connection rather than individual requests
@@ -132,19 +132,24 @@ Layer 7 load balancers operate at the application layer, making sophisticated ro
 6. Request is forwarded, potentially with modifications
 7. Response follows the reverse path
 
-#### Layer 7 Load Balancer Advantages:
+### Layer 7 Load Balancer Advantages:
 - **Intelligent Routing**: Can direct traffic based on content and application-specific attributes
 - **Caching Capability**: Can cache responses for improved performance
 - **Microservice Support**: Excellent for routing to specific microservices based on request paths
 - **API Gateway Functionality**: Can implement API gateway logic
 - **Authentication**: Can handle authentication before requests reach backend servers
 
-#### Layer 7 Load Balancer Disadvantages:
+### Layer 7 Load Balancer Disadvantages:
 - **Resource Intensity**: More expensive computationally due to content inspection
 - **Encryption Handling**: Must terminate and decrypt TLS connections
 - **Connection Management**: Creates two separate TCP connections per request
 - **Certificate Requirements**: Needs access to TLS certificates
 - **Buffering Needs**: Must buffer data for inspection
 - **Protocol Specificity**: Must understand each protocol it handles
+
+[previous part](../network-engineering-fundamental-part-5)
+
+
+[continue to next part](../network-engineering-fundamental-part-7)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

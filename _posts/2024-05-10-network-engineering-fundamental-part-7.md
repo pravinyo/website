@@ -14,7 +14,7 @@ image:
   alt: Generated using Copilot
 ---
 
-## The Network Journey Behind Clicking a Link
+# The Network Journey Behind Clicking a Link
 
 When you click a hyperlink in your browser, a complex sequence of networking events occurs:
 
@@ -192,5 +192,9 @@ The key element here is the meta tag with `http-equiv="refresh"` and `content="0
 
 The `couponCode` query parameter at the end of the URL is particularly noteworthy. The author updates this coupon monthly and pushes changes to GitHub, which triggers a Netlify rebuild. Anyone visiting `backend.husseinnasser.com` gets the latest coupon. If the author decides to switch course providers in the future, they can simply update the URL in index.html while the original link remains unchanged.
 
+[previous part](../network-engineering-fundamental-part-6)
+
+
+[continue to next part](../network-engineering-fundamental-part-8)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

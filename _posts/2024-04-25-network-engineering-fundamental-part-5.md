@@ -14,10 +14,10 @@ image:
   alt: Generated using Copilot
 ---
 
-## The Cost of Connections
+# The Cost of Connections
 Establishing and managing connections comes with inherent costs. This article explores why connections are expensive, how connection pooling mitigates this, different loading paradigms, techniques for faster connection setup, and the phenomenon of Head-of-Line blocking.
 
-### Why Connections Are Expensive
+## Why Connections Are Expensive
 
 Establishing TCP connections incurs significant costs:
 
@@ -28,7 +28,7 @@ Establishing TCP connections incurs significant costs:
 - **Algorithm Impact**: Nagle's algorithm and delayed acknowledgments add latency
 - **Termination Cost**: Connection teardown is also resource-intensive
 
-### Connection Pooling: A Critical Optimization
+## Connection Pooling: A Critical Optimization
 
 To mitigate connection costs, most database backends and reverse proxies implement connection pooling:
 
@@ -40,7 +40,7 @@ To mitigate connection costs, most database backends and reverse proxies impleme
 
 This approach dramatically improves response times for clients.
 
-### Eager vs. Lazy Loading
+## Eager vs. Lazy Loading
 
 Two paradigms for resource management affect connection performance:
 
@@ -55,7 +55,7 @@ Two paradigms for resource management affect connection performance:
 - Fast startup but initially slower requests
 - Resources consumed only as necessary
 
-### TCP Fast Open (TFO)
+## TCP Fast Open (TFO)
 
 TCP Fast Open addresses the handshake latency problem:
 
@@ -71,7 +71,7 @@ TCP Fast Open addresses the handshake latency problem:
 
 ![](image34.png)
 
-### TCP Head-of-Line (HOL) Blocking in HTTP/1 and HTTP/2
+## TCP Head-of-Line (HOL) Blocking in HTTP/1 and HTTP/2
 
 TCP's reliable delivery mechanism can create performance bottlenecks:
 
@@ -84,5 +84,9 @@ TCP's reliable delivery mechanism can create performance bottlenecks:
 ![](image24.png)
 ![](image29.png)
 
+[previous part](../network-engineering-fundamental-part-4)
+
+
+[continue to next part](../network-engineering-fundamental-part-6)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*

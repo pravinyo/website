@@ -14,10 +14,10 @@ image:
   alt: Generated using Copilot
 ---
 
-## Network Protocols: The Language of the Internet
+# Network Protocols: The Language of the Internet
 Network protocols are the language of the Internet. Let's look at two fundamental ones: ICMP for diagnostics and UDP for simple, fast transmissions.
 
-### ICMP (Internet Control Message Protocol)
+## ICMP (Internet Control Message Protocol)
 
 - **Purpose**: Designed for network diagnostic and control messages
 - **Features**:
@@ -50,29 +50,29 @@ Routing of IP packets through various devices like routers, switches, etc.
 
 ![](image12.png)
 
-### UDP (User Datagram Protocol)
+## UDP (User Datagram Protocol)
 
-**Basic Characteristics:**
+### Basic Characteristics:
 - Layer 4 protocol
 - Addresses processes using ports
 - Simple protocol for data transmission
 - Requires no prior communication (stateless)
 - Compact 8-byte header (vs. IP's 20-byte header)
 
-**Common UDP Applications:**
+### Common UDP Applications:
 - Video streaming
 - VPN services
 - DNS queries
 - WebRTC communications
 
-**UDP Advantages:**
+### UDP Advantages:
 - Simplicity
 - Small header size and bandwidth efficiency
 - Stateless operation
 - Lower memory consumption
 - Low latency with no handshakes or delivery guarantees
 
-**UDP Disadvantages:**
+### UDP Disadvantages:
 - No acknowledgment mechanism
 - No guaranteed delivery
 - Connection-less (anyone can send data)
@@ -80,7 +80,7 @@ Routing of IP packets through various devices like routers, switches, etc.
 - No packet ordering
 - Potential security vulnerabilities (easily spoofed)
 
-**Demo Example:**
+## Demo Example
 
 **Terminal 1:**
 ```sh
@@ -120,5 +120,10 @@ tcpdump: listening on en0, link-type EN10MB (Ethernet), snapshot length 524288 b
 
 8.8.8.8.53 > 192.168.0.229.61141: 37528 4/0/0 pravin.dev. A 185.199.111.153, pravin.dev. A 185.199.109.153, pravin.dev. A 185.199.108.153, pravin.dev. A 185.199.110.153 (92)
 ```
+
+[previous part](../network-engineering-fundamental-part-1)
+
+
+[continue to next part](../network-engineering-fundamental-part-3)
 
 *This blog post was compiled from my notes on a Networking Fundamentals course. I hope it helps clarify these essential concepts for you!*
