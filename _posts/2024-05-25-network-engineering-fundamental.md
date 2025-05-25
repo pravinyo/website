@@ -1,7 +1,7 @@
 ---
 title: "Fundamentals of Network Engineering"
 author: pravin_tripathi
-date: 2025-05-25 00:00:00 +0530
+date: 2024-05-25 00:00:00 +0530
 readtime: true
 media_subpath: /assets/img/network-engineering-fundamental/
 file_document_path: "/assets/document/attachment/network-engineering-fundamental/2210.00714v2.pdf"
