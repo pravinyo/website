@@ -40,7 +40,7 @@ A simple, elegant and easy to understand architecture. Where the backend applica
 
 Multi threading can be used to build performant backend applications that takes advantage of all CPU cores. The price you pay as an engineer is complexity (nothing is free) but sometimes its worth it.
 
-In this architecture, you still have a single listener thread and that same thread usually also accepts connections. The difference here is each accepted connection is handed over to another thread. Once a thread has a connection it will call read on the connection file descriptor using any IO paradigm is popular these days ([io_uring](https://man.archlinux.org/man/io_uring.7.en) seems to be the jam in 2022). [memcached](http://memcached.org/) use this architecture.
+In this architecture, you still have a single listener thread and that same thread usually also accepts connections. The difference here is each accepted connection is handed over to another thread. Once a thread has a connection it will call read on the connection file descriptor using any IO paradigm is popular these days ([io_uring](https://man.archlinux.org/man/io_uring.7.en) seems to be the jam in 2022). [memcached](https://memcached.org/) use this architecture.
 
 I used to think that for each new accepted connection you can just spin up a new thread and hand it over, but that turns out to be a bad idea. Pretty soon you will run out of memory and if even you don’t, the context-switching between the different threads in a limited number of cores will significantly hinder performance.
 
