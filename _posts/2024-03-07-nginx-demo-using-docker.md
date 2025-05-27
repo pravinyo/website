@@ -4,6 +4,7 @@ author: pravin_tripathi
 date: 2024-03-07 00:00:00 +0530
 readtime: true
 media_subpath: /assets/img/nginx-understanding-and-deployment/
+attachment_path: /assets/document/attachment/nginx-demo-using-docker/
 permalink: /nginx-understanding-and-deployment/nginx-demo-using-docker/
 parent: /nginx-understanding-and-deployment/
 categories: [Blogging, Article]
@@ -182,6 +183,6 @@ Add to network,
 docker network connect backendnet nginx2
 ```
 
-[nginx-udemy-container 2.zip](nginx-demo-using-docker/nginx-udemy-container_2.zip)
+[nginx-udemy-container 2.zip]({{page.attachment_path}}/nginx-udemy-container_2.zip)
 
 [Back to Parent Page]({{ page.parent }})
