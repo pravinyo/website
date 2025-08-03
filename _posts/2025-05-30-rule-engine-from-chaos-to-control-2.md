@@ -3,6 +3,7 @@ title: "From Chaos to Control Part 2: Configuration-Driven Rule Orchestration"
 author: pravin_tripathi
 date: 2025-05-30 00:00:00 +0530
 readtime: true
+attachment_path: /assets/document/attachment/rule-engine-from-chaos-to-control/
 media_subpath: /assets/img/rule-engine-from-chaos-to-control/
 categories: [Blogging, Article]
 mermaid: true
@@ -2602,4 +2603,7 @@ For organizations adopting this pattern:
 
 **Ready to implement configuration-driven rule orchestration in your organization?** Start with the stage abstraction pattern and build incrementally. The modular approach we've demonstrated works in production environments and provides immediate value while building toward comprehensive rule management capabilities.
 
-The next evolution in this series will explore **real-time rule updates and machine learning integration** - stay tuned for Part 3!
+## Code file
+[Download the complete code for this rule engine implementation]({{page.attachment_path}}/rule-engine-configuration-driven.zip)
+
+The next evolution in this series will explore **Conditional Rule Orchestration** - stay tuned for Part 3!
