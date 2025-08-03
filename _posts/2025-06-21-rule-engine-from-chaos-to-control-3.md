@@ -3,6 +3,7 @@ title: "From Chaos to Control Part 3: Conditional Rule Orchestration"
 author: pravin_tripathi
 date: 2025-06-21 00:00:00 +0530
 readtime: true
+attachment_path: /assets/document/attachment/rule-engine-from-chaos-to-control/
 media_subpath: /assets/img/rule-engine-from-chaos-to-control/
 categories: [Blogging, Article]
 mermaid: true
@@ -1095,4 +1096,7 @@ For organizations implementing conditional rule execution:
 
 **Ready to implement conditional rule orchestration?** Start with the conditional dependency abstraction and build incrementally. The patterns demonstrated here work in production environments and provide immediate value while building toward comprehensive business rule platforms.
 
-*Next in this series: **Real-time Rule Updates and Distributed Execution** - how to modify running rule engines without downtime and scale conditional execution across multiple services.*
+## Code file
+[Download the complete code for this rule engine implementation]({{page.attachment_path}}/rule-engine-conditional.zip)
+
+The next evolution in this series will explore **Building Dynamic Rule Execution APIs** - stay tuned for Part 4!
