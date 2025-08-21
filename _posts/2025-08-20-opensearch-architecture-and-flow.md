@@ -581,10 +581,22 @@ curl -X GET "localhost:9200/_cluster/health?pretty"
 # Expected response
 {
   "cluster_name" : "opensearch-cluster",
-  "status" : "yellow",  # Yellow is normal for single-node
+  "status" : "green",
   "timed_out" : false,
   "number_of_nodes" : 1,
-  "number_of_data_nodes" : 1
+  "number_of_data_nodes" : 1,
+  "discovered_master" : true,
+  "discovered_cluster_manager" : true,
+  "active_primary_shards" : 3,
+  "active_shards" : 3,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
 }
 ```
 
@@ -801,6 +813,23 @@ for hit in filtered_results['hits']['hits']:
     print(f"- {source['title']} by {source['author']}")
 ```
 
+```sh
+# Example output for search results
+Connected to OpenSearch 3.2.0
+Found 2 results for 'OpenSearch':
+- OpenSearch vs Elasticsearch (Score: 0.2215181)
+- Getting Started with OpenSearch (Score: 0.20990455)
+
+==================================================
+
+Multi-field search results:
+- Advanced OpenSearch Queries
+
+==================================================
+
+Filtered search results:
+- Getting Started with OpenSearch by john_doe
+```
 ### Aggregations (Analytics)
 
 ```python
@@ -858,9 +887,29 @@ def analyze_blog_data():
 analyze_blog_data()
 ```
 
-***
+```sh
+# Example output for analytics
+Posts by author:
+- bob_wilson: 1 posts
+- jane_smith: 1 posts
+- john_doe: 1 posts
+
+Posts over time:
+- 2024-01-15: 1 posts
+- 2024-01-16: 0 posts
+- 2024-01-17: 0 posts
+- 2024-01-18: 0 posts
+- 2024-01-19: 0 posts
+- 2024-01-20: 1 posts
+- 2024-01-21: 0 posts
+- 2024-01-22: 0 posts
+- 2024-01-23: 0 posts
+- 2024-01-24: 0 posts
+- 2024-01-25: 1 posts
+```
 
 ## Advanced Data Processing Pipelines
+OpenSearch provides powerful tools for transforming and enriching data before indexing it. This is particularly useful for log processing, data normalization, and complex data transformations.
 
 ### Ingest Pipelines
 
@@ -995,9 +1044,86 @@ def bulk_index_logs():
 bulk_index_logs()
 ```
 
-***
+---
+
+## Visualizing and Verifying Your Data in OpenSearch Dashboards
+To view and verify your indexed data and pipelines in OpenSearch Dashboards, follow these steps:
+
+### Step 1: Access OpenSearch Dashboards
+
+- Open your browser and go to [http://localhost:5601](http://localhost:5601) (default port from Docker setup).
+- You should see the OpenSearch Dashboards interface.
+
+### Step 2: Use Dev Tools to View the Pipeline
+
+- In the left sidebar, click on **Dev Tools**.
+- In the console area, enter the following command to view your specific pipeline:
+
+    ```
+    GET _ingest/pipeline/log_pipeline
+    ```
+
+- Click the Play button (►) or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to execute.
+- You'll see your pipeline configuration with all the processors you defined.
+
+### Step 3: View All Pipelines (Optional)
+
+- To see all pipelines in your system, run:
+
+    ```
+    GET _ingest/pipeline/
+    ```
+
+---
+
+### Viewing Your Indexed Data
+
+#### Step 4: Check if Your Index Exists
+
+- In Dev Tools, run:
+
+    ```
+    GET _cat/indices?v
+    ```
+
+- This will show all indices, including your `application_logs` index.
+
+#### Step 5: View the Processed Data
+
+- Search your indexed data:
+
+    ```
+    GET application_logs/_search
+    ```
+
+- This shows all documents in your index.
+
+- View a specific document (replace `YOUR_DOCUMENT_ID` with the actual ID):
+
+    ```
+    GET application_logs/_doc/YOUR_DOCUMENT_ID
+    ```
+
+- Search with pretty formatting:
+
+    ```
+    GET application_logs/_search?pretty
+    ```
+
+#### Step 6: Verify Pipeline Processing
+
+Your processed document should now have these fields (created by your pipeline):
+
+- `@timestamp` (converted from the original timestamp)
+- `level` (lowercase)
+- `service` (extracted from the log message)
+- `log_message` (extracted message content)
+- `processed_at` (processing timestamp)
+
+---
 
 ## Monitoring and Performance Optimization
+Monitoring and performance optimization are critical for maintaining a healthy OpenSearch cluster, ensuring reliability, and delivering fast query responses. This section covers essential techniques for tracking cluster health, analyzing resource usage, and identifying bottlenecks. By proactively monitoring and tuning your deployment, you can prevent outages, optimize performance, and scale efficiently as your data grows.
 
 ### Basic Health Monitoring
 
@@ -1036,6 +1162,21 @@ def check_cluster_health():
 
 # Execute health check
 check_cluster_health()
+```
+
+```sh
+# Example output for cluster health
+🏥 Cluster Health Overview:
+Status: yellow
+Nodes: 1
+Active Shards: 8
+Unassigned Shards: 1
+
+💻 Node Performance:
+Node opensearch-node1:
+  Heap Usage: 32% (0.2GB / 0.5GB)
+  CPU Usage: -1%
+
 ```
 
 ### Query Performance Analysis
@@ -1086,7 +1227,18 @@ def analyze_slow_queries():
 analyze_slow_queries()
 ```
 
-***
+```sh
+# Example output for query performance analysis
+✅ Slow query logging configured
+
+📊 Index Performance Analysis:
+Index: application_logs
+  Total Queries: 13
+  Average Query Time: 3.38ms
+Index: blog_posts
+  Total Queries: 10
+  Average Query Time: 17.30ms
+```
 
 ## Production Best Practices
 
@@ -1119,6 +1271,7 @@ transport.port: 9300                      # Inter-node communication port
 ```
 
 ### Index Lifecycle Management (ILM)
+Index Lifecycle Management (ILM) automates the process of managing indices as they age, grow, or become less frequently accessed. This is essential for controlling storage costs, maintaining optimal performance, and ensuring compliance by automatically rolling over, optimizing, or deleting old indices. With ILM, you can define policies that handle index rollover, retention, and deletion without manual intervention.
 
 ```python
 def create_log_lifecycle_policy():
@@ -1200,6 +1353,23 @@ create_log_lifecycle_policy()
 
 ### Backup Strategy
 
+A robust backup strategy is essential for disaster recovery and data retention in production OpenSearch clusters. OpenSearch supports **snapshot and restore**, allowing you to back up indices or the entire cluster to a repository (local filesystem, S3, etc.) and restore them as needed.
+
+#### Key Steps for Production Backups
+
+1. **Choose a Repository Type**:  
+    - Local filesystem (for on-premises or single-node clusters)
+    - Remote storage (Amazon S3, Azure Blob, Google Cloud Storage, etc.)
+
+2. **Register the Repository**:  
+    Use the OpenSearch API to register your backup location.
+
+3. **Automate Snapshots**:  
+    Schedule regular snapshots (e.g., daily, hourly) using cron jobs or OpenSearch plugins.
+
+4. **Monitor and Test Restores**:  
+    Regularly verify that snapshots are being created and can be restored.
+
 ```python
 def setup_backup_repository():
     """Configure automated snapshot backups"""
@@ -1249,205 +1419,6 @@ def setup_backup_repository():
 # Set up backup system
 setup_backup_repository()
 ```
-
-***
-
-## Troubleshooting and Maintenance
-
-### Common Issues and Quick Fixes
-
-**Cluster Status Red**:
-```python
-def diagnose_red_cluster():
-    """Diagnose and resolve red cluster status"""
-    
-    try:
-        # Get detailed cluster health information
-        health = client.cluster.health(level="indices")
-        
-        if health["status"] != "red":
-            print("✅ Cluster is not red")
-            return False
-        
-        unassigned_shards = health['unassigned_shards']
-        print(f"🔴 Cluster is RED with {unassigned_shards} unassigned shards")
-        
-        # Get shard allocation explanation
-        try:
-            allocation_explain = client.cluster.allocation_explain()
-            print("🔍 Shard allocation details:")
-            
-            # Extract key information from allocation explanation
-            current_node = allocation_explain.get('current_node')
-            allocation_explanation = allocation_explain.get('can_allocate', 'unknown')
-            
-            print(f"  Current node: {current_node}")
-            print(f"  Can allocate: {allocation_explanation}")
-            
-        except Exception as e:
-            print(f"  Unable to get allocation explanation: {e}")
-        
-        # Check individual index health
-        indices = health.get("indices", {})
-        for index_name, index_info in indices.items():
-            if index_info["status"] == "red":
-                print(f"❌ Index '{index_name}' is RED")
-                print(f"   Unassigned shards: {index_info['unassigned_shards']}")
-        
-        # Provide resolution steps
-        print("\n🔧 Resolution Steps:")
-        print("1. Check node disk space: df -h")
-        print("2. Verify node connectivity: curl -X GET 'node:9200/_cat/nodes'")
-        print("3. Check OpenSearch logs for errors")
-        print("4. Consider manual shard allocation if nodes are healthy")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Error diagnosing cluster: {e}")
-        return False
-
-# Execute diagnosis
-if diagnose_red_cluster():
-    print("Red cluster detected - follow resolution steps above")
-```
-
-**Performance Issues**:
-```python
-def diagnose_performance_issues():
-    """Identify and report performance bottlenecks"""
-    
-    print("🔍 Performance Diagnostics:\n")
-    
-    # Check for large shards
-    try:
-        shards = client.cat.shards(format="json", h="index,shard,prirep,store")
-        
-        large_shards = []
-        for shard in shards:
-            # Parse shard size if available
-            store_size = shard.get('store', '')
-            if 'gb' in store_size.lower():
-                try:
-                    size_value = float(store_size.replace('gb', '').strip())
-                    if size_value > 50:  # Flag shards larger than 50GB
-                        large_shards.append({
-                            'index': shard['index'],
-                            'shard': shard['shard'], 
-                            'size_gb': size_value,
-                            'type': shard['prirep']  # primary or replica
-                        })
-                except ValueError:
-                    continue
-        
-        if large_shards:
-            print("⚠️ Large Shards Detected (>50GB):")
-            for shard in large_shards:
-                print(f"  {shard['index']}[{shard['shard']}]: {shard['size_gb']}GB ({shard['type']})")
-            print("  Recommendation: Consider reindexing with more primary shards\n")
-        else:
-            print("✅ No oversized shards detected\n")
-            
-    except Exception as e:
-        print(f"❌ Error checking shard sizes: {e}\n")
-    
-    # Check index segment counts
-    try:
-        indices_stats = client.indices.stats()
-        
-        high_segment_indices = []
-        for index_name, stats in indices_stats['indices'].items():
-            if index_name.startswith('.'):  # Skip system indices
-                continue
-                
-            segment_count = stats['total'].get('segments', {}).get('count', 0)
-            if segment_count > 100:  # Flag indices with many segments
-                high_segment_indices.append({
-                    'index': index_name,
-                    'segments': segment_count
-                })
-        
-        if high_segment_indices:
-            print("⚠️ High Segment Count Detected:")
-            for idx in high_segment_indices:
-                print(f"  {idx['index']}: {idx['segments']} segments")
-            print("  Recommendation: Run force merge during low-traffic periods\n")
-        else:
-            print("✅ Segment counts are healthy\n")
-            
-    except Exception as e:
-        print(f"❌ Error checking segment counts: {e}\n")
-
-# Run performance diagnostics
-diagnose_performance_issues()
-```
-
-### Maintenance Tasks
-
-```python
-def routine_maintenance():
-    """Perform regular cluster maintenance tasks"""
-    
-    print("🔧 Starting Routine Maintenance\n")
-    
-    # 1. Clear caches to free memory
-    try:
-        # Clear field data cache (used for sorting/aggregations)
-        client.indices.clear_cache(fielddata=True)
-        print("✅ Cleared field data cache")
-        
-        # Clear query cache (used for filter caching)
-        client.indices.clear_cache(query=True)
-        print("✅ Cleared query cache")
-        
-    except Exception as e:
-        print(f"❌ Error clearing caches: {e}")
-    
-    # 2. Check and clean old snapshots
-    try:
-        snapshots = client.snapshot.get(repository="backup_repo", snapshot="*")
-        snapshot_list = snapshots.get('snapshots', [])
-        
-        print(f"\n📸 Found {len(snapshot_list)} snapshots")
-        
-        if len(snapshot_list) > 10:  # Keep only latest 10 snapshots
-            print("ℹ️ Consider cleaning old snapshots to free storage space")
-            
-            # Show oldest snapshots for manual review
-            sorted_snapshots = sorted(snapshot_list, key=lambda x: x['start_time'])
-            old_snapshots = sorted_snapshots[:-10]  # All but latest 10
-            
-            print("  Snapshots eligible for deletion:")
-            for snap in old_snapshots[:5]:  # Show first 5 old snapshots
-                print(f"    {snap['snapshot']} ({snap['start_time']})")
-                
-    except Exception as e:
-        print(f"❌ Error checking snapshots: {e}")
-    
-    # 3. Monitor cluster statistics
-    try:
-        stats = client.cluster.stats()
-        
-        # Extract key metrics
-        total_docs = stats['indices']['docs']['count']
-        total_size_gb = stats['indices']['store']['size_in_bytes'] / (1024**3)
-        node_count = stats['nodes']['count']['total']
-        
-        print(f"\n📊 Cluster Statistics:")
-        print(f"  Total Documents: {total_docs:,}")
-        print(f"  Total Size: {total_size_gb:.2f} GB") 
-        print(f"  Active Nodes: {node_count}")
-        
-    except Exception as e:
-        print(f"❌ Error getting cluster stats: {e}")
-    
-    print("\n✅ Maintenance completed")
-
-# Execute routine maintenance
-routine_maintenance()
-```
-
-***
 
 ## Key Takeaways for Software Engineers
 
