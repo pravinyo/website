@@ -23,14 +23,14 @@ This guide will take you from understanding OpenSearch's core architecture to im
 
 1. [Understanding the Problem OpenSearch Solves](#understanding-the-problem-opensearch-solves)
 2. [OpenSearch Architecture Deep Dive](#opensearch-architecture-deep-dive)  
-3. [When to Use OpenSearch (and When Not To)](#when-to-use-opensearch)
-4. [Core Components and Internal Mechanisms](#core-components-and-internal-mechanisms)
+3. [The Journey of Data: End-to-End Ingestion and Indexing](#the-journey-of-data-end-to-end-ingestion-and-indexing)
 5. [Installation and Environment Setup](#installation-and-environment-setup)
 6. [Hands-On Implementation Guide](#hands-on-implementation-guide)
 7. [Advanced Data Processing Pipelines](#advanced-data-processing-pipelines)
 8. [Monitoring and Performance Optimization](#monitoring-and-performance-optimization)
 9. [Production Best Practices](#production-best-practices)
-10. [Troubleshooting and Maintenance](#troubleshooting-and-maintenance)
+10. [Key Takeaways for Software Engineers](#key-takeaways-for-software-engineers)
+11. [More Resources](#more-resources)
 
 ***
 
