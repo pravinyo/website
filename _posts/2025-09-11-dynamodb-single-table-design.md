@@ -1,7 +1,7 @@
 ---
 title: "DynamoDB Single Table Design: Strategic Key Design and GSI Optimization"
 author: pravin_tripathi
-date: 2025-08-29 00:00:00 +0530
+date: 2025-09-11 00:00:00 +0530
 readtime: true
 media_subpath: /assets/img/dynamodb-single-table-design/
 categories: [Blogging, Article]
