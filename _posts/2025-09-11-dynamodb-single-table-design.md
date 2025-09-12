@@ -4,6 +4,7 @@ author: pravin_tripathi
 date: 2025-09-11 00:00:00 +0530
 readtime: true
 media_subpath: /assets/img/dynamodb-single-table-design/
+attachment_path: /assets/document/attachment/dynamodb-single-table-design
 categories: [Blogging, Article]
 mermaid: true
 tags: [softwareengineering, backenddevelopment, dynamodb]
@@ -621,3 +622,7 @@ Remember: **Single table design is about optimizing for your primary access patt
 The investment fund example shows that even complex financial relationships—with multiple entity types, historical versioning, and position-specific data—can be elegantly modeled using single table design when you understand and apply these fundamental principles correctly.
 
 Happy modeling! 🚀
+
+### Download the Report
+
+For a deeper dive into the rationale behind DynamoDB's single table design pattern, download the comprehensive PDF report: [Download DynamoDB_Single_Table_Design.pdf]({{page.attachment_path}}/DynamoDB_Single_Table_Design.pdf)
