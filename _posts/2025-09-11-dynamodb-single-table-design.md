@@ -25,6 +25,7 @@ The fundamental rule: **items that are accessed together should be stored togeth
 
 ## Domain Model: Investment Fund Management
 
+Let's consider a simplified investment fund management system to illustrate single table design principles.
 Our system manages investment funds with multiple investors, where each **Fund + Investor combination** represents a unique **Position**. Here's how the entities relate:
 
 - **Document**: Contains position summaries and can be latest or historical (document-level data)
@@ -48,6 +49,8 @@ Our system manages investment funds with multiple investors, where each **Fund +
 
 ## The Single Table Structure
 
+Table Name: `investment_fund`  
+
 | PK | SK | EntityType | Amount | Status | Version | PositionId |
 |----|----|------------|--------|--------|---------|------------|
 | DOC001 | DOCUMENT#LATEST | Document | - | Active | Latest | - |
@@ -66,14 +69,20 @@ Our system manages investment funds with multiple investors, where each **Fund +
 | DOC002 | CAPITAL_CALL#POSITION_2 | CapitalCall | 400000 | Pending | Latest | POSITION_2 |
 
 **Key Design Notes:**
-- **Document ID as PK** groups all related entities for efficient document-centric queries
-- **PositionId** is only populated for `CAPITAL_CALL`, `DISTRIBUTION`, and `UNFUNDED_COMMITMENT` entities
-- **Document** and **Capital Activity** entities are document-level aggregates without PositionId
-- **SK prefixes** enable efficient filtering by entity type using `begins_with()`
+- **Document ID as Partition Key (PK):** Ensures all entities related to a document are co-located, enabling fast, single-query document overviews.
+- **Selective PositionId Usage:** The `PositionId` attribute is present only for position-specific entities (`CAPITAL_CALL`, `DISTRIBUTION`, `UNFUNDED_COMMITMENT`), keeping document-level items clean and unambiguous.
+- **Document-Level Aggregates:** Entities like `Document` and `Capital Activity` represent document-wide data and do not include a `PositionId`.
+- **Sort Key (SK) Prefix Patterns:** Consistent SK prefixes (e.g., `CAPITAL_CALL#`, `DISTRIBUTION#`) allow efficient entity-type filtering with DynamoDB's `begins_with()` operator, supporting targeted queries without scans.
+
 
 ## Core Query Patterns: The Power of Strategic Keys
 
+Let's explore key query patterns enabled by this design. 
+
 ### Query 1: Complete Document Overview (Primary Access Pattern)
+
+Let's say we want to retrieve all entities for a specific document, including all positions. Because all related entities share the same partition key (document ID), we can retrieve everything with a single query:
+
 ```python
 import boto3
 from boto3.dynamodb.conditions import Key
@@ -128,6 +137,9 @@ print(f"Position 1 has {len(document_data['positions']['POSITION_1']['capital_ca
 ```
 
 ### Query 2: Position-Specific Items within Document
+
+Let's say we want to get all items for a specific position within a document. We can still do this efficiently with a single query, filtering by `PositionId`:
+
 ```python
 def get_position_items(document_id, position_id):
     """
@@ -155,6 +167,9 @@ position1_calls = get_position_capital_calls('DOC001', 'POSITION_1')
 ```
 
 ### Query 3: Entity Type Filtering with SK Prefixes
+
+Let's say we want to get all capital-related items (capital calls, distributions, commitments) for a document. We can leverage the SK prefix patterns:
+
 ```python
 def get_all_capital_entities(document_id):
     """
@@ -181,9 +196,12 @@ latest_doc = get_latest_document('DOC001')
 
 ## GSI Design: Avoiding Hot Partitions
 
-One of the most critical mistakes in DynamoDB design is creating GSIs that concentrate similar entities in the same partition, leading to hot partition problems.
+One of the most critical mistakes in DynamoDB design is creating GSIs that concentrate similar entities in the same partition, leading to hot partition problems. Let's see how to avoid this.
 
 ### Problematic GSI Design (Hot Partition Anti-Pattern)
+
+Incorrect GSI designs often use low cardinality partition keys, causing many items to land in the same partition:
+
 ```python
 # DANGEROUS: All latest documents hit same partition
 hot_partition_gsi = [
@@ -196,9 +214,16 @@ hot_partition_gsi = [
 # This creates throttling and poor performance under load
 ```
 
+Instead, we design GSIs with **high cardinality partition keys** that uniquely identify each item or a small group of items.
+
+
 ### Corrected GSI Design: High Cardinality Keys
 
+We create two GSIs to support secondary access patterns without hot partitions:
+
 #### GSI 1: Entity-Document Index (Document-Specific Queries)
+
+GSI 1 allows efficient queries for specific entities within a document, using a composite key that includes the entity type and document ID.
 
 | GSI_PK                        | GSI_SK   | PK     | SK                      | EntityType   | PositionId   |
 |-------------------------------|----------|--------|-------------------------|--------------|--------------|
@@ -210,6 +235,8 @@ hot_partition_gsi = [
 
 #### GSI 2: Position-Document Index (Position-Centric Queries)
 
+GSI 2 allows efficient queries for all data related to a position across documents, using the position ID as the partition key.
+
 | GSI2_PK    | GSI2_SK             | PK     | SK                      | EntityType   | PositionId   |
 |------------|---------------------|--------|-------------------------|--------------|--------------|
 | POSITION_1 | CAPITAL_CALL#DOC001 | DOC001 | CAPITAL_CALL#POSITION_1 | CapitalCall  | POSITION_1   |
@@ -218,6 +245,9 @@ hot_partition_gsi = [
 | POSITION_2 | CAPITAL_CALL#DOC001 | DOC001 | CAPITAL_CALL#POSITION_2 | CapitalCall  | POSITION_2   |
 
 ### GSI Query Patterns
+
+Let's see how to use these GSIs effectively:
+
 ```python
 def find_specific_document_latest(document_id):
     """
@@ -258,7 +288,12 @@ position1_all_data = find_all_position_data_across_documents('POSITION_1')
 
 ## Advanced Query Examples
 
+In addition to the core patterns, here are some advanced queries enabled by this design.
+
 ### Multi-Position Analysis within Document
+
+Here's how to analyze all positions within a document in one query:
+
 ```python
 def analyze_document_positions(document_id):
     """
@@ -306,6 +341,9 @@ print(f"POSITION_2 total distributed: ${doc001_analysis['POSITION_2']['total_dis
 ```
 
 ### Historical Data Queries
+
+It is often necessary to analyze historical versions of documents. Here's how to do that efficiently:
+
 ```python
 def get_historical_documents(document_id, start_date, end_date):
     """
@@ -347,7 +385,12 @@ doc_versions = compare_document_versions('DOC001')
 
 ## Anti-Patterns: What Breaks Single Table Design
 
+In contrast, here are some common anti-patterns that break the principles of single table design.
+
 ### Anti-Pattern 1: Different Partition Keys for Related Entities
+
+Instead of using the document ID as the partition key for all related entities, some designs use different PKs for each entity type. This breaks co-location and forces multiple queries or expensive scans:
+
 ```python
 # WRONG: Different PK for each entity type breaks co-location
 broken_structure = [
@@ -381,6 +424,9 @@ def get_document_overview_broken(document_id):
 ```
 
 ### Anti-Pattern 2: Hot Partition GSIs
+
+Hot partitions occur when a GSI uses a low cardinality partition key, causing many items to be concentrated in the same partition. This leads to throttling and poor performance under load:
+
 ```python
 # WRONG: Low cardinality GSI partition keys
 bad_gsi_patterns = [
@@ -446,28 +492,10 @@ def get_document_overview_position_centric(document_id):
 | **Broken Pattern** | Multiple scans (~100ms+) | Scan operations | Yes | 2+ scans | Poor |
 | **Hot Partition GSI** | 1 query (variable) | 1 query (variable) | None | 1 | Poor |
 
-## Best Practices for Single Table Design
-
-### Do This:
-1. **Identify primary access patterns first** - design keys to optimize for most common queries
-2. **Use document ID as PK** when document-centric access is primary
-3. **Design meaningful SK patterns** with prefixes for entity type filtering
-4. **Use PositionId selectively** - only for position-specific entities
-5. **Create high-cardinality GSIs** - each partition key should be unique or near-unique
-6. **Version entities appropriately** - distinguish latest vs historical data
-7. **Group related entities** under the same partition key for co-location
-
-### Avoid This:
-1. **Different PKs for related data** - breaks the fundamental co-location principle
-2. **Hot partition GSIs** - low cardinality partition keys cause throttling
-3. **Complex SK patterns** that don't align with query requirements
-4. **Unnecessary attributes** - don't add PositionId to document-level entities
-5. **Scan operations** for finding related data - always prefer query operations
-6. **Ignoring access patterns** - don't assume one size fits all
 
 ## Design Decision Framework
 
-### Step 1: Analyze Access Patterns
+When designing your single table, follow these structured steps:
 
 ### Step 1: Analyze Access Patterns
 
@@ -520,57 +548,6 @@ Design GSIs with high-cardinality partition keys to avoid hot partitions and sup
 
 ---
 
-## Key Design Principles
-
-### 1. Data Co-location Through Strategic Keys
-```python
-# Document ID groups all related entities for efficient access
-document_entities = {
-    "PK": "DOC001",  # Same for all entities in document
-    "SK_patterns": {
-        "document": "DOCUMENT#VERSION",           # Document metadata
-        "activities": "CAPITAL_ACTIVITY#VERSION", # Document-level activities
-        "calls": "CAPITAL_CALL#POSITION_ID",      # Position-specific calls
-        "distributions": "DISTRIBUTION#POSITION_ID", # Position-specific distributions
-        "commitments": "UNFUNDED_COMMITMENT#POSITION_ID" # Position-specific commitments
-    }
-}
-```
-
-### 2. Entity Classification
-```python
-# Document-level entities (no PositionId)
-document_level_entities = [
-    "DOCUMENT#LATEST",        # Document metadata
-    "DOCUMENT#2025-09-01",    # Historical document
-    "CAPITAL_ACTIVITY#LATEST" # Document-level capital activity
-]
-
-# Position-specific entities (with PositionId)
-position_specific_entities = [
-    "CAPITAL_CALL#POSITION_1",        # Position-specific capital call
-    "DISTRIBUTION#POSITION_1",        # Position-specific distribution  
-    "UNFUNDED_COMMITMENT#POSITION_1"  # Position-specific commitment
-]
-```
-
-### 3. GSI Hot Partition Avoidance
-```python
-# GOOD: High cardinality - distributed load
-good_gsi_patterns = {
-    "document_specific": "DOCUMENT#LATEST#DOC001",     # Unique per document
-    "position_document": "CAPITAL_CALL#POS1#DOC001",   # Unique combination
-    "time_distributed": "LATEST_DOCS#2025-09"          # Time-based sharding
-}
-
-# BAD: Low cardinality - concentrated load
-bad_gsi_patterns = {
-    "all_latest": "DOCUMENT#LATEST",        # All latest docs same partition
-    "all_active": "STATUS#ACTIVE",          # All active items same partition
-    "all_calls": "TYPE#CAPITAL_CALL"        # All capital calls same partition
-}
-```
-
 ## Real-World Implementation Considerations
 
 ### Scaling and Performance
@@ -585,12 +562,15 @@ bad_gsi_patterns = {
 - **Cost efficiency** - fewer read operations and no cross-table joins
 - **Easier monitoring** - single table to monitor for performance metrics
 
-### Development Workflow
-1. **Model access patterns first** before designing keys
-2. **Prototype with sample data** to validate query patterns
-3. **Test GSI performance** under simulated load
-4. **Monitor partition utilization** to detect hot partitions early
-5. **Iterate based on usage patterns** as requirements evolve
+### Future Challenges
+While single table design offers powerful benefits, be aware of these challenges:
+
+- **Evolving Access Patterns:** If your application's queries change significantly, your key design may become suboptimal, requiring costly migrations.
+- **Complexity:** Modeling all entities in one table increases cognitive load and can make onboarding new developers harder.
+- **Item Size Limits:** DynamoDB has a 400KB item size limit; denormalizing too much data can hit this ceiling.
+- **GSI Management:** As your application grows, you may need to add or redesign GSIs, which can be operationally complex.
+- **Monitoring Hot Partitions:** Even with careful design, unexpected data skew can cause hot partitions, requiring ongoing monitoring and adjustment.
+- **Testing and Validation:** More complex key patterns require thorough testing to ensure all access patterns are efficient and correct.
 
 ## Conclusion
 
