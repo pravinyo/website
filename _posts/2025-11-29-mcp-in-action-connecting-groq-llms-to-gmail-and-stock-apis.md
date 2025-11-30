@@ -3,6 +3,7 @@ title: "MCP in Action: Connecting Groq LLMs to Gmail and Stock APIs"
 author: pravin_tripathi
 date: 2025-11-29 00:00:00 +0530
 readtime: true
+attachment_path: /assets/document/attachment/mcp-in-action-connecting-groq-llms-to-gmail-and-stock-apis
 media_subpath: /assets/img/mcp-in-action-connecting-groq-llms-to-gmail-and-stock-apis/
 categories: [Blogging, Article]
 mermaid: true
@@ -1683,3 +1684,5 @@ The example implementation with both Gmail and Stock servers demonstrates that M
 - Handles both simple stateless services and complex stateful integrations
 
 Whether you're building an AI assistant for email, financial data, customer support, or any domain, MCP provides the foundation for building robust, professional-grade AI applications that can seamlessly integrate multiple services and scale to production demands.
+
+Download the code: [mcp-example.zip]({{page.attachment_path}}/mcp-example.zip)
