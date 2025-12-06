@@ -27,8 +27,7 @@ image:
 7. [Security and Authorization: Enterprise-Grade Access Control](#security)
 8. [Real-World Implementation: Multi-Tenant Rule Execution](#real-world)
 9. [Performance Optimization: Caching and Parallel Execution](#performance)
-10. [Production Monitoring: Observability and Metrics](#monitoring)
-11. [Conclusion: From Static Pipelines to Dynamic Platforms](#conclusion)
+10. [Conclusion: From Static Pipelines to Dynamic Platforms](#conclusion)
 
 ## Introduction: From Pipeline to Precision {#introduction}
 
