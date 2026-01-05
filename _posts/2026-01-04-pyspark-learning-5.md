@@ -14,9 +14,7 @@ image:
   alt: Generated using Gemini AI
 ---
 
-*Building reliable, optimized, and production-ready data pipelines*
-
-**Part 5 of 5 in the Complete PySpark Series**
+**Part 5 of 5 in the Complete PySpark Series**: *Building reliable, optimized, and production-ready data pipelines*
 
 ## Table of Contents
 
@@ -875,7 +873,7 @@ def validate_customers(df):
     return df
 ```
 
-## Where This Fits in the Series
+## We came to the end of the PySpark series!
 
 You've completed the entire PySpark series! Article 5 covered testing strategies for reliable code, debugging techniques for troubleshooting production issues, performance optimization principles, the Catalyst optimizer internals, and production best practices.
 

@@ -14,9 +14,7 @@ image:
   alt: Generated using Gemini AI
 ---
 
-*Building ACID-compliant data lakes and real-time streaming pipelines*
-
-**Part 4 of 5 in the Complete PySpark Series**
+**Part 4 of 5 in the Complete PySpark Series**: *Building ACID-compliant data lakes and real-time streaming pipelines*
 
 ## Table of Contents
 
@@ -940,7 +938,7 @@ print(f"Status: {query.status}")
 query.awaitTermination()
 ```
 
-## Where This Fits in the Series
+## What is Next in the Series
 
 You've now mastered Delta Lake for ACID transactions, time travel, and upserts, plus Structured Streaming for building real-time data pipelines. Article 4 covered Delta Lake operations including merge/upsert patterns, CDC, optimization, and comprehensive Structured Streaming patterns for Kafka, file, and Delta sources.
 

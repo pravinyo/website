@@ -14,9 +14,7 @@ image:
   alt: Generated using Gemini AI
 ---
 
-*Mastering data manipulation, filtering, joins, and aggregations*
-
-**Part 2 of 5 in the Complete PySpark Series**
+**Part 2 of 5 in the Complete PySpark Series**: *Mastering data manipulation, filtering, joins, and aggregations*
 
 ## Table of Contents
 
@@ -921,7 +919,7 @@ user_purchases = orders \
 
 
 
-## Where This Fits in the Series
+## What is Next in the Series
 
 You've now mastered DataFrame operations and transformations - the core building blocks of PySpark data processing. Article 2 covered reading data, selection and filtering, joins and aggregations, plus essential built-in functions for strings, dates, and arrays.
 

@@ -14,9 +14,7 @@ image:
   alt: Generated using Gemini AI
 ---
 
-*Mastering Window Functions, UDFs, and Null Handling for Robust Data Pipelines*
-
-**Part 3 of 5 in the Complete PySpark Series**
+**Part 3 of 5 in the Complete PySpark Series**: *Mastering Window Functions, UDFs, and Null Handling for Robust Data Pipelines*
 
 ## Table of Contents
 
@@ -545,7 +543,7 @@ null_counts = df.select([
 null_counts.show()
 ```
 
-## Where This Fits in the Series
+## What is Next in the Series
 
 You've now mastered advanced analytical patterns in PySpark. Article 3 covered window functions for sophisticated time-series and ranking calculations, UDFs for custom business logic, and proper null handling to ensure correct results.
 

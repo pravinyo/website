@@ -14,9 +14,7 @@ image:
   alt: Generated using Gemini AI
 ---
 
-*Understanding the foundations of distributed data processing with Apache Spark*
-
-**Part 1 of 5 in the Complete PySpark Series**
+**Part 1 of 5 in the Complete PySpark Series**: *Understanding the foundations of distributed data processing with Apache Spark*
 
 ## Table of Contents
 
@@ -221,7 +219,7 @@ high_value_customers = spark.sql("""
 """)
 ```
 
-## Where This Fits in the Series
+## What is Next in the Series
 
 You've now learned the foundational concepts of PySpark architecture, lazy evaluation, and SparkSession configuration. Article 1 covered the distributed computing model, key components (driver, executors, tasks), and essential session management patterns.
 
