@@ -19,8 +19,11 @@ image:
 2. [Core Concepts & Theory](#core-concepts--theory)
 3. [Week 2: RAG Fundamentals](#week-2-rag-fundamentals)
 4. [Week 3: Advanced RAG Implementation](#week-3-advanced-rag-implementation)
+    - [The Baseline Stack](#the-baseline-stack)
+    - [Advanced Retrieval Strategies](#advanced-retrieval-strategies)
 5. [Practical Projects](#practical-projects)
 6. [Debugging & Optimization](#debugging--optimization)
+    - [The "RAG Traps" to Avoid](#the-rag-traps-to-avoid)
 
 ## Introduction to RAG
 
@@ -830,6 +833,35 @@ while True:
 
 
 
+
+### 7. Advanced RAG Strategies (Deep Dive)
+
+Beyond the implementation basics, production-grade RAG requires specific strategies to handle edge cases and improve quality.
+
+#### The Baseline Stack
+*Implement these for an immediate quality boost.*
+
+**1. Context-Aware Chunking**
+Instead of arbitrarily splitting documents by character count, use "smart" chunking that respects document structure (headers, paragraphs). This preserves logical flow.
+
+**2. Reranking**
+A two-step search process:
+1. **Retrieve**: Fast vector search finds top 50 candidates.
+2. **Rerank**: A specialized model (e.g., Cohere) scores them for relevance and picks the best 5.
+*Impact*: Often the single highest-quality upgrade for RAG.
+
+**3. Query Expansion**
+Uses an LLM to generate variations of the user's query (e.g., "reset password" → "login help", "account recovery") to catch different phrasings.
+
+#### Advanced Retrieval Strategies
+
+**4. Contextual Retrieval**
+Solves "loss of context" in chunks. Before embedding, use an LLM to prepend a summary of the parent document to the chunk.
+*Example*: "Context: This is from the 2024 Q4 Financial Report. -> [Chunk text]"
+
+**5. Agentic RAG**
+Uses an LLM agent to plan multi-step retrieval for complex questions (e.g., "Compare sales in 2023 vs 2024").
+
 ## Practical Projects
 
 ### Project 1: Company Documentation Chatbot
@@ -1080,6 +1112,19 @@ result2 = chain.invoke({"input": "What is X?"})  # Uses cache
 ```
 
 
+
+
+### 5. Strategic Optimization
+
+#### The "RAG Traps" to Avoid
+1. **Over-Engineering**: Don't start with Knowledge Graphs. Start with a baseline + Reranking.
+2. **Ignoring Latency**: Agentic RAG is powerful but slow. Match strategy to use case.
+3. **Flying Blind**: Always maintain a "Gold Standard" test set (e.g., 20 QA pairs) to measure if changes actually help.
+
+#### Development Approach
+1. **Baseline**: Simple chunking + Vector Search.
+2. **The "Free" Upgrade**: Add Reranking.
+3. **Diagnose**: Add Query Expansion (for recall) or Contextual Retrieval (for accuracy) only as needed.
 
 ## Summary: Week 2-3 Learning Path
 
