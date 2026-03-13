@@ -20,7 +20,7 @@ image:
 2. [The Business Context: Human-in-the-Loop Ingestion](#the-business-context-human-in-the-loop-ingestion)
 3. [The Architecture](#the-architecture)
 4. [The Problem: The "Race Condition" Illusion](#the-problem-the-race-condition-illusion)
-5. [Unmasking the Caches: A Debugging Story](#unmasking-the-caches-a-debugging-story)
+5. [Unmasking the Caches: A Debugging Story](#unmasking-the-caches)
 6. [The Final Solution: The Cache-Busting PySpark Code](#the-final-solution-the-cache-busting-pyspark-code)
 
 ## Introduction
