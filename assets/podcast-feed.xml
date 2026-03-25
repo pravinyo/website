@@ -1,0 +1,68 @@
+---
+layout: compress
+permalink: /podcasts/feed.xml
+# Podcast RSS Feed, reference: https://help.apple.com/itc/podcasts_connect/#/itcb54353390
+---
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>{{ site.title }} - Podcast</title>
+    <description>{{ site.description }}</description>
+    <link>{{ "/" | absolute_url }}</link>
+    <atom:link href="{{ page.url | absolute_url }}" rel="self" type="application/rss+xml"/>
+    <language>{{ site.lang | default: "en" }}</language>
+    <copyright>© {{ 'now' | date: '%Y' }} {{ site.social.name }}</copyright>
+    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+    <generator>Jekyll</generator>
+
+    <!-- iTunes specific tags -->
+    <itunes:author>{{ site.social.name }}</itunes:author>
+    <itunes:summary>{{ site.description }}</itunes:summary>
+    <itunes:owner>
+      <itunes:name>{{ site.social.name }}</itunes:name>
+      <itunes:email>{{ site.social.email }}</itunes:email>
+    </itunes:owner>
+    <itunes:image href="{{ site.url }}{{ site.baseurl }}/assets/img/avatar.jpg"/>
+    <itunes:category text="Technology"/>
+    <itunes:explicit>no</itunes:explicit>
+
+    {% assign sorted_podcasts = site.podcasts | sort: 'date' | reverse %}
+    {% for podcast in sorted_podcasts %}
+    <item>
+      <title>{{ podcast.title | xml_escape }}</title>
+      <description>{% if podcast.description %}{{ podcast.description | xml_escape }}{% else %}{{ podcast.excerpt | strip_html | xml_escape }}{% endif %}</description>
+      <link>{{ podcast.url | absolute_url }}</link>
+      <guid>{{ podcast.url | absolute_url }}</guid>
+      <pubDate>{{ podcast.date | date_to_rfc822 }}</pubDate>
+
+      {% if podcast.audio %}
+        {% assign audio_url = podcast.audio %}
+        {% unless audio_url contains '://' %}
+          {% assign audio_url = site.url | append: site.baseurl | append: '/assets/podcasts/' | append: podcast.media_subpath | append: podcast.audio %}
+        {% endunless %}
+        <enclosure url="{{ audio_url }}" type="audio/mpeg" length="0"/>
+        <itunes:duration>00:30:00</itunes:duration> <!-- You should calculate actual duration -->
+      {% elsif podcast.video %}
+        {% assign video_url = podcast.video %}
+        {% unless video_url contains '://' %}
+          {% assign video_url = site.url | append: site.baseurl | append: '/assets/podcasts/' | append: podcast.media_subpath | append: podcast.video %}
+        {% endunless %}
+        <enclosure url="{{ video_url }}" type="video/mp4" length="0"/>
+        <itunes:duration>00:30:00</itunes:duration> <!-- You should calculate actual duration -->
+      {% endif %}
+
+      <itunes:author>{{ podcast.author | default: site.social.name | xml_escape }}</itunes:author>
+      <itunes:summary>{% if podcast.description %}{{ podcast.description | xml_escape }}{% else %}{{ podcast.excerpt | strip_html | xml_escape }}{% endif %}</itunes:summary>
+      <itunes:image href="{% if podcast.image %}{{ site.url }}{{ site.baseurl }}{{ podcast.image.path | default: podcast.image }}{% else %}{{ site.url }}{{ site.baseurl }}/assets/img/avatar.jpg{% endif %}"/>
+      <itunes:explicit>no</itunes:explicit>
+
+      {% if podcast.categories %}
+        {% for category in podcast.categories %}
+        <category>{{ category | xml_escape }}</category>
+        {% endfor %}
+      {% endif %}
+    </item>
+    {% endfor %}
+  </channel>
+</rss>

@@ -4,6 +4,9 @@
 
 Jekyll::Hooks.register :posts, :post_init do |post|
 
+  # Only process actual posts, not other collections
+  next unless post.collection.label == 'posts'
+
   commit_num = `git rev-list --count HEAD "#{ post.path }"`
 
   if commit_num.to_i > 1

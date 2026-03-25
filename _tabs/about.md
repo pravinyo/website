@@ -1,7 +1,7 @@
 ---
 title: About Pravin Tripathi
 icon: fas fa-info-circle
-order: 4
+order: 5
 ---
 
 > I'm responsible for everything on this site.
