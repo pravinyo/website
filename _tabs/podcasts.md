@@ -2,6 +2,7 @@
 title: Podcasts
 icon: fas fa-podcast
 order: 1
+layout: podcast-list
 ---
 
 {% include lang.html %}
