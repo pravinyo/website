@@ -14,39 +14,83 @@ script_includes:
 
 {% include toc-status.html %}
 
-<article class="px-1" data-toc="{{ enable_toc }}">
+<article class="px-1 podcast-page" data-toc="{{ enable_toc }}">
   <header>
     <h1 data-toc-skip>{{ page.title }}</h1>
     {% if page.description %}
       <p class="post-desc fw-light mb-4">{{ page.description }}</p>
     {% endif %}
 
-    {% if page.image %}
-      {% assign src = page.image.path | default: page.image %}
-      {% unless src contains '//' %}
-        {% assign src = page.media_subpath | append: '/' | append: src | replace: '//', '/' %}
-      {% endunless %}
-
-      <div class="mt-3 mb-3 preview-img{% if page.image.no_bg %} no-bg{% endif %}">
-        <img src="{{ src }}" alt="{{ page.image.alt | xml_escape | default: "Preview Image" }}" w="1200" h="630"{% if page.image.lqip %} lqip="{{ page.image.lqip }}"{% endif %}>
-        {%- if page.image.alt -%}
-          <figcaption class="text-center pt-2 pb-2">{{ page.image.alt }}</figcaption>
-        {%- endif -%}
-      </div>
-    {% endif %}
-
-    <!-- Podcast media player -->
-    {% if page.audio or page.video %}
-      <div class="podcast-media mb-4">
-        {% if page.audio %}
-          {% include embed/audio.html src=page.audio title=page.title %}
-        {% elsif page.video %}
-          {% include embed/video.html src=page.video title=page.title poster=page.poster %}
-        {% endif %}
-      </div>
-    {% endif %}
-
     <div class="post-meta text-muted">
+      <!-- published date -->
+      <span>
+        {{ site.data.locales[lang].post.posted }}
+        {% include datetime.html date=page.date tooltip=true lang=lang %}
+      </span>
+
+      <!-- lastmod date -->
+      {% if page.last_modified_at and page.last_modified_at != page.date %}
+        <span>
+          {{ site.data.locales[lang].post.updated }}
+          {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
+        </span>
+      {% endif %}
+
+      <!-- cover image — exact same pattern as post.html -->
+      {% if page.image %}
+        {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
+        {% capture class %}class="preview-img{% if page.image.no_bg %}{{ ' no-bg' }}{% endif %}"{% endcapture %}
+        {% capture alt %}alt="{{ page.image.alt | xml_escape | default: "Preview Image" }}"{% endcapture %}
+
+        {% if page.image.lqip %}
+          {%- capture lqip -%}lqip="{{ page.image.lqip }}"{%- endcapture -%}
+        {% endif %}
+
+        <div class="mt-3 mb-3" id="podcast-cover-wrapper">
+          <img {{ src }} {{ class }} {{ alt }} w="1200" h="630" {{ lqip }} id="podcast-cover-img">
+          {%- if page.image.alt -%}
+            <figcaption class="text-center pt-2 pb-2">{{ page.image.alt }}</figcaption>
+          {%- endif -%}
+        </div>
+        <script>
+          (function () {
+            function removeShimmer() {
+              var wrapper = document.getElementById('podcast-cover-wrapper');
+              if (!wrapper) return;
+              var el = wrapper;
+              while (el) { el.classList.remove('shimmer'); el = el.parentElement; }
+              wrapper.querySelectorAll('.shimmer').forEach(function(e) { e.classList.remove('shimmer'); });
+            }
+            var img = document.getElementById('podcast-cover-img');
+            if (!img) return;
+            if (img.complete) { removeShimmer(); }
+            else {
+              img.addEventListener('load', removeShimmer);
+              img.addEventListener('error', removeShimmer);
+            }
+          })();
+        </script>
+      {% endif %}
+
+      <!-- Podcast media player -->
+      {% if page.audio or page.video %}
+        {% assign media_base = page.media_subpath | default: '' %}
+        <div class="podcast-media mt-3 mb-4">
+          {% if page.audio %}
+            {% assign audio_src = page.audio %}
+            {% unless audio_src contains '//' %}
+              {% assign audio_src = media_base | append: '/' | append: audio_src | replace: '//', '/' %}
+            {% endunless %}
+            {% include embed/audio.html src=audio_src title=page.title %}
+          {% elsif page.video %}
+            {% assign video_src = page.video %}
+            {% unless video_src contains '//' %}
+              {% assign video_src = media_base | append: '/' | append: video_src | replace: '//', '/' %}
+            {% endunless %}
+            {% include embed/video.html src=video_src title=page.title poster=page.poster %}
+          {% endif %}
+        </div>
+      {% endif %}
 
       <div class="d-flex justify-content-between">
         <!-- author(s) -->
@@ -91,6 +135,7 @@ script_includes:
         </div>
       </div>
     </div>
+    <!-- .post-meta -->
   </header>
 
   {% if enable_toc %}
@@ -144,12 +189,10 @@ script_includes:
           >
             {{- tag -}}
           </a>
-          {%- unless forloop.last -%},{%- endunless -%}
         {% endfor %}
       </div>
     {% endif %}
 
-    <!-- sharing -->
-    {% include post-sharing.html %}
+    {% include post-sharing.html lang=lang %}
   </div>
 </article>
