@@ -58,8 +58,8 @@ layout: podcast-list
 {% else %}
   <div class="text-center py-5">
     <i class="fas fa-podcast fa-3x text-muted mb-3"></i>
-    <h3 class="text-muted">No podcast episodes yet</h3>
-    <p class="text-muted">Add episodes to the <code>_podcasts</code> folder to get started.</p>
+    <h3 class="text-muted">Coming Soon</h3>
+    <p class="text-muted">Podcast episodes will be featured here.</p>
   </div>
 {% endif %}
 
