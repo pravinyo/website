@@ -1,5 +1,5 @@
 ---
-title: "Tech Blogs: Become better software Engineer"
+title: "Essential Tech Blogs Every Software Engineer Should Follow"
 author: pravin_tripathi
 date: 2025-01-20 00:00:00 +0530
 readtime: true
