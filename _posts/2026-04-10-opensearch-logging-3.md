@@ -501,7 +501,7 @@ graph TD
 
 **Alerting closes the loop**: A monitor that queries the same indices your dashboards use means your alert condition is always in sync with what you see visually — no PromQL-to-dashboard translation gap.
 
----
+**Continue to Part 4 of this series**: [Latency & Failure Modes](/posts/opensearch-logging-4/)
 
 ## More Resources
 
