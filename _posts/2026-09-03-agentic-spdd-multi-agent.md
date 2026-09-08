@@ -441,6 +441,6 @@ SPDD compresses SDD's four documents into one Canvas, but it should not compress
 
 By adopting SDD's phase discipline and automating it with an Agentic SPDD workflow, you elevate yourself from a code-writer to a systems orchestrator. Across this series, one `PortfolioLedger` grew a settlement pipeline, and that pipeline grew a commission engine — each step reviewed at a gate before the next was built. Your repository becomes a library of version-controlled intents, making future refactoring and scaling entirely deterministic.
 
-<!-- **Next post:** [Design Patterns for AI-Assisted Development, Part 1: Principles & Creational Patterns →](/posts/design-patterns-part-1/) -->
+**Next post:** [Design Patterns for AI-Assisted Development, Part 1: Principles & Creational Patterns →](/posts/design-patterns-part-1/)
 
 In Module 2's next post, you'll learn the vocabulary that lets you describe structure precisely — and the patterns that prevent AI-generated code from becoming unmaintainable over time.
