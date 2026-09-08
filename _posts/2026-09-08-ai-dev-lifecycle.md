@@ -528,4 +528,4 @@ Notice that `PortfolioValuationService.total_value` — a financial calculation 
 
 ## Next Steps
 
-You've now followed `PortfolioValuationService` through review (post 1), a properly structured prompt and Canvas (post 2), and the full plan-to-document lifecycle (this post) — three modules' worth of tools, applied in sequence, on one running example. The final post in the series pulls back further still, into a roadmap for building these habits permanently into how you work.
+You've now followed `PortfolioValuationService` through review (post 1), a properly structured prompt and Canvas (post 2), and the full plan-to-document lifecycle (this post) — three modules' worth of tools, applied in sequence, on one running example. 
