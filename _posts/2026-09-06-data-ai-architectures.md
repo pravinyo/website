@@ -545,4 +545,4 @@ class RAGPipeline:
 
 ## Next Steps
 
-Continue to [Vibe Engineering Intro →](/vibe-engineering-intro/)
+Continue to [Vibe Engineering Intro →](/posts/vibe-engineering-intro/)
