@@ -542,7 +542,7 @@ class RAGPipeline:
 - [Patterns for Building LLM-based Systems and Products — Eugene Yan](https://eugeneyan.com/writing/llm-patterns/)
 
 ---
-<!-- 
+
 ## Next Steps
 
-Continue to [Vibe Engineering Intro →](/vibe-engineering-intro/) -->
+Continue to [Vibe Engineering Intro →](/vibe-engineering-intro/)
