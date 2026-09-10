@@ -35,15 +35,15 @@ image:
 
 ## Why This Module Exists in the Series
 
-By this point you have three tools that, together, tell you *what* good code looks like. TDD (Module 1) tells you whether a piece of code is **correct** — does it pass a test that defines the requirement, and is it built so a test even *can* be written against it? Design Patterns (Module 2) tell you whether it's **well-structured** — does it avoid a god object, a missing abstraction, a hardcoded dependency? Architecture (Module 3) tells you whether it **fits the system** — does it respect the boundary between layers, or the contract between services?
+By this point you have three tools that, together, tell you *what* good code looks like. [Agentic TDD](/posts/agentic-tdd-zero-code/) tells you whether a piece of code is **correct** — does it pass a test that defines the requirement, and is it built so a test even *can* be written against it? [Design Patterns](/posts/design-patterns-part-1/) tell you whether it's **well-structured** — does it avoid a god object, a missing abstraction, a hardcoded dependency? [Software Architecture](/posts/architecture-intro/) tells you whether it **fits the system** — does it respect the boundary between layers, or the contract between services?
 
-None of those three modules told you *when* to apply that judgment against something an AI just handed you. Vibe Engineering is that moment, made repeatable. It isn't a fourth, separate skill — it's the first three, compressed into a checklist you run on every AI-generated diff before it becomes your responsibility. You'll see that directly below: every category on this module's checklists is a named idea from an earlier module, not a new one.
+None of those three posts told you *when* to apply that judgment against something an AI just handed you. Vibe Engineering is that moment, made repeatable. It isn't a fourth, separate skill — it's the first three, compressed into a checklist you run on every AI-generated diff before it becomes your responsibility. You'll see that directly below: every category on this module's checklists is a named idea from an earlier module, not a new one.
 
 This post — and the two that follow it — walk through one running example so the discipline isn't abstract:
 
 1. **This post** — you ask an AI tool for a `PortfolioValuationService` with a vague prompt, get a plausible-looking but flawed result, and learn the checklist that catches the flaws — and which module each flaw traces back to.
-2. **Next post** — you go back and build the *structured prompt* that should have produced a better first draft, reusing the SDD/SPDD workflow and the REASONS Canvas from Module 1, Post 3.
-3. **Third post** — you follow `PortfolioValuationService` through the full plan → code → test → refactor → document lifecycle, using the QA/Architect persona split from Module 1 and the pattern vocabulary from Module 2 at each stage.
+2. **Next post** — you go back and build the *structured prompt* that should have produced a better first draft, reusing the SDD/SPDD workflow and the REASONS Canvas from [Agentic SPDD](/posts/agentic-spdd-multi-agent/).
+3. **Third post** — you follow `PortfolioValuationService` through the full plan → code → test → refactor → document lifecycle, using the QA/Architect persona split from [Agentic TDD](/posts/agentic-tdd-zero-code/) and the pattern vocabulary from [Design Patterns](/posts/design-patterns-part-1/) at each stage.
 
 ---
 
@@ -197,11 +197,11 @@ The checklists in this module aren't a new set of rules — they're the vocabula
 | Checklist category (below) | Where it comes from | The one-line idea |
 |---|---|---|
 | Security | New in this module | AI treats input as trusted by default; you can't skip this one, but it's the least connected to earlier modules |
-| Correctness / edge cases | **Module 1 — TDD** | If you can't write a failing test for the edge case, you haven't specified it — this is Red-Green-Refactor applied retroactively |
-| Error Handling | **Module 3 — Architecture** | An unguarded external call is a boundary the system doesn't control being treated as if it were reliable |
-| Testability (constructor injection, no global state) | **Module 2 — Dependency Inversion** | "Depend on abstractions, not concretions" is the SOLID principle; a class that builds its own dependencies violates it |
-| No repeated logic (DRY) | **Module 2 — Single Responsibility / Factory** | Copy-pasted logic across two functions is usually a missing abstraction a Factory or shared utility should own |
-| Layering ("business logic must never write a query directly") | **Module 3 — Layered Architecture** | This is the exact rule from the Architecture Intro post, restated as a review question |
+| Correctness / edge cases | **[Agentic TDD](/posts/agentic-tdd-zero-code/)** | If you can't write a failing test for the edge case, you haven't specified it — this is Red-Green-Refactor applied retroactively |
+| Error Handling | **[Software Architecture](/posts/architecture-intro/)** | An unguarded external call is a boundary the system doesn't control being treated as if it were reliable |
+| Testability (constructor injection, no global state) | **[Design Patterns](/posts/design-patterns-part-1/)** | "Depend on abstractions, not concretions" is the SOLID principle; a class that builds its own dependencies violates it |
+| No repeated logic (DRY) | **[Design Patterns](/posts/design-patterns-part-1/)** | Copy-pasted logic across two functions is usually a missing abstraction a Factory or shared utility should own |
+| Layering ("business logic must never write a query directly") | **[Software Architecture](/posts/architecture-intro/)** | This is the exact rule from the Architecture Intro post, restated as a review question |
 
 ---
 
@@ -219,19 +219,19 @@ Security
   [ ] No eval() or exec() on user-supplied data
   [ ] External dependencies version-pinned in requirements.txt
 
-Correctness (Module 1 — TDD)
+Correctness ([Agentic TDD](/posts/agentic-tdd-zero-code/))
   [ ] Edge cases handled (empty input, None, zero, negative numbers)
   [ ] Floating point: never use == for float comparison
   [ ] Datetime: timezone-aware datetimes for all external-facing values
   [ ] Concurrency: no shared mutable state without a lock
 
-Error Handling (Module 3 — Architecture boundaries)
+Error Handling ([Software Architecture](/posts/architecture-intro/) boundaries)
   [ ] No bare except clauses
   [ ] All exceptions logged before being caught or re-raised
   [ ] External calls have explicit timeouts
   [ ] Resources (files, DB connections) closed in finally or with context managers
 
-Code Quality (Module 2 — Design Patterns / SOLID)
+Code Quality ([Design Patterns](/posts/design-patterns-part-1/) / SOLID)
   [ ] Type hints on all public function signatures
   [ ] Docstrings on all public methods (Google style or NumPy style)
   [ ] No mutable default arguments
@@ -239,7 +239,7 @@ Code Quality (Module 2 — Design Patterns / SOLID)
   [ ] Singleton: thread-safe with a lock in __new__
   [ ] Decorator: uses @functools.wraps
 
-Testability (Module 2 — Dependency Inversion)
+Testability ([Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion)
   [ ] All external dependencies injected via constructor (not instantiated inside)
   [ ] No global state that tests can't reset
   [ ] Side effects (network, disk, DB) isolated behind injectable interfaces
@@ -251,11 +251,11 @@ Testability (Module 2 — Dependency Inversion)
 
 | Pattern | What AI does | What to do | Module it connects to |
 |---------|-------------|-----------|-----------|
-| **God class** | Puts data access, business logic, and presentation in one class | Split by responsibility (SRP) | Module 2 — SOLID, Single Responsibility |
-| **Shallow happy path** | Tests only the "it works" case; no edge cases, no error paths | Add parameterised tests for edge cases | Module 1 — TDD, edge-case coverage |
-| **Hardcoded infrastructure** | `self.db = PostgreSQLDatabase()` inside `__init__` | Replace with constructor injection + Protocol | Module 2 — Dependency Inversion |
-| **Copied logic** | Same transformation written 3× in different functions | Extract to a shared utility | Module 2 — Factory / DRY |
-| **Fantasy architecture** | Imports modules that don't exist or calls methods with wrong signatures | Always run the code before committing | Module 3 — validate the diagram against the code |
+| **God class** | Puts data access, business logic, and presentation in one class | Split by responsibility (SRP) | [Design Patterns](/posts/design-patterns-part-1/) — SOLID, Single Responsibility |
+| **Shallow happy path** | Tests only the "it works" case; no edge cases, no error paths | Add parameterised tests for edge cases | [Agentic TDD](/posts/agentic-tdd-zero-code/) — TDD, edge-case coverage |
+| **Hardcoded infrastructure** | `self.db = PostgreSQLDatabase()` inside `__init__` | Replace with constructor injection + Protocol | [Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion |
+| **Copied logic** | Same transformation written 3× in different functions | Extract to a shared utility | [Design Patterns](/posts/design-patterns-part-1/) — Factory / DRY |
+| **Fantasy architecture** | Imports modules that don't exist or calls methods with wrong signatures | Always run the code before committing | [Software Architecture](/posts/architecture-intro/) — validate the diagram against the code |
 
 ---
 
@@ -294,11 +294,11 @@ class PortfolioValuationService:
 
 | # | What the code does | Checklist item it fails | Which earlier module already taught the fix |
 |---|--------------------|--------------------------|-----------------------------------------------|
-| 1 | Instantiates `PostgresConnection` directly inside `__init__` | Testability — dependencies injected via constructor | **Module 2**: this is exactly the Dependency Inversion violation in the SOLID table — depend on an abstraction (a `Protocol`), not a concrete `PostgresConnection` |
-| 2 | No type hints or docstring on a public method | Code Quality | **Module 2 / 3**: every worked example in Design Patterns and Architecture types and documents its public interfaces — this is the same contract discipline |
-| 3 | Builds SQL with an f-string using `user_id` directly | Security — no string-formatted SQL | Security is the one category genuinely new to this module — but the *fix* (delegate to a repository) is the layering rule from **Module 3** |
-| 4 | Calls `requests.get` with no `timeout`, no error handling, and assumes `"price"` always exists | Error Handling — explicit timeouts and edge cases | **Module 3**: an external call is a system boundary; **Module 1**: "price missing from response" is exactly the kind of edge case a failing test would have forced you to specify before writing this line |
-| 5 | Returns a bare number with no currency, no per-position breakdown, and silently returns `0` for a user with no holdings | Correctness — ambiguous contract | **Module 1**: if you'd written the test first ("user with no holdings returns total_value=0, not an error"), the ambiguity between "zero value" and "valuation failed" would have surfaced before any code existed |
+| 1 | Instantiates `PostgresConnection` directly inside `__init__` | Testability — dependencies injected via constructor | **[Design Patterns](/posts/design-patterns-part-1/)**: this is exactly the Dependency Inversion violation in the SOLID table — depend on an abstraction (a `Protocol`), not a concrete `PostgresConnection` |
+| 2 | No type hints or docstring on a public method | Code Quality | **[Design Patterns](/posts/design-patterns-part-1/) / [Software Architecture](/posts/architecture-intro/)**: every worked example in Design Patterns and Architecture types and documents its public interfaces — this is the same contract discipline |
+| 3 | Builds SQL with an f-string using `user_id` directly | Security — no string-formatted SQL | Security is the one category genuinely new to this module — but the *fix* (delegate to a repository) is the layering rule from **[Software Architecture](/posts/architecture-intro/)** |
+| 4 | Calls `requests.get` with no `timeout`, no error handling, and assumes `"price"` always exists | Error Handling — explicit timeouts and edge cases | **[Software Architecture](/posts/architecture-intro/)**: an external call is a system boundary; **[Agentic TDD](/posts/agentic-tdd-zero-code/)**: "price missing from response" is exactly the kind of edge case a failing test would have forced you to specify before writing this line |
+| 5 | Returns a bare number with no currency, no per-position breakdown, and silently returns `0` for a user with no holdings | Correctness — ambiguous contract | **[Agentic TDD](/posts/agentic-tdd-zero-code/)**: if you'd written the test first ("user with no holdings returns total_value=0, not an error"), the ambiguity between "zero value" and "valuation failed" would have surfaced before any code existed |
 
 Five real defects, and the code still runs, still "looks right," and would probably pass a casual glance in a rushed review. Notice that **four of the five** are really Modules 1–3 showing up again, just at a different moment — the moment you're reading generated code instead of writing your own.
 
@@ -371,11 +371,11 @@ class PriceUnavailableError(Exception):
         super().__init__(f"Price unavailable for symbol: {symbol}")
 ```
 
-Every one of the five defects is now addressed: `PortfolioRepository` and `PriceFeed` are injected as `Protocol`s (Module 2's Dependency Inversion — testable with fakes, no real DB or network needed), the SQL/user-id handling has moved behind the repository, respecting the layering boundary from Module 3, the price call has explicit, logged error handling instead of an unguarded `requests.get`, and the return type is a documented dataclass instead of a bare float.
+Every one of the five defects is now addressed: `PortfolioRepository` and `PriceFeed` are injected as `Protocol`s ([Design Patterns](/posts/design-patterns-part-1/)'s Dependency Inversion — testable with fakes, no real DB or network needed), the SQL/user-id handling has moved behind the repository, respecting the layering boundary from [Software Architecture](/posts/architecture-intro/), the price call has explicit, logged error handling instead of an unguarded `requests.get`, and the return type is a documented dataclass instead of a bare float.
 
 Notice what didn't change: the underlying idea (loop over holdings, multiply quantity by price, sum) is exactly the same. Vibe Engineering isn't about rewriting AI output from scratch — it's about running Modules 1–3's questions against it and closing exactly the gaps those questions surface.
 
-**Keep this example open** — post 2 writes the structured prompt that should have produced something closer to the corrected version on the first try, using the same SDD/SPDD discipline from Module 1, and post 3 carries `PortfolioValuationService` through the rest of its lifecycle.
+**Keep this example open** — post 2 writes the structured prompt that should have produced something closer to the corrected version on the first try, using the same SDD/SPDD discipline from [Agentic SPDD](/posts/agentic-spdd-multi-agent/), and post 3 carries `PortfolioValuationService` through the rest of its lifecycle.
 
 ---
 
@@ -397,7 +397,7 @@ If you find any violations, fix them silently and return only the corrected code
 Then append a one-line summary of what you changed.
 ```
 
-This "fix before showing" instruction eliminates a full review-and-iterate round for the most common issues. Try it on the original `PortfolioValuationService` prompt above — most tools will independently catch defects 1, 3, and 4 from the table, though defect 5 (the ambiguous return contract) usually still needs a human to notice, because it's a design decision — exactly the kind of decision Module 1's Red phase forces you to make explicit *before* code exists, not after.
+This "fix before showing" instruction eliminates a full review-and-iterate round for the most common issues. Try it on the original `PortfolioValuationService` prompt above — most tools will independently catch defects 1, 3, and 4 from the table, though defect 5 (the ambiguous return contract) usually still needs a human to notice, because it's a design decision — exactly the kind of decision [Agentic TDD](/posts/agentic-tdd-zero-code/)'s Red phase forces you to make explicit *before* code exists, not after.
 
 ---
 
@@ -415,7 +415,7 @@ This "fix before showing" instruction eliminates a full review-and-iterate round
 
 - **Accepting AI code that "looks right" without running it.** AI confidently generates code with logical bugs, off-by-one errors, and wrong API signatures. Run it.
 - **Skipping the security layer because "it's an internal tool."** Internal tools become external tools. Apply the same security bar from day one.
-- **Using AI to generate tests for AI-generated code without human review.** AI will generate tests that are tautological — they pass because they test the implementation, not the requirement. Always write at least the edge-case tests yourself. (This is the exact "Mistake 2" from Module 1's zero-code post: not reading the generated test code.)
+- **Using AI to generate tests for AI-generated code without human review.** AI will generate tests that are tautological — they pass because they test the implementation, not the requirement. Always write at least the edge-case tests yourself. (This is the exact "Mistake 2" from [Agentic TDD](/posts/agentic-tdd-zero-code/)'s zero-code post: not reading the generated test code.)
 - **Treating the checklist as bureaucracy.** Each item on the checklist is there because of a real class of production failures. Use it as a mental model, not a compliance form.
 
 ---
@@ -426,7 +426,7 @@ This "fix before showing" instruction eliminates a full review-and-iterate round
 2. Write a `CodeReviewer` class with a method `scan(source_code: str) -> list[str]` that uses simple string/regex matching to detect: (a) bare `except:` clauses, (b) `= []` as a default argument, and (c) `requests.get(` without a `timeout=` argument. Return a list of warning strings.
 3. Refactor the `process_nse_data` / `process_bse_data` example above into a single generic `normalise_string_fields` function. Write three pytest tests covering: empty dict, dict with mixed types, and dict with already-normalised values.
 4. Take the *original* flawed `PortfolioValuationService` draft from the walkthrough. Before reading the corrected version again, write your own checklist findings independently — for each one you find, name which Module (1, 2, or 3) it traces back to, the way the table above does.
-5. Extend the corrected `PortfolioValuationService` with a `get_summary(user_id)` method that returns the top 3 positions by value. Write it test-first (Module 1 style): define the test cases before the implementation, including the case where a user has fewer than 3 positions.
+5. Extend the corrected `PortfolioValuationService` with a `get_summary(user_id)` method that returns the top 3 positions by value. Write it test-first ([Agentic TDD](/posts/agentic-tdd-zero-code/) style): define the test cases before the implementation, including the case where a user has fewer than 3 positions.
 
 ---
 
@@ -443,6 +443,6 @@ This "fix before showing" instruction eliminates a full review-and-iterate round
 
 ## Next Steps
 
-You've seen what happens when a prompt is too vague, and that most of what a disciplined review catches afterward is really Modules 1–3 reapplied. The next post works the same problem from the other direction: it reuses the multi-agent, spec-first workflow from Module 1 to write the prompt so the AI's *first* draft already looks like the corrected version above.
+You've seen what happens when a prompt is too vague, and that most of what a disciplined review catches afterward is really [Agentic TDD](/posts/agentic-tdd-zero-code/), [Design Patterns](/posts/design-patterns-part-1/), and [Software Architecture](/posts/architecture-intro/) reapplied. The next post works the same problem from the other direction: it reuses the multi-agent, spec-first workflow from [Agentic SPDD](/posts/agentic-spdd-multi-agent/) to write the prompt so the AI's *first* draft already looks like the corrected version above.
 
 Continue to [Prompting and Code Review →](/posts/prompting-code-review/)

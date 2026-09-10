@@ -19,7 +19,7 @@ image:
 ## TL;DR
 
 - A structured prompt is a function signature: define role, task, constraints, and expected output explicitly.
-- This post doesn't invent a new template — it takes the **REASONS Canvas and the QA/Architect persona split from Module 1**, and the **SOLID / pattern vocabulary from Module 2** and **layering vocabulary from Module 3**, and packages all of it into two reusable, plain-text templates you fill in by hand.
+- This post doesn't invent a new template — it takes the **REASONS Canvas and the QA/Architect persona split from [Agentic SPDD](/posts/agentic-spdd-multi-agent/)**, and the **SOLID / pattern vocabulary from [Design Patterns](/posts/design-patterns-part-1/)** and **layering vocabulary from [Software Architecture](/posts/architecture-intro/)**, and packages all of it into two reusable, plain-text templates you fill in by hand.
 - Every template in this post is **text, not code** — copy it as-is into any AI tool, and replace only the bracketed placeholders.
 - Security review for AI code focuses on injection, credentials, and trust boundaries that AI consistently overlooks.
 
@@ -38,9 +38,9 @@ image:
 
 The previous post reviewed a vague, one-line prompt against a checklist and fixed five defects after the fact. That's a necessary skill — you will always need a review pass, no matter how good your prompt is — but it's also the more expensive way to get good code: you pay the cost of generating the bad version, reading it carefully, and re-explaining the fix, every single time.
 
-This post attacks the problem from the input side, and it does so **without introducing a new framework**. Module 1 already gave you two structured workflows for turning intent into code: the plain-English-requirements-to-QA-persona-to-Architect-persona pipeline, and its more formal successor, the REASONS Canvas produced by an Analyst persona under Spec-Driven Development. Module 2 gave you the vocabulary (SOLID, the pattern families) to say precisely what "well-structured" means. Module 3 gave you the vocabulary (layers, boundaries) to say precisely what "respects the system" means.
+This post attacks the problem from the input side, and it does so **without introducing a new framework**. [Agentic TDD & SPDD](/posts/agentic-tdd-zero-code/) already gave you two structured workflows for turning intent into code: the plain-English-requirements-to-QA-persona-to-Architect-persona pipeline, and its more formal successor, the REASONS Canvas produced by an Analyst persona under Spec-Driven Development. [Design Patterns](/posts/design-patterns-part-1/) gave you the vocabulary (SOLID, the pattern families) to say precisely what "well-structured" means. [Software Architecture](/posts/architecture-intro/) gave you the vocabulary (layers, boundaries) to say precisely what "respects the system" means.
 
-What's been missing is putting all four of those together into one thing you can actually paste into a prompt box. That's what this post builds: two templates, entirely in plain text, with clearly marked fill-in-the-blank sections, that fold Module 1's process, Module 2's structural vocabulary, and Module 3's boundary vocabulary into the Constraints of a single prompt (for a small task) or a single Canvas (for a larger one).
+What's been missing is putting all four of those together into one thing you can actually paste into a prompt box. That's what this post builds: two templates, entirely in plain text, with clearly marked fill-in-the-blank sections, that fold [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s process, [Design Patterns](/posts/design-patterns-part-1/)'s structural vocabulary, and [Software Architecture](/posts/architecture-intro/)'s boundary vocabulary into the Constraints of a single prompt (for a small task) or a single Canvas (for a larger one).
 
 ---
 
@@ -108,19 +108,19 @@ Implement PortfolioValuationService.get_valuation(user_id: str), returning the
 current total market value of a user's portfolio and a per-position breakdown.
 
 CONSTRAINTS
-  - [Module 2 — Dependency Inversion] Inject the repository and price feed as
+  - [[Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion] Inject the repository and price feed as
     constructor dependencies typed as typing.Protocol. Do not instantiate a
     database or HTTP client inside the class.
-  - [Module 2 — Code contracts] All public methods must have type hints and a
+  - [[Design Patterns](/posts/design-patterns-part-1/) — Code contracts] All public methods must have type hints and a
     Google-style docstring.
-  - [Module 3 — Layering] Never build SQL with string interpolation inside this
+  - [[Software Architecture](/posts/architecture-intro/) — Layering] Never build SQL with string interpolation inside this
     class — the service must not touch SQL at all; that belongs to the
     repository, one layer down.
-  - [Module 3 — Boundaries] Every external price lookup must have explicit
+  - [[Software Architecture](/posts/architecture-intro/) — Boundaries] Every external price lookup must have explicit
     error handling: catch ConnectionError, log a warning with the symbol, and
     raise a typed PriceUnavailableError — never let a network exception
     propagate raw.
-  - [Module 1 — Make the contract testable] Return a dataclass (not a bare
+  - [[Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Make the contract testable] Return a dataclass (not a bare
     number) with total_value and a list of per-position dicts, so "zero
     holdings" and "valuation failed" are never ambiguous to a test — or a caller.
 
@@ -138,7 +138,7 @@ Running the structured prompt above through an AI coding tool produces code extr
 
 ## Two Templates, Not One: Matching the Workflow to the Task Size
 
-Module 1 taught two workflows, and the reason there were two is important: a plain-English requirements doc handed to a QA/Architect persona pair is fast and appropriate for a well-understood, contained piece of work; a full REASONS Canvas drafted by an Analyst persona is slower to produce but earns its cost on anything with real design decisions, multiple constraints, or an audit trail requirement. The same split applies to prompting a single feature, and it's the split this post organises its templates around.
+[Agentic TDD & SPDD](/posts/agentic-tdd-zero-code/) taught two workflows, and the reason there were two is important: a plain-English requirements doc handed to a QA/Architect persona pair is fast and appropriate for a well-understood, contained piece of work; a full REASONS Canvas drafted by an Analyst persona is slower to produce but earns its cost on anything with real design decisions, multiple constraints, or an audit trail requirement. The same split applies to prompting a single feature, and it's the split this post organises its templates around.
 
 ```mermaid
 graph TD
@@ -170,16 +170,16 @@ TASK
 Implement: [[FILL: the one thing this prompt should produce — one class or function]]
 
 CONSTRAINTS
-  - [Module 2 — Dependency Inversion] [[FILL: which dependencies must be
+  - [[Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion] [[FILL: which dependencies must be
     constructor-injected as Protocols, if any]]
-  - [Module 2 — Code contracts] Type hints and [[FILL: docstring style, e.g.
+  - [[Design Patterns](/posts/design-patterns-part-1/) — Code contracts] Type hints and [[FILL: docstring style, e.g.
     Google or NumPy]] docstrings on all public members.
-  - [Module 3 — Layering] [[FILL: which layer this code belongs to, and what
+  - [[Software Architecture](/posts/architecture-intro/) — Layering] [[FILL: which layer this code belongs to, and what
     it must NOT do directly — e.g. "must not touch SQL", "must not call
     another service's repository"]]
-  - [Module 3 — Boundaries] [[FILL: timeout/retry/error-handling requirement
+  - [[Software Architecture](/posts/architecture-intro/) — Boundaries] [[FILL: timeout/retry/error-handling requirement
     for any external call]]
-  - [Module 1 — Testable contract] [[FILL: what the return value/exception
+  - [[Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Testable contract] [[FILL: what the return value/exception
     contract must make unambiguous]]
   - Security: [[FILL: any input validation or secrets-handling requirement]]
 
@@ -198,7 +198,7 @@ Use this template for anything you'd comfortably review in one sitting — a sin
 
 ### Template B — the Full REASONS Canvas (larger features)
 
-For anything bigger — multiple entities, a real design trade-off, something a compliance review might ask about later — reuse the REASONS Canvas from Module 1's SPDD post directly, rather than inventing a new structure. The Canvas is still produced by an **Analyst persona**, reviewed and committed by you, and only then handed to an **Architect persona** — never merge those two steps into one prompt, for the same reason Module 1 warned against merging the QA and Architect personas: a single session optimises the spec to be easy for itself to implement, not to be correct.
+For anything bigger — multiple entities, a real design trade-off, something a compliance review might ask about later — reuse the REASONS Canvas from [Agentic SPDD](/posts/agentic-spdd-multi-agent/) directly, rather than inventing a new structure. The Canvas is still produced by an **Analyst persona**, reviewed and committed by you, and only then handed to an **Architect persona** — never merge those two steps into one prompt, for the same reason [Agentic TDD](/posts/agentic-tdd-zero-code/) warned against merging the QA and Architect personas: a single session optimises the spec to be easy for itself to implement, not to be correct.
 
 **Step 1 — the Analyst prompt (blank, plain text):**
 
@@ -223,42 +223,42 @@ never exceed the trade value", "a price lookup must never block indefinitely"]]
 
 ```
 R - Requirements
-  [[FILL: what the system must do, in one paragraph — this is Module 1's
+  [[FILL: what the system must do, in one paragraph — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s
   "Specify" phase]]
 
 E - Entities
-  [[FILL: the data types involved — this is Module 1's "Specify" phase,
-  and often maps directly onto a dataclass or Protocol from Module 2]]
+  [[FILL: the data types involved — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s "Specify" phase,
+  and often maps directly onto a dataclass or Protocol from [Design Patterns](/posts/design-patterns-part-1/)]]
 
 A - Approach
-  [[FILL: the technical strategy — this is Module 1's "Plan" phase, and is
-  where you name a Design Pattern from Module 2 if one applies, e.g.
+  [[FILL: the technical strategy — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s "Plan" phase, and is
+  where you name a Design Pattern from [Design Patterns](/posts/design-patterns-part-1/) if one applies, e.g.
   "use constructor injection (Dependency Inversion) for the price feed"]]
 
 S - Structure
-  [[FILL: file/module layout — this is where Module 3's layering applies;
+  [[FILL: file/module layout — this is where [Software Architecture](/posts/architecture-intro/)'s layering applies;
   state which layer each new file belongs to]]
 
 O - Operations
-  [[FILL: the ordered steps the implementation takes — this is Module 1's
+  [[FILL: the ordered steps the implementation takes — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s
   "Tasks" phase in miniature]]
 
 N - Norms
-  [[FILL: coding standards — type hints, docstring style, and any Module 2
+  [[FILL: coding standards — type hints, docstring style, and any [Design Patterns](/posts/design-patterns-part-1/)
   pattern conventions your team follows]]
 
 S - Safeguards
   [[FILL: hard constraints the implementation must never violate — this is
-  where Module 3's "no bare except", "explicit timeouts", and this module's
+  where [Software Architecture](/posts/architecture-intro/)'s "no bare except", "explicit timeouts", and this module's
   security checklist items belong]]
 ```
 
-**Step 3 — the same two-persona discipline from Module 1, applied here:**
+**Step 3 — the same two-persona discipline from [Agentic SPDD](/posts/agentic-spdd-multi-agent/), applied here:**
 
 ```
 1. Analyst persona drafts the Canvas above.
 2. You review it — read Requirements/Entities as a Specify review, and
-   Approach/Structure/Operations as a Plan+Tasks review, per Module 1.
+   Approach/Structure/Operations as a Plan+Tasks review, per [Agentic SPDD](/posts/agentic-spdd-multi-agent/).
 3. Commit the Canvas to version control before any code exists.
 4. QA persona (separate session): "Generate a pytest suite that verifies
    every Requirement and Safeguard in this Canvas. Do not write
@@ -266,7 +266,7 @@ S - Safeguards
 5. Architect persona (separate session): "Implement this Canvas so that it
    passes the attached test suite. Do not modify the tests."
 6. If the implementation drifts from the Canvas, update the Canvas — never
-   hand-patch the code — per Module 1's Closed Loop rule.
+   hand-patch the code — per [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s Closed Loop rule.
 ```
 
 ### Filling in the Full Canvas for `PortfolioValuationService`
@@ -285,12 +285,12 @@ E - Entities
 
 A - Approach
   Constructor-inject PortfolioRepository and PriceFeed as typing.Protocol
-  dependencies (Module 2 — Dependency Inversion). Loop over holdings,
+  dependencies ([Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion). Loop over holdings,
   summing quantity * price per position.
 
 S - Structure
   - services/portfolio_valuation_service.py (Business Logic layer —
-    Module 3: must not import a database driver or an HTTP client directly)
+    [Software Architecture](/posts/architecture-intro/): must not import a database driver or an HTTP client directly)
   - repositories/portfolio_repository.py (Data Access layer)
   - tests/services/test_portfolio_valuation_service.py
 
@@ -312,7 +312,7 @@ S - Safeguards
   - A user with zero holdings returns total_value = 0.0, not an error.
 ```
 
-This Canvas, handed to a QA persona and then an Architect persona exactly as Module 1 describes, is what produces the corrected `PortfolioValuationService` from post 1 as a *first* draft — with the added benefit that the Canvas itself is now a committed, versioned artifact your team can review the next time this service changes, not a prompt that lived only in a chat window.
+This Canvas, handed to a QA persona and then an Architect persona exactly as [Agentic SPDD](/posts/agentic-spdd-multi-agent/) describes, is what produces the corrected `PortfolioValuationService` from post 1 as a *first* draft — with the added benefit that the Canvas itself is now a committed, versioned artifact your team can review the next time this service changes, not a prompt that lived only in a chat window.
 
 ---
 
@@ -349,10 +349,10 @@ TASK
 Implement: {self.task_description}
 
 CONSTRAINTS
-  - [Module 2 — Dependency Inversion] {self.dependency_constraint}
-  - [Module 3 — Layering] {self.layering_constraint}
-  - [Module 3 — Boundaries] {self.boundary_constraint}
-  - [Module 1 — Testable contract] {self.testable_contract}
+  - [[Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion] {self.dependency_constraint}
+  - [[Software Architecture](/posts/architecture-intro/) — Layering] {self.layering_constraint}
+  - [[Software Architecture](/posts/architecture-intro/) — Boundaries] {self.boundary_constraint}
+  - [[Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Testable contract] {self.testable_contract}
 
 EDGE CASES TO HANDLE EXPLICITLY
 {edge_case_lines}
@@ -433,7 +433,7 @@ AI sometimes describes code accurately but builds something subtly different. Co
 | "This handles None inputs" | Is there an explicit `if value is None` guard, or does it just not crash on None? |
 | "Tests cover all edge cases" | Are the "edge case" tests actually testing different code paths, or the same path with different values? |
 | "No hardcoded values" | Search for string literals that look like URLs, keys, or environment names |
-| "Uses dependency injection" | Is `ConcreteClass()` instantiated inside `__init__`? If yes, it's NOT injected (Module 2 — Dependency Inversion). |
+| "Uses dependency injection" | Is `ConcreteClass()` instantiated inside `__init__`? If yes, it's NOT injected ([Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion). |
 | "Follows existing patterns" | Does it actually import from the reference file, or start from scratch? |
 
 ---
@@ -543,7 +543,7 @@ Start with minimal constraints. Add one constraint per round, targeting the spec
 
 ```
 Do NOT ask a single prompt to draft the Canvas, write the tests, AND implement
-the code. Exactly as Module 1 warns: a single session optimises the spec to be
+the code. Exactly as [Agentic SPDD](/posts/agentic-spdd-multi-agent/) warns: a single session optimises the spec to be
 easy for itself to implement. Analyst, QA, and Architect stay three separate
 sessions, even when the Canvas took five minutes to fill in instead of thirty.
 ```
@@ -576,7 +576,7 @@ sessions, even when the Canvas took five minutes to fill in instead of thirty.
 1. Using the security-focused review dimension from Template B's Safeguards field, review the `get_portfolio` function (the unsafe version) and record what AI finds. Then compare AI's review against the Security Checklist above — what did AI miss?
 2. Copy the blank Quick Template and fill it in for a real, small feature from your own codebase. Run it through an AI tool, then review the output against the Security and AI-Specific Red Flags checklists from post 1. Note which constraints the AI honoured and which it didn't.
 3. Practice iterative prompt development: prompt an AI for a "rate limiter" function with no constraints. Record what's wrong. Add one constraint per round, citing the module each constraint comes from, until the output passes all items in the Universal Red Flags checklist from post 1.
-4. Take a feature with at least three entities and one real design trade-off (e.g., "add a watchlist that notifies a user when a stock crosses a price threshold"). Fill in the blank Full REASONS Canvas for it, then run the three-persona sequence (Analyst → QA → Architect) exactly as Module 1 describes. Keep a note of which Canvas field each generated test traces back to.
+4. Take a feature with at least three entities and one real design trade-off (e.g., "add a watchlist that notifies a user when a stock crosses a price threshold"). Fill in the blank Full REASONS Canvas for it, then run the three-persona sequence (Analyst → QA → Architect) exactly as [Agentic SPDD](/posts/agentic-spdd-multi-agent/) describes. Keep a note of which Canvas field each generated test traces back to.
 5. Take the filled-in `PortfolioValuationService` Canvas above and deliberately remove the "A user with zero holdings returns total_value = 0.0" Safeguard before running the Architect persona. Does the generated implementation still handle that case correctly by accident, or does it start raising an error? What does that tell you about which Safeguards are safe to leave implicit?
 
 ---

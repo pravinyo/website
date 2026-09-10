@@ -443,4 +443,4 @@ By adopting SDD's phase discipline and automating it with an Agentic SPDD workfl
 
 **Next post:** [Design Patterns for AI-Assisted Development, Part 1: Principles & Creational Patterns →](/posts/design-patterns-part-1/)
 
-In Module 2's next post, you'll learn the vocabulary that lets you describe structure precisely — and the patterns that prevent AI-generated code from becoming unmaintainable over time.
+In the [Design Patterns](/posts/design-patterns-part-1/) post, you'll learn the vocabulary that lets you describe structure precisely — and the patterns that prevent AI-generated code from becoming unmaintainable over time.

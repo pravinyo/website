@@ -27,7 +27,7 @@ image:
 
 ## Why This Post Exists in the AI-Assisted Development Series
 
-This is the first post in Module 3, and Module 3 is about architecture — so it's worth being explicit about why an "architecture" module belongs in a series about building software *with* AI agents.
+This is the first post in the [Software Architecture](/posts/architecture-intro/) series, which is about architecture — so it's worth being explicit about why architecture belongs in a series about building software *with* AI agents.
 
 An AI coding agent is extremely good at producing a plausible-looking function, class, or route handler on request. What it is not good at, by default, is remembering that your data-access code is never supposed to talk directly to your presentation layer, or that `ServiceA` already depends on `ServiceB` and must not depend on it the other way around too. Each prompt is answered mostly in isolation, drawing on patterns that are statistically common in training data — not necessarily the patterns your codebase has committed to.
 
@@ -37,7 +37,7 @@ That means the architectural boundaries in your system now depend on something t
 2. **You need the vocabulary to review what comes back.** If you can't name the layering violation, you can't ask for it to be fixed — you'll just feel a vague unease about a diff and approve it anyway.
 3. **You need diagrams that are cheap to produce and easy to compare against reality**, because AI-generated code drifts from any diagram that isn't kept in the loop.
 
-Everything else in this post — the three patterns, the diagrams, the AI-prompting examples — is in service of those three points, and this framing carries through the rest of Module 3.
+Everything else in this post — the three patterns, the diagrams, the AI-prompting examples — is in service of those three points, and this framing carries through the rest of [Software Architecture](/posts/architecture-intro/).
 
 ---
 
