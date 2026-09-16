@@ -28,7 +28,7 @@ image:
 
 ## Prerequisites
 
-- Completed [TDD Fundamentals](/tdd-fundamentals/) — comfortable with pytest, fixtures, mocking, and the Red-Green-Refactor loop, and familiar with the `PortfolioLedger` example
+- Completed [TDD Fundamentals](/posts/tdd-fundamental/) — comfortable with pytest, fixtures, mocking, and the Red-Green-Refactor loop, and familiar with the `PortfolioLedger` example
 - Familiarity with at least one AI coding tool (Claude, GitHub Copilot, ChatGPT, or similar) that can hold a multi-turn conversation or take separate prompts per persona
 - `pytest`, `pytest-cov`, and a passing familiarity with PySpark DataFrames
 
@@ -154,8 +154,8 @@ Now that you have a functioning, failing test suite generated entirely by AI, fe
 
 **Your Prompt:**
 
-> "Act as a Data Architect. I have provided the failing `pytest` suite (`test_settlement_pipeline.py`) for our PySpark settlement module.
-> Phase 1: Generate a `settlement_plan.md` detailing the architectural approach, data models, and DataFrame transformations needed to make these tests pass. Wait for my approval.
+> "Act as a Data Architect. I have provided the failing `pytest` suite (`test_settlement_pipeline.py`) for our PySpark settlement module.  
+> Phase 1: Generate a `settlement_plan.md` detailing the architectural approach, data models, and DataFrame transformations needed to make these tests pass. Wait for my approval.  
 > Phase 2: Once approved, write the Python implementation."
 
 By forcing the AI to output a `settlement_plan.md` first, you catch architectural flaws (like the unnecessary use of UDFs instead of native PySpark functions) before any code is written. This mirrors the second quality gate in the fully spec-driven workflow covered in the next post — approve the plan on paper, before it becomes code you have to unwind.

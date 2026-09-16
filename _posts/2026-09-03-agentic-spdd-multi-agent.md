@@ -27,7 +27,7 @@ image:
 
 ## Prerequisites
 
-- Completed [Agentic TDD: Multi-Agent Workflows for Zero-Code Test Generation](/agentic-tdd-zero-code/) — comfortable with the QA-persona/Architect-persona split, the Red-Green gate, and the `settled_df` schema produced by `TradeSettlementPipeline`
+- Completed [Agentic TDD: Multi-Agent Workflows for Zero-Code Test Generation](/posts/agentic-tdd-zero-code/) — comfortable with the QA-persona/Architect-persona split, the Red-Green gate, and the `settled_df` schema produced by `TradeSettlementPipeline`
 - Familiarity with PySpark DataFrame operations (`when`, `otherwise`, `broadcast` joins)
 - A coding agent capable of reading a file from your repository as context (e.g., Claude Code, GitHub Copilot Workspace)
 - Git, for version-controlling the generated spec artifacts
