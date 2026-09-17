@@ -227,10 +227,7 @@ You begin with a rough, unstructured idea of what you need to build — this rep
 
 ```text
 # Goal: Multi-Plan Commission Engine
-We need to add brokerage commission calculation on top of our daily
-TradeSettlementPipeline output (settled_df).
-Support flat, tiered, and percentage-based plans without regressing the
-existing settlement logic.
+We need to add brokerage commission calculation on top of our daily TradeSettlementPipeline output (settled_df). Support flat, tiered, and percentage-based plans without regressing the existing settlement logic.
 Keep it highly performant — no heavy UDFs.
 ```
 
@@ -302,7 +299,9 @@ Now, you feed the version-controlled asset to your coding agent (like Claude Cod
 
 **Your Prompt:**
 
-> "Act as a Data Architect. I have provided the version-controlled SPDD prompt `@GGQPA-002-[Feat]-multi-plan-commission.md`. Phase 1: read the REASONS Canvas and produce `commission_plan.md`, restating the Approach and Structure as a concrete implementation plan. Wait for my approval. Phase 2: once approved, implement the PySpark modules and `pytest` suite exactly as constrained by the Canvas."
+> "Act as a Data Architect. I have provided the version-controlled SPDD prompt `@GGQPA-002-[Feat]-multi-plan-commission.md`.  
+> Phase 1: read the REASONS Canvas and produce `commission_plan.md`, restating the Approach and Structure as a concrete implementation plan. Wait for my approval.  
+> Phase 2: once approved, implement the PySpark modules and `pytest` suite exactly as constrained by the Canvas."
 
 **Output — Phase 1, `commission_plan.md`:**
 
