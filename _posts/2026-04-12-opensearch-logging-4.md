@@ -167,7 +167,9 @@ With persistent buffering:
 
 
 
-## 5. OpenSearch 429 Errors — Three Distinct Root Causes {#429}
+<a id="429"></a>
+
+## 5. OpenSearch 429 Errors — Three Distinct Root Causes
 
 When you see HTTP 429 from OpenSearch itself (not the Ingestion pipeline), it can come from three entirely different internal systems. Conflating them leads to wrong fixes.
 
