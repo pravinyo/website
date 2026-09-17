@@ -106,7 +106,7 @@ Every policy statement is a `(Effect, Action, Resource, Condition)` tuple. The d
 
 ---
 
-## How IAM Roles Work — The Trust and Permission Split
+## How IAM Roles Work — The Trust and Permission Split {#how-iam-roles-work}
 
 An IAM role has two distinct policy attachments that serve different purposes. This split confuses most engineers the first time they encounter it.
 
@@ -214,7 +214,7 @@ sequenceDiagram
 
 ---
 
-## How Lambda Assumes a Role — Step by Step
+## How Lambda Assumes a Role — Step by Step {#how-lambda-assumes-a-role}
 
 When you create a Lambda function, you assign it an **execution role**. This is an IAM role with a trust policy that allows `lambda.amazonaws.com` to assume it. Here is exactly what happens from function creation to your code reading from DynamoDB:
 
@@ -734,7 +734,7 @@ def get_database_credentials() -> dict:
 
 ---
 
-## Resource-Based Policies vs Identity-Based Policies
+## Resource-Based Policies vs Identity-Based Policies {#resource-based-vs-identity-based-policies}
 
 Most AWS access decisions involve two independent policy types. Understanding both is necessary for cross-account access and for services like S3, SQS, and KMS.
 
@@ -788,7 +788,7 @@ Below S3 Bucket Policy on the audit bucket (Account B) Without this, even if Acc
 
 ---
 
-## Debugging IAM: What to Check When Access is Denied
+## Debugging IAM: What to Check When Access is Denied {#debugging-iam}
 
 An `AccessDenied` error in AWS is frustrating because the error message rarely tells you *why*. Here is a systematic checklist:
 

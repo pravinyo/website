@@ -34,6 +34,8 @@ This post is a complete, bottom-up treatment of JWT authentication. We will star
 10. [What Can Go Wrong — Attacks and Pitfalls](#what-can-go-wrong)
 11. [Key Takeaways](#key-takeaways)
 
+<!-- TOC anchors intentionally match explicit heading IDs below -->
+
 ---
 
 ## The Problem JWT Solves
@@ -606,7 +608,7 @@ The `family_id` groups all refresh tokens from a single login session. When reus
 
 ---
 
-## FastAPI Implementation — Production Grade
+## FastAPI Implementation — Production Grade {#fastapi-implementation}
 
 ```python
 # auth/routes.py
@@ -919,7 +921,7 @@ async def jwks():
 
 ---
 
-## What Can Go Wrong — Attacks and Pitfalls
+## What Can Go Wrong — Attacks and Pitfalls {#what-can-go-wrong}
 
 ### The `alg: none` Attack
 

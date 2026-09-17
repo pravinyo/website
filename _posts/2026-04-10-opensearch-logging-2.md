@@ -19,7 +19,7 @@ In [Part 1](/posts/opensearch-logging-1/) we traced the journey of a log record 
 
 This post picks up there. We will explore what happens inside **Amazon OpenSearch Ingestion**, how to design your index strategy for log data so it stays fast and cheap over months, and how to squeeze maximum throughput out of the network between Fluent Bit and OpenSearch.
 
-[Part 3](/posts/opensearch-metrics/) covers using OpenSearch as a **metrics backend** — replacing or complementing Prometheus.
+[Part 3](/posts/opensearch-logging-3/) covers using OpenSearch as a **metrics backend** — replacing or complementing Prometheus.
 
 ---
 

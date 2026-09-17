@@ -508,5 +508,5 @@ graph TD
 - [OpenSearch Alerting Documentation](https://opensearch.org/docs/latest/observing-your-data/alerting/index/)
 - [OpenSearch Dashboards Documentation](https://opensearch.org/docs/latest/dashboards/index/)
 - [Part 1 of this series — From logger.info() to the Wire](/posts/opensearch-logging-1/)
-- [Part 2 of this series — Ingestion Pipeline and Index Strategy](/posts/opensearch-ingestion-index/)
+- [Part 2 of this series — Ingestion Pipeline and Index Strategy](/posts/opensearch-logging-2/)
 - [Reindexing in OpenSearch](https://pravin.dev/posts/opensearch-reindexing/)

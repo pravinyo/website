@@ -41,9 +41,11 @@ In the previous three articles, we covered the architecture of OpenSearch and Fl
    - 7.5 Translog: The Hidden Write-Ahead Log
 8. [Key Takeaways for Production](#takeaways)
 
+<!-- Explicit anchors keep the markdown links stable across Jekyll versions -->
 
 
-## 1. Introduction
+
+## 1. Introduction {#intro}
 
 If you've ever run a high-throughput observability pipeline — dozens of application pods funneling logs through **Fluent Bit** into an **Amazon OpenSearch** cluster — you've likely hit walls that were hard to diagnose. A sudden flood of `429 Too Many Requests`, logs mysteriously disappearing after a log rotation, or an inexplicably slow dashboard query that bogs down the entire cluster.
 
@@ -51,7 +53,7 @@ These aren't random failures. Each one has a precise mechanical explanation root
 
 
 
-## 2. The Pipeline Architecture
+## 2. The Pipeline Architecture {#architecture}
 
 Before diving into failure modes, here's the full end-to-end pipeline:
 
@@ -69,7 +71,7 @@ Each arrow is a potential failure point. Data moves asynchronously through buffe
 
 
 
-## 3. How Backpressure Works in Fluent Bit
+## 3. How Backpressure Works in Fluent Bit {#backpressure}
 
 Backpressure is the mechanism by which a slow downstream communicates to an upstream to slow down. In Fluent Bit, this is implemented through a memory limit threshold and a pair of **pause/resume callbacks** fired on the input plugin.
 
@@ -123,7 +125,7 @@ Key metrics to monitor:
 
 
 
-## 4. OpenSearch Ingestion — What Happens on the Receiving End
+## 4. OpenSearch Ingestion — What Happens on the Receiving End {#ingestion}
 
 Amazon OpenSearch Ingestion (built on **Data Prepper**) has its own internal HTTP source with bounded buffers. When Fluent Bit POSTs a bulk payload, the pipeline evaluates two conditions:
 
@@ -165,7 +167,7 @@ With persistent buffering:
 
 
 
-## 5. OpenSearch 429 Errors — Three Distinct Root Causes
+## 5. OpenSearch 429 Errors — Three Distinct Root Causes {#429}
 
 When you see HTTP 429 from OpenSearch itself (not the Ingestion pipeline), it can come from three entirely different internal systems. Conflating them leads to wrong fixes.
 
@@ -239,7 +241,7 @@ flowchart TD
 
 
 
-## 6. Segment Merging — The Silent Latency Killer
+## 6. Segment Merging — The Silent Latency Killer {#segment-merge}
 
 This is one of the most misunderstood sources of latency spikes in OpenSearch, and it is directly connected to high-volume Fluent Bit ingestion.
 
@@ -277,7 +279,7 @@ OpenSearch 3.0 fixed both by raising `floor_segment` to **16 MB** and `maxMergeA
 
 
 
-## 7. Other Surprising Failure Modes
+## 7. Other Surprising Failure Modes {#failure-modes}
 
 ### 7.1 Hot Shard Problem
 
@@ -363,7 +365,7 @@ For high-volume log pipelines where losing a few seconds of logs is acceptable (
 
 
 
-## 8. Key Takeaways for Production
+## 8. Key Takeaways for Production {#takeaways}
 
 **Fluent Bit configuration:**
 - Always enable `storage.type filesystem` for production — memory-only loses data under backpressure or on crash
