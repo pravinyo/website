@@ -135,81 +135,91 @@ Components communicate via events rather than direct method calls. Publishers em
 
 The example below is written as language-agnostic pseudocode. The layering — not the syntax — is the point; translate it into whichever language your project uses.
 
-```pseudocode
+```python
 # ── Layer 1: Data Access (database / API boundary) ─────────────────────
 
-record StockRecord:
-    symbol: string
-    price: number
-    pe_ratio: number
-    market_cap: number
+from dataclasses import dataclass
+from typing import Optional
 
-interface StockRepository:
-    find_by_symbol(symbol) -> StockRecord or null
-    find_all() -> list<StockRecord>
 
-class InMemoryStockRepository implements StockRepository:
+@dataclass(frozen=True)
+class StockRecord:
+    symbol: str
+    price: float
+    pe_ratio: float
+    market_cap: int
+
+
+class StockRepository:
+    def find_by_symbol(self, symbol: str) -> Optional[StockRecord]:
+        raise NotImplementedError
+
+    def find_all(self) -> list[StockRecord]:
+        raise NotImplementedError
+
+
+class InMemoryStockRepository(StockRepository):
     # Concrete repository — swappable with a real DB implementation.
-    store = {
+    _store = {
         "RELIANCE": StockRecord("RELIANCE", 2450.75, 25.0, 1_800_000),
-        "TCS":      StockRecord("TCS",      3600.00, 30.0, 1_400_000),
-        "INFY":     StockRecord("INFY",     1450.50, 22.5,   600_000),
+        "TCS": StockRecord("TCS", 3600.00, 30.0, 1_400_000),
+        "INFY": StockRecord("INFY", 1450.50, 22.5, 600_000),
     }
 
-    function find_by_symbol(symbol):
-        return store.get(uppercase(symbol))
+    def find_by_symbol(self, symbol: str) -> Optional[StockRecord]:
+        return self._store.get(symbol.upper())
 
-    function find_all():
-        return values(store)
+    def find_all(self) -> list[StockRecord]:
+        return list(self._store.values())
 
 
 # ── Layer 2: Business Logic ─────────────────────────────────────────────
 
 class ValuationService:
     # Business rules: no queries, no HTTP, no UI concerns.
-    constructor(repo: StockRepository):
+    def __init__(self, repo: StockRepository):
         self.repo = repo
 
-    function classify_valuation(symbol):
+    def classify_valuation(self, symbol: str):
         record = self.repo.find_by_symbol(symbol)
-        if record is null:
-            raise Error("Unknown symbol: " + symbol)
+        if record is None:
+            raise ValueError(f"Unknown symbol: {symbol}")
 
         # Business rule: P/E-based valuation classification
         if record.pe_ratio < 15:
             verdict = "undervalued"
-        else if record.pe_ratio < 25:
+        elif record.pe_ratio < 25:
             verdict = "fairly_valued"
         else:
             verdict = "overvalued"
 
         return {
-            symbol: record.symbol,
-            price: record.price,
-            pe_ratio: record.pe_ratio,
-            verdict: verdict,
+            "symbol": record.symbol,
+            "price": record.price,
+            "pe_ratio": record.pe_ratio,
+            "verdict": verdict,
         }
 
-    function top_value_picks(limit = 3):
+    def top_value_picks(self, limit: int = 3):
         all_stocks = self.repo.find_all()
-        sorted_stocks = sort_by(all_stocks, key = s -> s.pe_ratio)
-        return [self.classify_valuation(s.symbol) for s in sorted_stocks[0:limit]]
+        sorted_stocks = sorted(all_stocks, key=lambda s: s.pe_ratio)
+        return [self.classify_valuation(s.symbol) for s in sorted_stocks[:limit]]
 
 
 # ── Layer 3: Presentation (an HTTP route handler in your framework of choice) ─
 
-function handle_get_valuation(symbol, service: ValuationService):
+def handle_get_valuation(symbol: str, service: ValuationService):
     # Presentation layer: validate input, call service, format response.
     # No business logic here — just orchestration and formatting.
-    symbol = uppercase(trim(symbol))
-    if not is_alphabetic(symbol):
-        return { error: "Invalid symbol format", code: 400 }
+    symbol = symbol.upper().strip()
+    if not symbol.isalpha():
+        return {"error": "Invalid symbol format", "code": 400}
 
     try:
         result = service.classify_valuation(symbol)
-        return { data: result, code: 200 }
-    catch ValueError as exc:
-        return { error: exc.message, code: 404 }
+        return {"data": result, "code": 200}
+    except ValueError as exc:
+        return {"error": str(exc), "code": 404}
 
 
 # Wire up the layers
@@ -362,12 +372,12 @@ across all stocks priced above 1000.
 
 **What the agent produced (pseudocode, reflecting the actual generated shape):**
 
-```pseudocode
+```python
 class ValuationService:
     ...
-    function average_pe_above(threshold):
+    def average_pe_above(self, threshold):
         # directly queries the database, bypassing the repository
-        rows = database.execute(
+        rows = self.database.execute(
             "SELECT pe_ratio FROM stocks WHERE price > ?", [threshold]
         )
         return average([r.pe_ratio for r in rows])

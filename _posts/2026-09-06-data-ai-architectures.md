@@ -89,93 +89,102 @@ graph TD
 
 ---
 
-## Pseudocode Examples
+## Python Examples
 
 ### 1. Batch Data Pipeline — Stock Fundamentals ETL
 
-```pseudocode
+```python
 # Extract-Transform-Load pipeline for stock fundamentals data.
 # Follows the layered architecture from the Architecture Intro post.
 
-record RawFundamentals:
-    # Raw data as it arrives from the source — unvalidated.
-    symbol: string
-    raw_pe: string        # may be "N/A", "23.5", or empty
-    raw_revenue: string   # in local currency units, may have thousands separators
-    raw_debt: string
+import logging
+from dataclasses import dataclass, field
+from typing import Any
 
-record FundamentalsRecord:
+
+@dataclass
+class RawFundamentals:
+    # Raw data as it arrives from the source — unvalidated.
+    symbol: str
+    raw_pe: str
+    raw_revenue: str
+    raw_debt: str
+
+
+@dataclass
+class FundamentalsRecord:
     # Clean, validated, typed record ready for the data warehouse.
-    symbol: string
-    pe_ratio: number or null
-    revenue: number or null
-    debt: number or null
-    data_quality_flags: list<string> = []
+    symbol: str
+    pe_ratio: float | None
+    revenue: float | None
+    debt: float | None
+    data_quality_flags: list[str] = field(default_factory=list)
 
 
 # ── Extract ─────────────────────────────────────────────────────────────
-function extract(source: list<map>) -> iterator<RawFundamentals>:
+def extract(source):
     # Yield raw records from a data source (file, API, DB dump).
     for row in source:
         yield RawFundamentals(
-            symbol = row.get("symbol", ""),
-            raw_pe = row.get("pe_ratio", ""),
-            raw_revenue = row.get("revenue", ""),
-            raw_debt = row.get("debt", ""),
+            symbol=row.get("symbol", ""),
+            raw_pe=row.get("pe_ratio", ""),
+            raw_revenue=row.get("revenue", ""),
+            raw_debt=row.get("debt", ""),
         )
 
 
 # ── Transform ────────────────────────────────────────────────────────────
-function parse_number(raw, field_name, flags):
+def parse_number(raw_value, field_name, flags):
     # Parse a number from a raw string, recording data quality issues.
-    if raw is empty or trim(raw) in ("N/A", "-", ""):
-        flags.append("missing_" + field_name)
-        return null
+    if raw_value is None or str(raw_value).strip() in ("N/A", "-", ""):
+        flags.append(f"missing_{field_name}")
+        return None
     try:
-        cleaned = remove_thousands_separators(trim(raw))
-        return to_number(cleaned)
-    catch ParseError:
-        flags.append("invalid_" + field_name + ":" + raw)
-        return null
+        cleaned = str(raw_value).replace(",", "").strip()
+        return float(cleaned)
+    except (TypeError, ValueError):
+        flags.append(f"invalid_{field_name}:{raw_value}")
+        return None
 
-function transform(raw: RawFundamentals) -> FundamentalsRecord:
+
+def transform(raw: RawFundamentals) -> FundamentalsRecord:
     # Transform and validate a raw record. Never raises — all errors become flags.
-    flags = []
+    flags: list[str] = []
 
-    if raw.symbol is empty or not is_alphabetic(raw.symbol):
-        flags.append("invalid_symbol:" + raw.symbol)
+    if not raw.symbol or not raw.symbol.isalpha():
+        flags.append(f"invalid_symbol:{raw.symbol}")
 
     return FundamentalsRecord(
-        symbol = uppercase(trim(raw.symbol)),
-        pe_ratio = parse_number(raw.raw_pe, "pe_ratio", flags),
-        revenue = parse_number(raw.raw_revenue, "revenue", flags),
-        debt = parse_number(raw.raw_debt, "debt", flags),
-        data_quality_flags = flags,
+        symbol=raw.symbol.strip().upper(),
+        pe_ratio=parse_number(raw.raw_pe, "pe_ratio", flags),
+        revenue=parse_number(raw.raw_revenue, "revenue", flags),
+        debt=parse_number(raw.raw_debt, "debt", flags),
+        data_quality_flags=flags,
     )
 
 
 # ── Load ─────────────────────────────────────────────────────────────────
-function load(records: list<FundamentalsRecord>, repository) -> map:
+def load(records, repository) -> dict[str, int]:
     # Load clean records to destination. Returns a summary.
     success = 0
     skipped = 0
     for record in records:
-        if "invalid_symbol" in join(record.data_quality_flags, " "):
-            log.warn("Skipping invalid record: {}", record)
+        if "invalid_symbol" in " ".join(record.data_quality_flags):
+            logging.warning("Skipping invalid record: %s", record)
             skipped += 1
             continue
         repository.upsert(record)
         success += 1
-    return {loaded: success, skipped: skipped}
+    return {"loaded": success, "skipped": skipped}
 
 
 # ── Pipeline orchestrator ─────────────────────────────────────────────────
-function run_pipeline(source_data: list<map>, repository) -> map:
+def run_pipeline(source_data, repository) -> dict[str, int]:
     # Full ETL pipeline — extract → transform → load.
     raw_records = list(extract(source_data))
     clean_records = [transform(r) for r in raw_records]
     result = load(clean_records, repository)
-    log.info("Pipeline complete: {}", result)
+    logging.info("Pipeline complete: %s", result)
     return result
 ```
 
@@ -200,126 +209,140 @@ graph LR
     end
 ```
 
-```pseudocode
+```python
 # ── Contracts (define interfaces before implementations) ─────────────────
 
-interface Embedder:
-    embed(text: string) -> list<number>
+from dataclasses import dataclass, field
+import json
+import time
 
-interface VectorStore:
-    upsert(doc_id: string, vector: list<number>, metadata: map) -> void
-    search(vector: list<number>, top_k: integer) -> list<map>
 
-interface LLMClient:
-    complete(prompt: string, max_tokens: integer = 512) -> string
+class Embedder:
+    def embed(self, text: str):
+        raise NotImplementedError
+
+
+class VectorStore:
+    def upsert(self, doc_id: str, vector, metadata: dict):
+        raise NotImplementedError
+
+    def search(self, vector, top_k: int):
+        raise NotImplementedError
+
+
+class LLMClient:
+    def complete(self, prompt: str, max_tokens: int = 512) -> str:
+        raise NotImplementedError
 
 
 # ── Observability wrapper ─────────────────────────────────────────────────
-record RAGTrace:
+@dataclass
+class RAGTrace:
     # Records every step for debugging hallucinations and drift.
-    question: string
-    retrieved_chunks: list<map>
-    prompt: string
-    response: string
-    latency_ms: number
-    timestamp: number = current_time()
+    question: str
+    retrieved_chunks: list
+    prompt: str
+    response: str
+    latency_ms: float
+    timestamp: float = field(default_factory=time.time)
 
 
 # ── Pipeline ──────────────────────────────────────────────────────────────
 class RAGPipeline:
     # Injection: all three dependencies are injected — testable with fakes.
     # Observability: every query produces a RAGTrace for monitoring.
-    constructor(embedder: Embedder, store: VectorStore, llm: LLMClient, top_k = 5, max_tokens = 512):
+    def __init__(self, embedder: Embedder, store: VectorStore, llm: LLMClient, top_k=5, max_tokens=512):
         self.embedder = embedder
         self.store = store
         self.llm = llm
         self.top_k = top_k
         self.max_tokens = max_tokens
 
-    function index(documents: list<map>):
+    def index(self, documents):
         # Offline step: embed documents and store in the vector DB.
         for doc in documents:
-            vector = self.embedder.embed(doc.text)
+            vector = self.embedder.embed(doc["text"])
             self.store.upsert(
-                doc_id = doc.id,
-                vector = vector,
-                metadata = {text: doc.text, source: doc.get("source", "unknown")},
+                doc_id=doc["id"],
+                vector=vector,
+                metadata={"text": doc["text"], "source": doc.get("source", "unknown")},
             )
 
-    function query(question: string) -> (string, RAGTrace):
+    def query(self, question: str):
         # Online step: embed question, retrieve context, generate answer.
-        start = monotonic_time()
+        start = time.perf_counter()
 
         # 1. Embed the question
         question_vector = self.embedder.embed(question)
 
         # 2. Retrieve relevant chunks
-        chunks = self.store.search(question_vector, top_k = self.top_k)
+        chunks = self.store.search(question_vector, top_k=self.top_k)
 
         # 3. Build prompt with retrieved context
-        context_text = join(
-            ["[Source: " + c.metadata.source + "]\n" + c.metadata.text for c in chunks],
-            "\n\n---\n\n"
+        context_text = "\n\n---\n\n".join(
+            f"[Source: {chunk['metadata']['source']}]\n{chunk['metadata']['text']}" for chunk in chunks
         )
-        prompt =
-            "You are a financial research assistant. Answer based ONLY on the provided context.\n" +
-            "If the answer is not in the context, say \"I don't have that information.\"\n\n" +
-            "Context:\n" + context_text + "\n\n" +
-            "Question: " + question + "\n" +
-            "Answer:"
+        prompt = (
+            "You are a financial research assistant. Answer based ONLY on the provided context.\n"
+            "If the answer is not in the context, say \"I don't have that information.\"\n\n"
+            f"Context:\n{context_text}\n\nQuestion: {question}\nAnswer:"
+        )
 
         # 4. Generate
-        response = self.llm.complete(prompt, max_tokens = self.max_tokens)
+        response = self.llm.complete(prompt, max_tokens=self.max_tokens)
 
-        latency_ms = (monotonic_time() - start) * 1000
+        latency_ms = (time.perf_counter() - start) * 1000
         trace = RAGTrace(
-            question = question,
-            retrieved_chunks = chunks,
-            prompt = prompt,
-            response = response,
-            latency_ms = latency_ms,
+            question=question,
+            retrieved_chunks=chunks,
+            prompt=prompt,
+            response=response,
+            latency_ms=latency_ms,
         )
 
-        return (response, trace)
+        return response, trace
 
 
 # ── Fake implementations for testing ─────────────────────────────────────
-class FakeEmbedder implements Embedder:
+class FakeEmbedder(Embedder):
     # Returns a deterministic 4-dim vector for testing.
-    function embed(text):
-        return [length(text) * 0.01, word_count(text) * 0.1, 0.5, 0.5]
+    def embed(self, text: str):
+        return [len(text) * 0.01, text.count(" ") * 0.1, 0.5, 0.5]
 
-class InMemoryVectorStore implements VectorStore:
+
+class InMemoryVectorStore(VectorStore):
     # Simple store for unit tests — no real similarity search.
-    docs = []
+    def __init__(self):
+        self.docs = []
 
-    function upsert(doc_id, vector, metadata):
-        self.docs.append({id: doc_id, vector: vector, metadata: metadata})
+    def upsert(self, doc_id, vector, metadata):
+        self.docs.append({"id": doc_id, "vector": vector, "metadata": metadata})
 
-    function search(vector, top_k):
-        return self.docs[0:top_k]  # return first N for testing
+    def search(self, vector, top_k):
+        return self.docs[:top_k]  # return first N for testing
 
-class FakeLLM implements LLMClient:
-    function complete(prompt, max_tokens = 512):
+
+class FakeLLM(LLMClient):
+    def complete(self, prompt: str, max_tokens: int = 512) -> str:
         return "Based on the provided context, the P/E ratio of RELIANCE is 25."
 
 
 # Test the pipeline
-pipeline = new RAGPipeline(
-    embedder = new FakeEmbedder(),
-    store = new InMemoryVectorStore(),
-    llm = new FakeLLM(),
+pipeline = RAGPipeline(
+    embedder=FakeEmbedder(),
+    store=InMemoryVectorStore(),
+    llm=FakeLLM(),
 )
 
 pipeline.index([
-    {id: "1", text: "RELIANCE has a P/E ratio of 25 as of Q3 2025.", source: "NSE filing"},
-    {id: "2", text: "TCS revenue grew 8% YoY in FY2025.", source: "TCS annual report"},
+    {"id": "1", "text": "RELIANCE has a P/E ratio of 25 as of Q3 2025.", "source": "NSE filing"},
+    {"id": "2", "text": "TCS revenue grew 8% YoY in FY2025.", "source": "TCS annual report"},
 ])
 
-(answer, trace) = pipeline.query("What is RELIANCE's P/E ratio?")
-print("Answer: " + answer)
-print("Latency: " + format(trace.latency_ms, ".1f") + "ms")
-print("Chunks retrieved: " + length(trace.retrieved_chunks))
+answer, trace = pipeline.query("What is RELIANCE's P/E ratio?")
+print(f"Answer: {answer}")
+print(f"Latency: {trace.latency_ms:.1f}ms")
+print(f"Chunks retrieved: {len(trace.retrieved_chunks)}")
 ```
 
 ---
@@ -328,49 +351,56 @@ print("Chunks retrieved: " + length(trace.retrieved_chunks))
 
 When a single LLM query isn't enough, you compose multiple tool calls in a loop:
 
-```pseudocode
-record Tool:
-    name: string
-    description: string
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class Tool:
+    name: str
+    description: str
     func: callable
+
 
 class SimpleAgent:
     # Minimal ReAct-style agent: Reason → Act → Observe → loop.
     # Real production agents use frameworks like LangGraph or CrewAI.
     # This skeleton shows the core pattern only.
 
-    constructor(llm: LLMClient, tools: list<Tool>, max_steps = 5):
+    def __init__(self, llm: LLMClient, tools, max_steps=5):
         self.llm = llm
-        self.tools = index_by(tools, key = t -> t.name)
+        self.tools = {tool.name: tool for tool in tools}
         self.max_steps = max_steps
 
-    function build_system_prompt():
-        tool_descriptions = join(
-            ["- " + t.name + ": " + t.description for t in values(self.tools)], "\n"
+    def build_system_prompt(self):
+        tool_descriptions = "\n".join(
+            f"- {tool.name}: {tool.description}" for tool in self.tools.values()
         )
-        return
-            "You are a financial research agent. Available tools:\n" + tool_descriptions + "\n\n" +
-            "To use a tool, respond with: TOOL: <tool_name> ARGS: <json args>\n" +
+        return (
+            "You are a financial research agent. Available tools:\n"
+            f"{tool_descriptions}\n\n"
+            "To use a tool, respond with: TOOL: <tool_name> ARGS: <json args>\n"
             "When done, respond with: FINAL: <your answer>"
+        )
 
-    function run(query: string) -> string:
-        history = ["Question: " + query]
-        for step in range(1, self.max_steps + 1):
-            prompt = self.build_system_prompt() + "\n\n" + join(history, "\n")
+    def run(self, query: str) -> str:
+        history = [f"Question: {query}"]
+        for _ in range(self.max_steps):
+            prompt = self.build_system_prompt() + "\n\n" + "\n".join(history)
             response = self.llm.complete(prompt)
-            history.append("Agent: " + response)
+            history.append(f"Agent: {response}")
 
-            if starts_with(response, "FINAL:"):
-                return trim(remove_prefix(response, "FINAL:"))
+            if response.startswith("FINAL:"):
+                return response.removeprefix("FINAL:").strip()
 
-            if starts_with(response, "TOOL:"):
-                # Parse tool name and args from the response
-                # (simplified here — real agents parse structured JSON args)
-                tool_name = extract_tool_name(response)
+            if response.startswith("TOOL:"):
+                # Parse tool name and args from the response.
+                # (Simplified here — real agents parse structured JSON args.)
+                tool_name = response.split()[1]
                 tool = self.tools.get(tool_name)
-                if tool is not null:
-                    observation = tool.func(symbol = "RELIANCE")
-                    history.append("Observation: " + observation)
+                if tool is not None:
+                    observation = tool.func(symbol="RELIANCE")
+                    history.append(f"Observation: {observation}")
 
         return "Max steps reached without a final answer."
 ```
@@ -387,18 +417,22 @@ The three mandatory signals for any production AI system:
 | **Retrieved context** | Chunk IDs, similarity scores, sources | Debug retrieval quality, detect data drift |
 | **Output** | Response text, latency, token count | Monitor hallucination patterns, cost |
 
-```pseudocode
-function log_rag_trace(trace: RAGTrace):
+```python
+import json
+
+
+def log_rag_trace(trace: RAGTrace):
     # Emit a structured log event for every RAG query — ready for any log aggregator.
-    log.info(to_json({
-        event: "rag_query",
-        question: trace.question,
-        retrieved_count: length(trace.retrieved_chunks),
-        sources: [c.metadata.source for c in trace.retrieved_chunks],
-        response_length: length(trace.response),
-        latency_ms: round(trace.latency_ms, 2),
-        timestamp: trace.timestamp,
-    }))
+    log_data = {
+        "event": "rag_query",
+        "question": trace.question,
+        "retrieved_count": len(trace.retrieved_chunks),
+        "sources": [chunk["metadata"]["source"] for chunk in trace.retrieved_chunks],
+        "response_length": len(trace.response),
+        "latency_ms": round(trace.latency_ms, 2),
+        "timestamp": trace.timestamp,
+    }
+    print(json.dumps(log_data))
 ```
 
 ---
@@ -423,17 +457,17 @@ Requirements:
 - Include fake implementations suitable for tests
 ```
 
-**What the agent produced (excerpt, pseudocode reflecting the actual shape):**
+**What the agent produced (excerpt, Python reflecting the actual shape):**
 
-```pseudocode
+```python
 class RAGPipeline:
-    function query(question):
+    def query(self, question):
         vector = embed_with_openai(question)          # <- calls a specific provider directly
-        chunks = pinecone_client.query(vector, top_k=5) # <- hardcoded to one vendor's client
-        prompt = "Context: " + chunks + "\nQuestion: " + question
+        chunks = pinecone_client.query(vector, top_k=5)  # <- hardcoded to one vendor's client
+        prompt = "Context: " + str(chunks) + "\nQuestion: " + question
         answer = openai_complete(prompt)                # <- another direct provider call
-        print("got answer: " + answer)                  # <- unstructured, and to console not a trace
-        return answer                                    # <- no trace returned at all
+        print("got answer: " + answer)                 # <- unstructured, and to console not a trace
+        return answer                                  # <- no trace returned at all
 ```
 
 **The review pass:**
@@ -472,38 +506,48 @@ Do not change the existing interface — query() should now return (response, tr
 
 **What a reasonable output looks like** — this is the version worth comparing your own agent's output against, line by line:
 
-```pseudocode
-record RAGTrace:
-    question: string
-    retrieved_chunks: list<map>
-    prompt: string
-    response: string
-    latency_ms: number
-    timestamp: number = current_time()
+```python
+from dataclasses import dataclass, field
+import json
+import time
 
-function log_trace(trace: RAGTrace):
-    log.info(to_json({
-        event: "rag_query",
-        question: trace.question,
-        retrieved_count: length(trace.retrieved_chunks),
-        response_length: length(trace.response),
-        latency_ms: trace.latency_ms,
+
+@dataclass
+class RAGTrace:
+    question: str
+    retrieved_chunks: list
+    prompt: str
+    response: str
+    latency_ms: float
+    timestamp: float = field(default_factory=time.time)
+
+
+def log_trace(trace: RAGTrace):
+    print(json.dumps({
+        "event": "rag_query",
+        "question": trace.question,
+        "retrieved_count": len(trace.retrieved_chunks),
+        "response_length": len(trace.response),
+        "latency_ms": trace.latency_ms,
     }))
 
+
 class RAGPipeline:
-    function query(question) -> (string, RAGTrace):
-        start = monotonic_time()
+    def query(self, question):
+        start = time.perf_counter()
         vector = self.embedder.embed(question)
-        chunks = self.store.search(vector, top_k = self.top_k)
+        chunks = self.store.search(vector, top_k=self.top_k)
         prompt = build_prompt(question, chunks)
         response = self.llm.complete(prompt)
         trace = RAGTrace(
-            question = question, retrieved_chunks = chunks,
-            prompt = prompt, response = response,
-            latency_ms = (monotonic_time() - start) * 1000,
+            question=question,
+            retrieved_chunks=chunks,
+            prompt=prompt,
+            response=response,
+            latency_ms=(time.perf_counter() - start) * 1000,
         )
         log_trace(trace)
-        return (response, trace)
+        return response, trace
 ```
 
 **The review pass — the two things worth double-checking even on a "good" output like this one:**

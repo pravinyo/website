@@ -91,34 +91,43 @@ The [12-factor methodology](https://12factor.net/) defines how cloud-native appl
 
 ---
 
-## Pseudocode Examples
+## Python Examples
 
 ### 1. Factor #3 — Twelve-Factor Config
 
-```pseudocode
-record AppConfig:
-    db_url: string
-    cache_url: string
-    api_key: string
-    debug: boolean
-    port: integer
+```python
+import os
+from dataclasses import dataclass
 
-function AppConfig.from_env():
-    # Load all config from environment. Fail loudly if required vars are missing.
-    required = ["DATABASE_URL", "CACHE_URL", "EXTERNAL_API_KEY"]
-    missing = [key for key in required if env.get(key) is empty]
-    if missing is not empty:
-        raise EnvironmentError(
-            "Missing required environment variables: " + join(missing, ", ") +
-            "\nCopy .env.example to .env and fill in the values."
+
+@dataclass(frozen=True)
+class AppConfig:
+    db_url: str
+    cache_url: str
+    api_key: str
+    debug: bool
+    port: int
+
+    @classmethod
+    def from_env(cls):
+        # Load all config from environment. Fail loudly if required vars are missing.
+        required = ["DATABASE_URL", "CACHE_URL", "EXTERNAL_API_KEY"]
+        missing = [key for key in required if not os.getenv(key)]
+        if missing:
+            raise EnvironmentError(
+                "Missing required environment variables: "
+                + ", ".join(missing)
+                + "\nCopy .env.example to .env and fill in the values."
+            )
+
+        return cls(
+            db_url=os.environ["DATABASE_URL"],
+            cache_url=os.environ["CACHE_URL"],
+            api_key=os.environ["EXTERNAL_API_KEY"],
+            debug=os.getenv("DEBUG", "false").lower() == "true",
+            port=int(os.getenv("PORT", "8000")),
         )
-    return AppConfig(
-        db_url = env["DATABASE_URL"],
-        cache_url = env["CACHE_URL"],
-        api_key = env["EXTERNAL_API_KEY"],
-        debug = lowercase(env.get("DEBUG", "false")) == "true",
-        port = to_integer(env.get("PORT", "8000")),
-    )
+
 
 # Usage — config is loaded once at startup, injected everywhere
 # config = AppConfig.from_env()
@@ -128,48 +137,49 @@ function AppConfig.from_env():
 
 ### 2. Microservice — Stock Quote Service
 
-A minimal, independently deployable service following 12-factor principles. This is written as pseudocode against a generic "web framework" so you can map it onto Express, FastAPI, Spring Boot, ASP.NET Core, or anything else with the same shape: a router, a handler, a health check.
+A minimal, independently deployable service following 12-factor principles. This is written as Python so it maps cleanly to frameworks such as FastAPI, Flask, or Django, while keeping the same shape: a route, a handler, and a health check.
 
-```pseudocode
-# stock_quote_service — Single-responsibility microservice.
-# Exposes: GET /quote/{symbol}
+```python
+import json
+import logging
+import os
+from datetime import datetime, timezone
 
-configure_logging(format = "structured-json", destination = stdout)  # Factor 11
-logger = get_logger()
 
-app = new WebApp()
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-record StockQuote:
-    symbol: string
-    price: number
-    timestamp: number
 
-function fetch_price(symbol):
+def fetch_price(symbol: str) -> float:
     # In production: call the real market-data provider using injected config.
     prices = {"RELIANCE": 2450.75, "TCS": 3600.00, "INFY": 1450.50}
     if symbol not in prices:
-        raise NotFoundError("Symbol not found: " + symbol)
+        raise KeyError(f"Symbol not found: {symbol}")
     return prices[symbol]
 
-app.route("GET", "/quote/:symbol", function(request):
-    symbol = uppercase(trim(request.params.symbol))
+
+def handle_quote(symbol: str):
+    symbol = symbol.strip().upper()
     try:
         price = fetch_price(symbol)
-        quote = StockQuote(symbol, price, current_time())
-        logger.info("Quote served: {} = {:.2f}", symbol, price)
-        return json_response(quote, status = 200)
-    catch NotFoundError:
-        logger.warn("Unknown symbol requested: {}", symbol)
-        return json_response({error: "Symbol not found"}, status = 404)
-)
+        payload = {
+            "symbol": symbol,
+            "price": price,
+            "timestamp": int(datetime.now(timezone.utc).timestamp()),
+        }
+        logging.info(json.dumps({"event": "quote_served", "symbol": symbol, "price": price}))
+        return payload, 200
+    except KeyError:
+        logging.warning(json.dumps({"event": "unknown_symbol", "symbol": symbol}))
+        return {"error": "Symbol not found"}, 404
 
-app.route("GET", "/health", function(request):
+
+def health_check():
     # Liveness check — required for Kubernetes/ECS-style health probes.
-    return json_response({status: "ok"}, status = 200)
-)
+    return {"status": "ok"}, 200
 
-port = to_integer(env.get("PORT", "5001"))  # Factor 7: port binding
-app.listen(host = "0.0.0.0", port = port)   # 0.0.0.0 for container networking
+
+port = int(os.getenv("PORT", "5001"))  # Factor 7: port binding
+print(f"Service listening on 0.0.0.0:{port}")
 ```
 
 ---
@@ -178,105 +188,120 @@ app.listen(host = "0.0.0.0", port = port)   # 0.0.0.0 for container networking
 
 When Service A calls Service B over the network, Service B can fail. Without a circuit breaker, Service A queues up requests, exhausting threads and memory until *it* also fails. The circuit breaker detects failures and short-circuits calls before they happen.
 
-```pseudocode
-enum CircuitState:
-    CLOSED     # Healthy: requests flow through
-    OPEN       # Failing: requests blocked immediately
-    HALF_OPEN  # Probing: one trial request allowed
+```python
+import threading
+import time
+from enum import Enum, auto
 
-class CircuitBreakerOpenError extends Error:
-    # Raised when calls are attempted while circuit is OPEN.
+
+class CircuitState(Enum):
+    CLOSED = auto()      # Healthy: requests flow through
+    OPEN = auto()        # Failing: requests blocked immediately
+    HALF_OPEN = auto()  # Probing: one trial request allowed
+
+
+class CircuitBreakerOpenError(RuntimeError):
+    pass
+
 
 class CircuitBreaker:
     # Transitions: CLOSED → OPEN after failure_threshold consecutive failures.
     # OPEN → HALF_OPEN after recovery_timeout has elapsed.
     # HALF_OPEN → CLOSED on success, → OPEN on failure.
 
-    constructor(failure_threshold = 5, recovery_timeout = 30.0, name = "default"):
+    def __init__(self, failure_threshold=5, recovery_timeout=30.0, name="default"):
         self.name = name
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
-        self.state_value = CLOSED
+        self.state_value = CircuitState.CLOSED
         self.failure_count = 0
-        self.last_failure_time = null
-        self.lock = new Mutex()
+        self.last_failure_time = None
+        self.lock = threading.RLock()
 
-    function state():
+    @property
+    def state(self):
         # Returns current state, transitioning OPEN→HALF_OPEN if timeout elapsed.
         with self.lock:
-            if self.state_value == OPEN
-               and self.last_failure_time is not null
-               and (monotonic_time() - self.last_failure_time) > self.recovery_timeout:
-                self.state_value = HALF_OPEN
+            if (
+                self.state_value == CircuitState.OPEN
+                and self.last_failure_time is not None
+                and (time.monotonic() - self.last_failure_time) > self.recovery_timeout
+            ):
+                self.state_value = CircuitState.HALF_OPEN
             return self.state_value
 
-    function call(func, ...args):
-        current_state = self.state()
+    def call(self, func, *args, **kwargs):
+        current_state = self.state
 
-        if current_state == OPEN:
+        if current_state == CircuitState.OPEN:
             raise CircuitBreakerOpenError(
-                "Circuit '" + self.name + "' is OPEN — service unavailable. " +
-                "Retry after " + self.recovery_timeout + "s."
+                f"Circuit '{self.name}' is OPEN — service unavailable. "
+                f"Retry after {self.recovery_timeout}s."
             )
 
         try:
-            result = func(...args)
+            result = func(*args, **kwargs)
             self._on_success()
             return result
-        catch Exception as exc:
+        except Exception:
             self._on_failure()
-            raise exc
+            raise
 
-    function _on_success():
+    def _on_success(self):
         with self.lock:
             self.failure_count = 0
-            self.state_value = CLOSED
+            self.state_value = CircuitState.CLOSED
 
-    function _on_failure():
+    def _on_failure(self):
         with self.lock:
             self.failure_count += 1
-            self.last_failure_time = monotonic_time()
+            self.last_failure_time = time.monotonic()
             if self.failure_count >= self.failure_threshold:
-                self.state_value = OPEN
+                self.state_value = CircuitState.OPEN
 
 
 # ── Usage ──────────────────────────────────────────────────────────────
-function call_external_api(symbol):
+def call_external_api(symbol):
     # Simulate a flaky external service.
     raise ConnectionError("Service temporarily unavailable")
 
-breaker = new CircuitBreaker(failure_threshold = 3, recovery_timeout = 30, name = "Market-Data-API")
+
+breaker = CircuitBreaker(failure_threshold=3, recovery_timeout=30, name="Market-Data-API")
 
 for attempt in range(1, 6):
     try:
-        result = breaker.call(call_external_api, "RELIANCE")
-    catch CircuitBreakerOpenError as e:
-        print("Attempt " + attempt + ": Circuit OPEN — " + e.message)
-    catch ConnectionError as e:
-        print("Attempt " + attempt + ": Call FAILED — " + e.message + " | State: " + breaker.state())
+        breaker.call(call_external_api, "RELIANCE")
+    except CircuitBreakerOpenError as exc:
+        print(f"Attempt {attempt}: Circuit OPEN — {exc}")
+    except ConnectionError as exc:
+        print(f"Attempt {attempt}: Call FAILED — {exc} | State: {breaker.state}")
 ```
 
 ---
 
 ### 4. Retry with Exponential Backoff
 
-```pseudocode
-function retry_with_backoff(func, max_attempts = 3, base_delay = 1.0, max_delay = 30.0, jitter = true):
+```python
+import random
+import time
+
+
+def retry_with_backoff(func, max_attempts=3, base_delay=1.0, max_delay=30.0, jitter=True):
     # Exponential backoff: delay doubles each retry.
     # Jitter: adds randomness to prevent a thundering herd.
     for attempt in range(1, max_attempts + 1):
         try:
             return func()
-        catch Exception as exc:
+        except Exception as exc:
             if attempt == max_attempts:
-                raise exc  # re-raise on final attempt
+                raise  # re-raise on final attempt
 
-            delay = min(base_delay * (2 ^ (attempt - 1)), max_delay)
+            delay = min(base_delay * (2 ** (attempt - 1)), max_delay)
             if jitter:
-                delay = delay * (0.5 + random() * 0.5)  # 50–100% of delay
+                delay *= random.uniform(0.5, 1.0)  # 50–100% of delay
 
-            print("Attempt " + attempt + " failed: " + exc.message + ". Retrying in " + delay + "s...")
-            sleep(delay)
+            print(f"Attempt {attempt} failed: {exc}. Retrying in {delay:.2f}s...")
+            time.sleep(delay)
 ```
 
 ---
@@ -319,26 +344,29 @@ Generate a microservice that follows 12-factor principles:
 The service should expose: GET /health (liveness check) and GET /quote/{symbol}
 ```
 
-**What the agent produced (excerpt, pseudocode reflecting the actual shape):**
+**What the agent produced (excerpt, Python reflecting the actual shape):**
 
-```pseudocode
-API_KEY = "sk-live-4f9a2c..."      # <- hardcoded, not read from env
-CACHE = {}                          # <- module-level mutable dict, shared across requests
+```python
+API_KEY = "sk-live-4f9a2c..."  # <- hardcoded, not read from env
+CACHE = {}  # <- module-level mutable dict, shared across requests
 
-app.route("GET", "/quote/:symbol", function(request):
-    symbol = request.params.symbol
+
+def quote_route(symbol):
     if symbol in CACHE:
-        return json_response(CACHE[symbol])
-    price = fetch_price(symbol, api_key = API_KEY)
-    CACHE[symbol] = price            # <- in-memory state, lost on restart, wrong across replicas
-    log_to_file("app.log", "served " + symbol)   # <- writes to a file, not stdout
-    return json_response(price)
+        return {"status": "ok", "price": CACHE[symbol]}
 
-app.route("GET", "/health", function(request):
-    return json_response({status: "ok"})
-)
+    price = fetch_price(symbol, api_key=API_KEY)
+    CACHE[symbol] = price  # <- in-memory state, lost on restart, wrong across replicas
+    with open("app.log", "a", encoding="utf-8") as handle:
+        handle.write(f"served {symbol}\n")  # <- writes to a file, not stdout
+    return {"status": "ok", "price": price}
 
-app.listen(port = 8000)             # <- hardcoded port, ignores PORT
+
+def health_route():
+    return {"status": "ok"}
+
+
+# app.listen(port=8000)  # <- hardcoded port, ignores PORT
 ```
 
 **The review pass — check the prompt's four factors one by one:**
