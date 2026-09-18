@@ -150,8 +150,7 @@ Few design decisions?"}
     B -->|No —
 multiple entities,
 real design trade-offs,
-needs an audit trail| D["Full REASONS Canvas
-+ QA/Architect persona split"]
+needs an audit trail| D["Full REASONS Canvas + QA/Architect persona split"]
     C --> E["One prompt, one review pass"]
     D --> F["Analyst drafts Canvas → you review & commit
 → QA persona writes tests → Architect persona implements"]
