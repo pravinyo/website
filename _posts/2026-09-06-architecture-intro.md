@@ -131,9 +131,9 @@ Components communicate via events rather than direct method calls. Publishers em
 
 ---
 
-## Pseudocode Example — Stock Analysis Service, Layered
+## Python Example — Stock Analysis Service, Layered
 
-The example below is written as language-agnostic pseudocode. The layering — not the syntax — is the point; translate it into whichever language your project uses.
+The example below is written in Python to make the layering explicit and runnable. The architectural pattern — not the syntax — is the point; you can translate the same structure into whichever language your project uses.
 
 ```python
 # ── Layer 1: Data Access (database / API boundary) ─────────────────────
