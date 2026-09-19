@@ -26,7 +26,7 @@ image:
 
 ## Why This Post Exists in the AI-Assisted Development Series
 
-The first two posts in this module were about structuring code that an AI agent helps you write. This post closes the loop: it's about structuring the *AI components themselves* — the pipelines, retrieval systems, and agents you're now building as first-class parts of your architecture, using everything the earlier posts established.
+The [previous post](/posts/architecture-intro/) was about structuring code that an AI agent helps you write. This post closes the loop: it's about structuring the *AI components themselves* — the pipelines, retrieval systems, and agents you're now building as first-class parts of your architecture, using everything that post established.
 
 That closing of the loop matters for a specific reason: an LLM call is the least deterministic, hardest-to-test unit you will ever add to a system, and it is exactly the kind of component an AI coding agent will, left to its own devices, wire up as a "magic function" — call the model, get a string back, hope for the best. No contract, no logging of what went in or came out, no visibility into whether the retrieved context was any good.
 
@@ -38,7 +38,7 @@ The golden rule below is the antidote, and it's the same discipline you already 
 
 ## Prerequisites
 
-- [Cloud-Native and Microservices](/posts/cloud-native-microservices/)
+- [Architecture Intro](/posts/architecture-intro/)
 - Comfort with interfaces/contracts and asynchronous concepts in any language
 - Familiarity with REST APIs and JSON
 
@@ -562,7 +562,7 @@ class RAGPipeline:
 1. **Vector DB selection.** For small-to-medium corpora (< 1M documents), `pgvector` on top of a relational database you already run is usually sufficient — one fewer service to operate. Reach for a dedicated vector database when you need approximate nearest-neighbour search at scale or hybrid search.
 2. **Chunking strategy matters more than the embedding model.** Too-large chunks retrieve irrelevant context; too-small chunks lose surrounding meaning. 256–512 tokens with 10–20% overlap is a good starting point.
 3. **Test retrieval before generation.** Most RAG bugs are retrieval bugs (wrong chunks returned), not LLM bugs. Evaluate retrieval quality independently using labelled question-answer pairs before evaluating end-to-end.
-4. **Rate limits are business logic.** LLM API rate limits and token quotas should be handled at the application layer with retry + backoff (from the Microservices post), not silently swallowed.
+4. **Rate limits are business logic.** LLM API rate limits and token quotas should be handled at the application layer with retry + backoff, not silently swallowed.
 5. **Evals replace vibes.** "It seems to work" is not a production AI quality bar. Define evaluation metrics (faithfulness, relevance, answer correctness) and automate them before every deployment.
 
 ---

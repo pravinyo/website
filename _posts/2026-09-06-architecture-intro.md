@@ -1,8 +1,8 @@
 ---
-title: "Software Architecture: Foundations, Patterns, and Diagrams"
+title: "Software Architecture: The Vocabulary AI Agents Don't Have"
 date: 2026-09-06 10:00:00 +0530
 categories: [Blogging, Article, ai-engineering]
-tags: [architecture, mvc, event-driven, layered, mermaid, system-design, ai-assisted-development]
+tags: [architecture, mvc, event-driven, layered, mermaid, ai-assisted-development]
 author: pravin_tripathi
 readtime: true
 media_subpath: /assets/img/ai-assisted-development/
@@ -18,16 +18,15 @@ image:
 
 ## TL;DR
 
-- Software architecture defines how a system's components are structured, communicate, and evolve — independent of which language or framework you write it in.
-- The three foundational patterns — Layered, MVC, and Event-Driven — cover most use cases you'll encounter, in any stack.
 - An AI agent can generate a working file in seconds, but it has no memory of your system's boundaries from one prompt to the next. Architecture is the vocabulary you use to hold that line — in your prompts, and in your reviews.
+- This post assumes you already know Layered, MVC, and Event-Driven architecture at a working level — it's a fast recap, not a tutorial, before getting to what AI does with (and to) them.
 - Use AI to *draft* architecture diagrams and scaffolding from plain English, then validate every arrow and every box against the actual code.
 
 ---
 
 ## Why This Post Exists in the AI-Assisted Development Series
 
-This is the first post in the [Software Architecture](/posts/architecture-intro/) series, which is about architecture — so it's worth being explicit about why architecture belongs in a series about building software *with* AI agents.
+This is the first post in the Software Architecture module — so it's worth being explicit about why architecture belongs in a series about building software *with* AI agents.
 
 An AI coding agent is extremely good at producing a plausible-looking function, class, or route handler on request. What it is not good at, by default, is remembering that your data-access code is never supposed to talk directly to your presentation layer, or that `ServiceA` already depends on `ServiceB` and must not depend on it the other way around too. Each prompt is answered mostly in isolation, drawing on patterns that are statistically common in training data — not necessarily the patterns your codebase has committed to.
 
@@ -37,38 +36,35 @@ That means the architectural boundaries in your system now depend on something t
 2. **You need the vocabulary to review what comes back.** If you can't name the layering violation, you can't ask for it to be fixed — you'll just feel a vague unease about a diff and approve it anyway.
 3. **You need diagrams that are cheap to produce and easy to compare against reality**, because AI-generated code drifts from any diagram that isn't kept in the loop.
 
-Everything else in this post — the three patterns, the diagrams, the AI-prompting examples — is in service of those three points, and this framing carries through the rest of [Software Architecture](/posts/architecture-intro/).
+Everything else in this post — the recap, the AI-prompting examples — is in service of those three points, and this framing carries through the rest of this module.
 
 ---
 
 ## Prerequisites
 
-- Design Patterns Module ([Part 1: Principles & Creational Patterns](/posts/design-patterns-part-1/), [Part 2: Structural & Behavioral Patterns](/posts/design-patterns-part-2/))
-- Familiarity with HTTP request-response cycles
-- Basic programming literacy: functions, classes or modules, and how a codebase is typically organised into files and folders. No specific language is assumed — the examples in this post are written as language-agnostic pseudocode.
+- Standard design-pattern vocabulary — SOLID, Dependency Inversion, and the Gang of Four catalogue (Factory, Strategy, Adapter, and the rest). This is assumed, not taught here; [Refactoring Guru's catalogue](https://refactoring.guru/design-patterns) is a fast refresher if any of it's rusty.
+- Working familiarity with Layered, MVC, and Event-Driven architecture — this post recaps them in a few sentences each rather than teaching them from scratch. If any of the three is new to you, [Martin Fowler's *Patterns of Enterprise Application Architecture*](https://martinfowler.com/eaaCatalog/) (in References) covers the ground this post assumes.
 
 ---
 
 ## Concept Explanation
 
-**Software architecture** is the set of high-level decisions that define a system's structure: which components exist, how they communicate, and how responsibilities are divided. Unlike design patterns (which solve object-level problems), architecture operates at the system level — it answers "how does the whole thing fit together?"
+**Software architecture** is the set of high-level decisions that define a system's structure: which components exist, how they communicate, and how responsibilities are divided. Unlike design patterns (which solve object-level problems), architecture operates at the system level.
 
-Good architecture defers decisions that don't need to be made yet, makes the important decisions explicit, and ensures the system can evolve as requirements change. Bad architecture couples everything together so tightly that a change in one place breaks three others — and an AI agent, asked to make that one change, will happily make it and quietly break the other three, because it has no way of knowing they were coupled unless the code (or you) tells it so.
+Bad architecture couples everything together so tightly that a change in one place breaks three others — and an AI agent, asked to make that one change, will happily make it and quietly break the other three, because it has no way of knowing they were coupled unless the code (or you) tells it so.
 
-> **Analogy:** Architecture is the floor plan of a building. It doesn't tell you what furniture to put in each room, but it determines which rooms exist, how they connect, and which walls can't be moved. An AI agent handed a request to "add a window" will cheerfully cut through a load-bearing wall if nothing tells it which walls those are.
+> **Analogy:** Architecture is the floor plan of a building. An AI agent handed a request to "add a window" will cheerfully cut through a load-bearing wall if nothing tells it which walls those are.
 
 ---
 
-## How It Works: Pattern Overview
+## The Three Patterns, in One Diagram Each
+
+Three foundational patterns cover most cases: **Layered** (Presentation → Business Logic → Data Access → Infrastructure, each layer only talking to the one directly below it), **MVC** (Model holds data and rules, View renders, Controller orchestrates), and **Event-Driven** (publishers emit events, subscribers react, neither side knows about the other).
 
 ```mermaid
 graph TD
     subgraph Layered["Layered Architecture"]
-        P[Presentation Layer]
-        BL[Business Logic Layer]
-        DA[Data Access Layer]
-        DB[(Database)]
-        P --> BL --> DA --> DB
+        P[Presentation] --> BL[Business Logic] --> DA[Data Access] --> DB[(Database)]
     end
 
     subgraph MVC["MVC Pattern"]
@@ -84,196 +80,17 @@ graph TD
     end
 ```
 
----
+**The one rule an AI agent breaks most often:** a presentation-layer function must never write a query directly, and a data-access function must never apply business rules. Crossing layers is the most common architectural sin — and, because it's the path of least resistance for an autocomplete-style suggestion, it's also the most common thing an AI agent will do if you don't stop it. Worked Example 2 below shows exactly this failure.
 
-## The Three Foundational Patterns
-
-### 1. Layered Architecture
-
-Components are organised into horizontal layers, each with a clear responsibility. Each layer only talks to the layer directly below it.
-
-| Layer | Responsibility | Typical building blocks (any stack) |
-|-------|---------------|-------------------|
-| **Presentation** | HTTP routes, serialisation, request/response shaping | Web framework routers or controllers (e.g. Express, FastAPI, Spring MVC, ASP.NET Core, Rails controllers) |
-| **Business Logic** | Rules, calculations, workflows | Service classes, domain modules, use-case objects |
-| **Data Access** | Database queries, ORM mappings, persistence | Repository classes, ORMs (SQLAlchemy, Hibernate, Prisma, ActiveRecord, Entity Framework) |
-| **Infrastructure** | External services, file I/O | Email/SMS clients, object storage adapters, third-party API clients |
-
-**Rule:** A presentation layer function must never write a query directly. A data access function must never apply business rules. Crossing layers is the most common architectural sin — and, because it's the path of least resistance for an autocomplete-style suggestion, it's also the most common thing an AI agent will do if you don't stop it.
-
-### 2. MVC (Model-View-Controller)
-
-MVC separates a UI-bearing application into three roles:
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant Controller
-    participant Model
-    participant View
-
-    User->>Controller: HTTP Request (GET /stocks/RELIANCE)
-    Controller->>Model: fetch_stock("RELIANCE")
-    Model-->>Controller: StockData object
-    Controller->>View: render(template, StockData)
-    View-->>User: HTTP Response (HTML)
-```
-
-- **Model**: Business data and rules — no knowledge of the UI.
-- **View**: Renders data — no business logic.
-- **Controller**: Orchestrates — receives input, calls the model, returns a view.
-
-### 3. Event-Driven Architecture
-
-Components communicate via events rather than direct method calls. Publishers emit events; subscribers react to them. Neither side knows about the other.
-
-**When to use:** Real-time systems, asynchronous workflows, systems where multiple reactions can happen to the same state change (e.g., "order placed" triggers: send email, update inventory, notify warehouse, award loyalty points — all independently).
-
----
-
-## Python Example — Stock Analysis Service, Layered
-
-The example below is written in Python to make the layering explicit and runnable. The architectural pattern — not the syntax — is the point; you can translate the same structure into whichever language your project uses.
-
-```python
-# ── Layer 1: Data Access (database / API boundary) ─────────────────────
-
-from dataclasses import dataclass
-from typing import Optional
-
-
-@dataclass(frozen=True)
-class StockRecord:
-    symbol: str
-    price: float
-    pe_ratio: float
-    market_cap: int
-
-
-class StockRepository:
-    def find_by_symbol(self, symbol: str) -> Optional[StockRecord]:
-        raise NotImplementedError
-
-    def find_all(self) -> list[StockRecord]:
-        raise NotImplementedError
-
-
-class InMemoryStockRepository(StockRepository):
-    # Concrete repository — swappable with a real DB implementation.
-    _store = {
-        "RELIANCE": StockRecord("RELIANCE", 2450.75, 25.0, 1_800_000),
-        "TCS": StockRecord("TCS", 3600.00, 30.0, 1_400_000),
-        "INFY": StockRecord("INFY", 1450.50, 22.5, 600_000),
-    }
-
-    def find_by_symbol(self, symbol: str) -> Optional[StockRecord]:
-        return self._store.get(symbol.upper())
-
-    def find_all(self) -> list[StockRecord]:
-        return list(self._store.values())
-
-
-# ── Layer 2: Business Logic ─────────────────────────────────────────────
-
-class ValuationService:
-    # Business rules: no queries, no HTTP, no UI concerns.
-    def __init__(self, repo: StockRepository):
-        self.repo = repo
-
-    def classify_valuation(self, symbol: str):
-        record = self.repo.find_by_symbol(symbol)
-        if record is None:
-            raise ValueError(f"Unknown symbol: {symbol}")
-
-        # Business rule: P/E-based valuation classification
-        if record.pe_ratio < 15:
-            verdict = "undervalued"
-        elif record.pe_ratio < 25:
-            verdict = "fairly_valued"
-        else:
-            verdict = "overvalued"
-
-        return {
-            "symbol": record.symbol,
-            "price": record.price,
-            "pe_ratio": record.pe_ratio,
-            "verdict": verdict,
-        }
-
-    def top_value_picks(self, limit: int = 3):
-        all_stocks = self.repo.find_all()
-        sorted_stocks = sorted(all_stocks, key=lambda s: s.pe_ratio)
-        return [self.classify_valuation(s.symbol) for s in sorted_stocks[:limit]]
-
-
-# ── Layer 3: Presentation (an HTTP route handler in your framework of choice) ─
-
-def handle_get_valuation(symbol: str, service: ValuationService):
-    # Presentation layer: validate input, call service, format response.
-    # No business logic here — just orchestration and formatting.
-    symbol = symbol.upper().strip()
-    if not symbol.isalpha():
-        return {"error": "Invalid symbol format", "code": 400}
-
-    try:
-        result = service.classify_valuation(symbol)
-        return {"data": result, "code": 200}
-    except ValueError as exc:
-        return {"error": str(exc), "code": 404}
-
-
-# Wire up the layers
-repo = InMemoryStockRepository()
-service = ValuationService(repo)
-
-print(handle_get_valuation("RELIANCE", service))
-print(handle_get_valuation("INFY", service))
-print(handle_get_valuation("UNKNOWN", service))
-```
-
-### Architecture Diagram — MVC, framework-agnostic
-
-```mermaid
-graph TD
-    User -->|HTTP Request| Router[Controller: HTTP Route Handler]
-    Router -->|calls| ValuationService[Model: ValuationService]
-    ValuationService -->|queries| StockRepository[(Data Access: Repository)]
-    StockRepository -->|query / API call| DB[(Database / External Data Provider)]
-    ValuationService -->|returns result| Router
-    Router -->|renders| Template[View: Template / Serializer]
-    Template -->|HTTP Response| User
-```
-
----
-
-## When to Use Which Pattern
-
-| Scenario | Best Pattern | Why |
-|----------|-------------|-----|
-| Web application with UI | MVC | Clean separation of routing, logic, and rendering |
-| Complex business rules | Layered | Keeps business logic isolated from infrastructure |
-| Real-time notifications | Event-Driven | Decouples emitters from multiple independent consumers |
-| Simple scripts or CLIs | None / flat | Patterns add overhead that doesn't pay off at small scale |
-| Data pipelines | Layered + Event | Extract→Transform→Load maps naturally to layers |
+For the code-level shape of a layered service — repository, service, route handler — see the `StockRepository` / `ValuationService` pair used in Worked Example 2; the pattern is the same one summarized in the diagram above, just with names attached.
 
 ---
 
 ## Communicating Architecture to a Team (and to an Agent)
 
-A good architecture diagram answers three questions at a glance:
-1. **What are the components?** (boxes)
-2. **How do they communicate?** (arrows with labels)
-3. **What crosses a boundary?** (dashed lines between layers or services)
+A good architecture diagram answers three questions at a glance: what are the components (boxes), how do they communicate (arrows with labels), and what crosses a boundary (dashed lines between layers or services). Those are also, not coincidentally, the three things an AI agent needs pinned down before it can generate code that respects your structure. A diagram is a compact, unambiguous artifact you can paste straight into a prompt.
 
-Those are also, not coincidentally, the three things an AI agent needs pinned down before it can generate code that respects your structure. A diagram is a compact, unambiguous artifact you can paste straight into a prompt.
-
-**Diagramming tools:**
-- [Mermaid Live Editor](https://mermaid.live/) — inline in Markdown, version-controlled, and something most AI agents can both read and write directly.
-- [D2](https://d2lang.com/) — declarative, auto-layout
-- [Excalidraw](https://excalidraw.com/) — whiteboard style for initial drafts
-- [C4 Model](https://c4model.com/) — four zoom levels (Context → Container → Component → Code)
-
-**The one-minute rule:** If a team member can't understand the diagram within one minute, it has too much detail. Separate concerns into multiple diagrams at different zoom levels. The same rule applies to what you paste into a prompt — an overloaded diagram gives an agent too much surface area to misread.
+**The one-minute rule:** if a team member can't understand the diagram within one minute, it has too much detail — the same rule applies to what you paste into a prompt. [Mermaid Live Editor](https://mermaid.live/) is worth calling out specifically here: it's inline in Markdown, version-controlled, and something most AI agents can both read and write directly, which is why every diagram in this series uses it.
 
 ---
 
@@ -383,9 +200,9 @@ class ValuationService:
         return average([r.pe_ratio for r in rows])
 ```
 
-**The review pass:** this compiles, passes a quick manual test, and looks reasonable in a diff — which is exactly why it's dangerous. It violates the layering rule from the top of this post: business logic must never write a query directly. Concretely, this breaks two things the layering was protecting:
+**The review pass:** this compiles, passes a quick manual test, and looks reasonable in a diff — which is exactly why it's dangerous. It violates the layering rule from earlier in this post: business logic must never write a query directly. Concretely, this breaks two things the layering was protecting:
 
-- `InMemoryStockRepository` (used in tests) is now bypassed — this method will fail or misbehave under test doubles.
+- The in-memory test repository is now bypassed — this method will fail or misbehave under test doubles.
 - Swapping the persistence layer later (a new database, a new ORM) now means hunting through business logic for stray queries instead of changing one repository class.
 
 **The fix to request:**
@@ -404,33 +221,28 @@ The lesson isn't "AI agents write bad code." It's that an agent optimizing for "
 ## Pro Tips
 
 1. **Architecture Decision Records (ADRs).** When you make a significant architectural choice, write a 1-page ADR: context, decision, and consequences. Future-you — and any agent you point at the repo later — will be grateful.
-2. **Dependency direction is non-negotiable.** Business logic must never depend on infrastructure (database, HTTP clients). Infrastructure depends on business logic contracts (interfaces). Violating this makes testing impossible.
-3. **Start with a monolith.** Microservices add distribution complexity. Build a well-structured monolith first; split only when you have concrete evidence of a bottleneck.
-4. **Diagrams rot — faster now than before.** Code changes; diagrams get forgotten, and an AI agent can now change a lot of code in one sitting. Add diagram review to your sprint retrospective, or regenerate diagrams from code on a schedule rather than trusting a diagram nobody has looked at in months.
-5. **The 3-second test.** Show your architecture diagram to a colleague for 3 seconds, then ask them what the system does. If they can't answer, redraw it.
+2. **Dependency direction is non-negotiable.** Business logic must never depend on infrastructure (database, HTTP clients). Violating this makes testing impossible, and it's exactly the shape of violation an agent produces when it takes the shortest path to "it works."
+3. **Diagrams rot — faster now than before.** Code changes; diagrams get forgotten, and an AI agent can now change a lot of code in one sitting. Add diagram review to your sprint retrospective, or regenerate diagrams from code on a schedule rather than trusting a diagram nobody has looked at in months.
 
 ---
 
 ## Common Mistakes
 
 - **Skipping the data access layer.** Putting queries directly in business logic functions is the #1 architectural sin in AI-generated code (see Worked Example 2 above). Always add a repository/adapter boundary.
-- **God service.** A single service that handles everything — authentication, business logic, email sending, persistence. Split by responsibility.
 - **AI generating circular dependencies.** `ServiceA` imports `ServiceB`, which imports `ServiceA`. Watch for this in AI-generated multi-file outputs. Fix by extracting a shared interface.
-- **Over-architecturing small scripts.** A 50-line data processing script does not need a layered architecture with repositories and service classes.
-- **Treating MVC as sacred.** Real frameworks bend MVC in practical ways. Understand the intent — separation of concerns — not the rigid definition.
+- **Over-architecturing small scripts.** A 50-line data processing script does not need a layered architecture with repositories and service classes — and an agent asked to "make this more professional" will sometimes add one anyway.
 
 ---
 
 ## References
 
-- [Martin Fowler — Patterns of Enterprise Application Architecture](https://martinfowler.com/eaaCatalog/)
-- [C4 Model for architecture diagrams](https://c4model.com/)
+- [Martin Fowler — Patterns of Enterprise Application Architecture](https://martinfowler.com/eaaCatalog/) — for the Layered/MVC/Event-Driven concepts this post assumes
 - [Mermaid live editor](https://mermaid.live/)
-- [D2 diagramming language](https://d2lang.com/)
+- [C4 Model for architecture diagrams](https://c4model.com/)
 - [Architecture Decision Records (ADRs)](https://adr.github.io/)
 
 ---
 
 ## Next Steps
 
-Continue to [Cloud-Native and Microservices →](/posts/cloud-native-microservices/)
+Continue to [Data and AI Architectures →](/posts/data-ai-architectures/)

@@ -1,6 +1,6 @@
 ---
 title: "Agentic SDD & SPDD: Multi-Agent Workflows for Structured Prompt-Driven Development"
-date: 2026-09-02 10:00:00 +0530
+date: 2026-09-03 10:00:00 +0530
 categories: [Blogging, Article, ai-engineering]
 tags: [softwareengineering, backenddevelopment, python, test-driven-development, ai-assisted-development, multi-agent, prompting]
 author: pravin_tripathi
@@ -440,6 +440,6 @@ SPDD compresses SDD's four documents into one Canvas, but it should not compress
 
 By adopting SDD's phase discipline and automating it with an Agentic SPDD workflow, you elevate yourself from a code-writer to a systems orchestrator. Across this series, one `PortfolioLedger` grew a settlement pipeline, and that pipeline grew a commission engine — each step reviewed at a gate before the next was built. Your repository becomes a library of version-controlled intents, making future refactoring and scaling entirely deterministic.
 
-**Next post:** [Design Patterns for AI-Assisted Development, Part 1: Principles & Creational Patterns →](/posts/design-patterns-part-1/)
+**Next post:** [Software Architecture: The Vocabulary AI Agents Don't Have →](/posts/architecture-intro/)
 
-In the [Design Patterns](/posts/design-patterns-part-1/) post, you'll learn the vocabulary that lets you describe structure precisely — and the patterns that prevent AI-generated code from becoming unmaintainable over time.
+The next post assumes you're already comfortable with standard design-pattern vocabulary (SOLID, Dependency Inversion, Strategy, Factory, and the rest of the Gang of Four catalogue) — if any of that's rusty, [Refactoring Guru's pattern catalogue](https://refactoring.guru/design-patterns) is a fast refresher. From there, [Software Architecture](/posts/architecture-intro/) moves from individual patterns to how they combine into a system, and to the layering vocabulary an AI agent has no memory of from one prompt to the next.

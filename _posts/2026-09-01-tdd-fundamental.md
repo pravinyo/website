@@ -1,6 +1,6 @@
 ---
 title: "TDD Fundamentals: Red-Green-Refactor"
-date: 2026-09-02 10:00:00 +0530
+date: 2026-09-01 10:00:00 +0530
 categories: [Blogging, Article, ai-engineering]
 tags: [softwareengineering, backenddevelopment, python, test-driven-development, ai-assisted-development]
 author: pravin_tripathi

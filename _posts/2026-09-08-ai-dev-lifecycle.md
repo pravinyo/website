@@ -20,7 +20,7 @@ image:
 
 - AI assists every stage of the development lifecycle — but engineering oversight is non-negotiable at each one.
 - The rule: AI generates, engineer decides. Never approve code you don't understand.
-- This post does not introduce new machinery for the five phases. **Plan reuses the Analyst persona and REASONS Canvas from [Agentic TDD & SPDD](/posts/agentic-spdd-multi-agent/). Code reuses the QA/Architect persona split and contract-first TDD from [Agentic TDD](/posts/agentic-tdd-zero-code/). Refactor names the [Design Patterns](/posts/design-patterns-part-1/) and checks the layering rules from [Software Architecture](/posts/architecture-intro/).** The lifecycle is what happens when you run all three earlier modules back to back, on one feature, in order.
+- This post does not introduce new machinery for the five phases. **Plan reuses the Analyst persona and REASONS Canvas from [Agentic TDD & SPDD](/posts/agentic-spdd-multi-agent/). Code reuses the QA/Architect persona split and contract-first TDD from [Agentic TDD](/posts/agentic-tdd-zero-code/). Refactor names the applicable design pattern and checks the layering rules from [Software Architecture](/posts/architecture-intro/).** The lifecycle is what happens when you run both earlier modules back to back, on one feature, in order.
 - Professional responsibility is not reduced by AI involvement — it is transferred entirely to the engineer who merges the code.
 
 ---
@@ -28,7 +28,7 @@ image:
 ## Prerequisites
 
 - [Prompting and Code Review](/posts/prompting-code-review/) — this post assumes you have the Quick Template and REASONS Canvas from that post in hand
-- All previous modules (TDD, Design Patterns, Architecture, Vibe Engineering Intro)
+- All previous modules (TDD, Architecture, Vibe Engineering Intro) — plus standard design-pattern vocabulary (SOLID, named GoF patterns), assumed rather than taught in this series; see [Refactoring Guru's catalogue](https://refactoring.guru/design-patterns) if a refresher is needed
 - Experience with a full feature development cycle (plan → deploy)
 
 ---
@@ -42,7 +42,7 @@ Posts 1 and 2 of this module each isolated a single moment: reviewing one AI-gen
 | **Plan** | [Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Analyst persona and REASONS Canvas (Template B) |
 | **Code** | [Agentic TDD](/posts/agentic-tdd-zero-code/) — QA-persona/Architect-persona split, applied contract-first (Red-Green-Refactor) |
 | **Test** | [Agentic TDD](/posts/agentic-tdd-zero-code/) — Red-Green-Refactor discipline, extended with coverage-gap review |
-| **Refactor** | [Design Patterns](/posts/design-patterns-part-1/) — named patterns and SOLID vocabulary |
+| **Refactor** | Design Patterns — named patterns and SOLID vocabulary |
 | **Document** | The Canvas's own Norms and Safeguards fields, turned into docstring content |
 
 AI can participate in every one of those steps. That's genuinely useful — and it's also exactly where the "AI generates, engineer decides" principle from the introduction post is easiest to quietly abandon, because each individual step feels small and low-stakes on its own. This post walks the full lifecycle using `PortfolioValuationService` as the through-line, precisely so you see the engineer's decision re-enter at every phase using the exact tools Modules 1–3 already gave you — not a sixth, new set of rules to learn.
@@ -92,7 +92,7 @@ portfolio value when a stock price updates, and pushes the new value to
 connected clients.
 
 INPUTS / EXISTING CONTRACTS
-StockPriceFeed ([Observer pattern](/posts/design-patterns-part-2/), a Behavioral Pattern), which
+StockPriceFeed (Observer pattern, a Behavioral Pattern), which
 already publishes price-update events.
 
 MUST EXPLICITLY ADDRESS IN SAFEGUARDS
@@ -122,7 +122,7 @@ Notice that the two open questions are genuine business decisions — currency h
 
 ## Phase 2: Code — the QA/Architect Split, Applied Contract-First
 
-**The contract-first workflow, as [Agentic TDD](/posts/agentic-tdd-zero-code/) defined it:** write the interface (a `Protocol`, following [Dependency Inversion](/posts/design-patterns-part-1/)) and hand it to a QA persona for tests *before* an Architect persona ever writes implementation code. The Canvas from Phase 1 is the shared source both personas work from — neither one improvises past it.
+**The contract-first workflow, as [Agentic TDD](/posts/agentic-tdd-zero-code/) defined it:** write the interface (a `Protocol`, following Dependency Inversion) and hand it to a QA persona for tests *before* an Architect persona ever writes implementation code. The Canvas from Phase 1 is the shared source both personas work from — neither one improvises past it.
 
 ```python
 # Step 1: Define the contract (you write this, directly from the Canvas's
@@ -209,7 +209,7 @@ Tests: [[paste test file]]
 Canvas Approach & Safeguards: [[paste relevant Canvas fields from Phase 1]]
 
 Constraints:
-- Inject StockPriceFeed and PortfolioRepository via constructor ([Dependency Inversion](/posts/design-patterns-part-1/))
+- Inject StockPriceFeed and PortfolioRepository via constructor (Dependency Inversion)
 - UserNotFoundError and PriceUnavailableError are custom exceptions
 - All price lookups must time out after 3 seconds (Canvas Safeguard)
 - Log a WARNING for each position where price is unavailable before raising
@@ -285,7 +285,7 @@ Run the three human review questions from [Agentic TDD](/posts/agentic-tdd-zero-
 
 ## Phase 4: Refactor — Name the Pattern, Check the Layer
 
-**What AI does well:** Identifying code smells (long method, feature envy, data clumps), suggesting which [Design Pattern](/posts/design-patterns-part-1/) applies, generating the refactored version with the pattern applied, and — because [Software Architecture](/posts/architecture-intro/) gave you the vocabulary for it — flagging a layering violation the way that post's examples did.
+**What AI does well:** Identifying code smells (long method, feature envy, data clumps), suggesting which Design Pattern applies, generating the refactored version with the pattern applied, and — because [Software Architecture](/posts/architecture-intro/) gave you the vocabulary for it — flagging a layering violation the way that post's examples did.
 
 **What requires human judgment:** Deciding whether a refactor is worth the risk, ensuring tests still pass after refactoring, reviewing whether the suggested pattern is the right one for the context, and confirming the refactor didn't cross a layer boundary while it was at it.
 
@@ -295,8 +295,8 @@ REFACTOR PROMPT (plain text — paste directly)
 Review this code for the following code smells. For each smell found:
 1. Name the smell
 2. Quote the offending lines
-3. Name the [Design Pattern](/posts/design-patterns-part-1/) that fixes it, if one applies
-4. State whether the fix crosses a layer boundary ([per Architecture principles](/posts/architecture-intro/)) — if so, flag it
+3. Name the Design Pattern that fixes it, if one applies
+4. State whether the fix crosses a layer boundary (per Architecture principles) — if so, flag it
    instead of silently generating a fix
 5. Show the refactored code
 
@@ -323,7 +323,7 @@ Running the Refactor prompt against `PortfolioValuation.total_value` (typed as `
 def create_trade(symbol: str, quantity: str, price: str, direction: str) -> dict:
     return {"symbol": symbol, "qty": int(quantity), "price": float(price), "direction": direction}
 
-# AI suggests, naming the fix as a value-object refactor ([Design Patterns territory](/posts/design-patterns-part-1/) —
+# AI suggests, naming the fix as a value-object refactor (Design Patterns territory —
 # not one of the three GoF families directly, but the same instinct as
 # Builder's validation-on-construction): replace primitives with domain types
 from dataclasses import dataclass
@@ -468,9 +468,9 @@ If you can't explain points 2 and 3, the code isn't ready to merge.
 
 ```
 When asking AI to implement a feature, always produce and commit the
-REASONS Canvas ([Agentic SPDD](/posts/agentic-spdd-multi-agent/)) before any code-generation
+REASONS Canvas (Agentic SPDD) before any code-generation
 prompt. Then split QA and Architect into separate sessions, exactly as
-[Agentic TDD](/posts/agentic-tdd-zero-code/) requires — never let one session draft the
+Agentic TDD requires — never let one session draft the
 spec, write the tests, and implement, in sequence, without a human gate
 between each.
 ```
@@ -527,4 +527,4 @@ Notice that `PortfolioValuationService.total_value` — a financial calculation 
 
 ## Next Steps
 
-You've now followed `PortfolioValuationService` through review (post 1), a properly structured prompt and Canvas (post 2), and the full plan-to-document lifecycle (this post) — three modules' worth of tools, applied in sequence, on one running example. 
+You've now followed `PortfolioValuationService` through review (post 1), a properly structured prompt and Canvas (post 2), and the full plan-to-document lifecycle (this post) — the tools from every earlier module, applied in sequence, on one running example. 

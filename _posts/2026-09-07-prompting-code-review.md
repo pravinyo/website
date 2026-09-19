@@ -19,7 +19,7 @@ image:
 ## TL;DR
 
 - A structured prompt is a function signature: define role, task, constraints, and expected output explicitly.
-- This post doesn't invent a new template — it takes the **REASONS Canvas and the QA/Architect persona split from [Agentic SPDD](/posts/agentic-spdd-multi-agent/)**, and the **SOLID / pattern vocabulary from [Design Patterns](/posts/design-patterns-part-1/)** and **layering vocabulary from [Software Architecture](/posts/architecture-intro/)**, and packages all of it into two reusable, plain-text templates you fill in by hand.
+- This post doesn't invent a new template — it takes the **REASONS Canvas and the QA/Architect persona split from [Agentic SPDD](/posts/agentic-spdd-multi-agent/)**, and the **SOLID / pattern vocabulary from Design Patterns** and **layering vocabulary from [Software Architecture](/posts/architecture-intro/)**, and packages all of it into two reusable, plain-text templates you fill in by hand.
 - Every template in this post is **text, not code** — copy it as-is into any AI tool, and replace only the bracketed placeholders.
 - Security review for AI code focuses on injection, credentials, and trust boundaries that AI consistently overlooks.
 
@@ -38,9 +38,9 @@ image:
 
 The previous post reviewed a vague, one-line prompt against a checklist and fixed five defects after the fact. That's a necessary skill — you will always need a review pass, no matter how good your prompt is — but it's also the more expensive way to get good code: you pay the cost of generating the bad version, reading it carefully, and re-explaining the fix, every single time.
 
-This post attacks the problem from the input side, and it does so **without introducing a new framework**. [Agentic TDD & SPDD](/posts/agentic-tdd-zero-code/) already gave you two structured workflows for turning intent into code: the plain-English-requirements-to-QA-persona-to-Architect-persona pipeline, and its more formal successor, the REASONS Canvas produced by an Analyst persona under Spec-Driven Development. [Design Patterns](/posts/design-patterns-part-1/) gave you the vocabulary (SOLID, the pattern families) to say precisely what "well-structured" means. [Software Architecture](/posts/architecture-intro/) gave you the vocabulary (layers, boundaries) to say precisely what "respects the system" means.
+This post attacks the problem from the input side, and it does so **without introducing a new framework**. [Agentic TDD & SPDD](/posts/agentic-tdd-zero-code/) already gave you two structured workflows for turning intent into code: the plain-English-requirements-to-QA-persona-to-Architect-persona pipeline, and its more formal successor, the REASONS Canvas produced by an Analyst persona under Spec-Driven Development. Design Patterns gave you the vocabulary (SOLID, the pattern families) to say precisely what "well-structured" means. [Software Architecture](/posts/architecture-intro/) gave you the vocabulary (layers, boundaries) to say precisely what "respects the system" means.
 
-What's been missing is putting all four of those together into one thing you can actually paste into a prompt box. That's what this post builds: two templates, entirely in plain text, with clearly marked fill-in-the-blank sections, that fold [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s process, [Design Patterns](/posts/design-patterns-part-1/)'s structural vocabulary, and [Software Architecture](/posts/architecture-intro/)'s boundary vocabulary into the Constraints of a single prompt (for a small task) or a single Canvas (for a larger one).
+What's been missing is putting all four of those together into one thing you can actually paste into a prompt box. That's what this post builds: two templates, entirely in plain text, with clearly marked fill-in-the-blank sections, that fold [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s process, Design Patterns' structural vocabulary, and [Software Architecture](/posts/architecture-intro/)'s boundary vocabulary into the Constraints of a single prompt (for a small task) or a single Canvas (for a larger one).
 
 ---
 
@@ -108,19 +108,19 @@ Implement PortfolioValuationService.get_valuation(user_id: str), returning the
 current total market value of a user's portfolio and a per-position breakdown.
 
 CONSTRAINTS
-  - [[Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion] Inject the repository and price feed as
+  - [Design Patterns — Dependency Inversion] Inject the repository and price feed as
     constructor dependencies typed as typing.Protocol. Do not instantiate a
     database or HTTP client inside the class.
-  - [[Design Patterns](/posts/design-patterns-part-1/) — Code contracts] All public methods must have type hints and a
+  - [Design Patterns — Code contracts] All public methods must have type hints and a
     Google-style docstring.
-  - [[Software Architecture](/posts/architecture-intro/) — Layering] Never build SQL with string interpolation inside this
+  - [Software Architecture — Layering] Never build SQL with string interpolation inside this
     class — the service must not touch SQL at all; that belongs to the
     repository, one layer down.
-  - [[Software Architecture](/posts/architecture-intro/) — Boundaries] Every external price lookup must have explicit
+  - [Software Architecture — Boundaries] Every external price lookup must have explicit
     error handling: catch ConnectionError, log a warning with the symbol, and
     raise a typed PriceUnavailableError — never let a network exception
     propagate raw.
-  - [[Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Make the contract testable] Return a dataclass (not a bare
+  - [Agentic SPDD — Make the contract testable] Return a dataclass (not a bare
     number) with total_value and a list of per-position dicts, so "zero
     holdings" and "valuation failed" are never ambiguous to a test — or a caller.
 
@@ -169,16 +169,16 @@ TASK
 Implement: [[FILL: the one thing this prompt should produce — one class or function]]
 
 CONSTRAINTS
-  - [[Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion] [[FILL: which dependencies must be
+  - [Design Patterns — Dependency Inversion] [[FILL: which dependencies must be
     constructor-injected as Protocols, if any]]
-  - [[Design Patterns](/posts/design-patterns-part-1/) — Code contracts] Type hints and [[FILL: docstring style, e.g.
+  - [Design Patterns — Code contracts] Type hints and [[FILL: docstring style, e.g.
     Google or NumPy]] docstrings on all public members.
-  - [[Software Architecture](/posts/architecture-intro/) — Layering] [[FILL: which layer this code belongs to, and what
+  - [Software Architecture — Layering] [[FILL: which layer this code belongs to, and what
     it must NOT do directly — e.g. "must not touch SQL", "must not call
     another service's repository"]]
-  - [[Software Architecture](/posts/architecture-intro/) — Boundaries] [[FILL: timeout/retry/error-handling requirement
+  - [Software Architecture — Boundaries] [[FILL: timeout/retry/error-handling requirement
     for any external call]]
-  - [[Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Testable contract] [[FILL: what the return value/exception
+  - [Agentic SPDD — Testable contract] [[FILL: what the return value/exception
     contract must make unambiguous]]
   - Security: [[FILL: any input validation or secrets-handling requirement]]
 
@@ -222,33 +222,33 @@ never exceed the trade value", "a price lookup must never block indefinitely"]]
 
 ```
 R - Requirements
-  [[FILL: what the system must do, in one paragraph — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s
+  [[FILL: what the system must do, in one paragraph — this is Agentic SPDD's
   "Specify" phase]]
 
 E - Entities
-  [[FILL: the data types involved — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s "Specify" phase,
-  and often maps directly onto a dataclass or Protocol from [Design Patterns](/posts/design-patterns-part-1/)]]
+  [[FILL: the data types involved — this is Agentic SPDD's "Specify" phase,
+  and often maps directly onto a dataclass or Protocol from Design Patterns]]
 
 A - Approach
-  [[FILL: the technical strategy — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s "Plan" phase, and is
-  where you name a Design Pattern from [Design Patterns](/posts/design-patterns-part-1/) if one applies, e.g.
+  [[FILL: the technical strategy — this is Agentic SPDD's "Plan" phase, and is
+  where you name a Design Pattern from Design Patterns if one applies, e.g.
   "use constructor injection (Dependency Inversion) for the price feed"]]
 
 S - Structure
-  [[FILL: file/module layout — this is where [Software Architecture](/posts/architecture-intro/)'s layering applies;
+  [[FILL: file/module layout — this is where Software Architecture's layering applies;
   state which layer each new file belongs to]]
 
 O - Operations
-  [[FILL: the ordered steps the implementation takes — this is [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s
+  [[FILL: the ordered steps the implementation takes — this is Agentic SPDD's
   "Tasks" phase in miniature]]
 
 N - Norms
-  [[FILL: coding standards — type hints, docstring style, and any [Design Patterns](/posts/design-patterns-part-1/)
+  [[FILL: coding standards — type hints, docstring style, and any Design Patterns
   pattern conventions your team follows]]
 
 S - Safeguards
   [[FILL: hard constraints the implementation must never violate — this is
-  where [Software Architecture](/posts/architecture-intro/)'s "no bare except", "explicit timeouts", and this module's
+  where Software Architecture's "no bare except", "explicit timeouts", and this module's
   security checklist items belong]]
 ```
 
@@ -257,7 +257,7 @@ S - Safeguards
 ```
 1. Analyst persona drafts the Canvas above.
 2. You review it — read Requirements/Entities as a Specify review, and
-   Approach/Structure/Operations as a Plan+Tasks review, per [Agentic SPDD](/posts/agentic-spdd-multi-agent/).
+   Approach/Structure/Operations as a Plan+Tasks review, per Agentic SPDD.
 3. Commit the Canvas to version control before any code exists.
 4. QA persona (separate session): "Generate a pytest suite that verifies
    every Requirement and Safeguard in this Canvas. Do not write
@@ -265,7 +265,7 @@ S - Safeguards
 5. Architect persona (separate session): "Implement this Canvas so that it
    passes the attached test suite. Do not modify the tests."
 6. If the implementation drifts from the Canvas, update the Canvas — never
-   hand-patch the code — per [Agentic SPDD](/posts/agentic-spdd-multi-agent/)'s Closed Loop rule.
+   hand-patch the code — per Agentic SPDD's Closed Loop rule.
 ```
 
 ### Filling in the Full Canvas for `PortfolioValuationService`
@@ -284,12 +284,12 @@ E - Entities
 
 A - Approach
   Constructor-inject PortfolioRepository and PriceFeed as typing.Protocol
-  dependencies ([Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion). Loop over holdings,
+  dependencies (Design Patterns — Dependency Inversion). Loop over holdings,
   summing quantity * price per position.
 
 S - Structure
   - services/portfolio_valuation_service.py (Business Logic layer —
-    [Software Architecture](/posts/architecture-intro/): must not import a database driver or an HTTP client directly)
+    Software Architecture: must not import a database driver or an HTTP client directly)
   - repositories/portfolio_repository.py (Data Access layer)
   - tests/services/test_portfolio_valuation_service.py
 
@@ -348,10 +348,10 @@ TASK
 Implement: {self.task_description}
 
 CONSTRAINTS
-  - [[Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion] {self.dependency_constraint}
-  - [[Software Architecture](/posts/architecture-intro/) — Layering] {self.layering_constraint}
-  - [[Software Architecture](/posts/architecture-intro/) — Boundaries] {self.boundary_constraint}
-  - [[Agentic SPDD](/posts/agentic-spdd-multi-agent/) — Testable contract] {self.testable_contract}
+  - [Design Patterns — Dependency Inversion] {self.dependency_constraint}
+  - [Software Architecture — Layering] {self.layering_constraint}
+  - [Software Architecture — Boundaries] {self.boundary_constraint}
+  - [Agentic SPDD — Testable contract] {self.testable_contract}
 
 EDGE CASES TO HANDLE EXPLICITLY
 {edge_case_lines}
@@ -432,7 +432,7 @@ AI sometimes describes code accurately but builds something subtly different. Co
 | "This handles None inputs" | Is there an explicit `if value is None` guard, or does it just not crash on None? |
 | "Tests cover all edge cases" | Are the "edge case" tests actually testing different code paths, or the same path with different values? |
 | "No hardcoded values" | Search for string literals that look like URLs, keys, or environment names |
-| "Uses dependency injection" | Is `ConcreteClass()` instantiated inside `__init__`? If yes, it's NOT injected ([Design Patterns](/posts/design-patterns-part-1/) — Dependency Inversion). |
+| "Uses dependency injection" | Is `ConcreteClass()` instantiated inside `__init__`? If yes, it's NOT injected (Design Patterns — Dependency Inversion). |
 | "Follows existing patterns" | Does it actually import from the reference file, or start from scratch? |
 
 ---
@@ -542,7 +542,7 @@ Start with minimal constraints. Add one constraint per round, targeting the spec
 
 ```
 Do NOT ask a single prompt to draft the Canvas, write the tests, AND implement
-the code. Exactly as [Agentic SPDD](/posts/agentic-spdd-multi-agent/) warns: a single session optimises the spec to be
+the code. Exactly as Agentic SPDD warns: a single session optimises the spec to be
 easy for itself to implement. Analyst, QA, and Architect stay three separate
 sessions, even when the Canvas took five minutes to fill in instead of thirty.
 ```
@@ -582,6 +582,7 @@ sessions, even when the Canvas took five minutes to fill in instead of thirty.
 
 ## References
 
+- [Refactoring Guru — Design Patterns](https://refactoring.guru/design-patterns) — catalogue for the "Design Patterns" vocabulary (SOLID, Dependency Inversion, etc.) the templates in this post cite as constraint labels
 - [Anthropic — Prompt engineering guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
 - [OpenAI — Prompt engineering best practices](https://platform.openai.com/docs/guides/prompt-engineering)
 - [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
@@ -592,6 +593,6 @@ sessions, even when the Canvas took five minutes to fill in instead of thirty.
 
 ## Next Steps
 
-You now have two plain-text templates — one quick, one a full Canvas — that fold three modules' worth of vocabulary into a prompt or spec you can reuse on any feature. The next post zooms out from a single prompt to the full lifecycle a feature like `PortfolioValuationService` actually goes through, and shows exactly where each of these templates, and each persona, re-enters at every stage.
+You now have two plain-text templates — one quick, one a full Canvas — that fold Agentic SPDD's process and Software Architecture's layering vocabulary, alongside standard design-pattern vocabulary, into a prompt or spec you can reuse on any feature. The next post zooms out from a single prompt to the full lifecycle a feature like `PortfolioValuationService` actually goes through, and shows exactly where each of these templates, and each persona, re-enters at every stage.
 
 Continue to [AI Dev Lifecycle →](/posts/ai-dev-lifecycle/)
